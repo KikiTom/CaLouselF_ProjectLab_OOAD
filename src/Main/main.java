@@ -1,7 +1,6 @@
 package Main;
 
 import javafx.application.Application;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 import Controller.LoginController;
 import Controller.RegisterController;
@@ -26,12 +25,11 @@ public class Main extends Application {
         RegisterView registerView = new RegisterView();
 
         // Initialize controllers
-        LoginController loginController = new LoginController(userService, loginView);
-        RegisterController registerController = new RegisterController(userService, registerView);
+        LoginController loginController = new LoginController(userService, loginView, primaryStage);
 
         // Show the Login scene initially
-//        loginController.showLoginScene(primaryStage);
-//        registerController.showRegisterScene(primaryStage);
+       primaryStage.setResizable(false);
+       loginController.showLoginScene(primaryStage);
     }
 
     public static void main(String[] args) {
