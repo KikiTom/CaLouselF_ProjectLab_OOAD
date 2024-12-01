@@ -1,6 +1,8 @@
 
 package View;
 
+import Controller.RegisterController;
+import Service.UserService;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -13,49 +15,42 @@ import javafx.stage.Stage;
 import javafx.scene.effect.DropShadow;
 
 public class RegisterView {
-    private Label shopNameLabel;
-    private Label welcomeLabel;
-    private TextField usernameField;
-    private PasswordField passwordField;
-    private PasswordField confirmPasswordField;
-    private TextField phoneNumberField;
-    private TextField addressField;
+    private Label shopNameLabel,passwordMatchLabel,welcomeLabel,validationlabel;
+    private TextField usernameField,phoneNumberField, addressField;
+    private PasswordField passwordField,confirmPasswordField;
     private ComboBox<String> roleComboBox;
     private Button registerButton;
     private Hyperlink loginLink;
-    private Label passwordMatchLabel;
+    
+    private Label usernameValidationLabel;  
+    private Label passwordValidationLabel;  
+    private Label phoneValidationLabel;  
+    private Label addressValidationLabel;
 
     public RegisterView() {
-        // Shop Name Label
         shopNameLabel = new Label("CaLouseIF");
         shopNameLabel.setFont(Font.font("Arial", FontWeight.BOLD, 24));
         shopNameLabel.setTextFill(Color.DARKBLUE);
 
-        // Welcome Label
         welcomeLabel = new Label("Create Your Account");
         welcomeLabel.setFont(Font.font("Arial", 16));
         welcomeLabel.setTextFill(Color.GRAY);
 
-        // Username Field
         usernameField = new TextField();
         usernameField.setPromptText("Choose a username");
         usernameField.setStyle("-fx-background-radius: 5; -fx-padding: 10px;");
 
-        // Password Field
         passwordField = new PasswordField();
         passwordField.setPromptText("Create a strong password");
         passwordField.setStyle("-fx-background-radius: 5; -fx-padding: 10px;");
 
-        // Confirm Password Field
         confirmPasswordField = new PasswordField();
         confirmPasswordField.setPromptText("Confirm your password");
         confirmPasswordField.setStyle("-fx-background-radius: 5; -fx-padding: 10px;");
 
-        // Password Match Label
         passwordMatchLabel = new Label();
         passwordMatchLabel.setStyle("-fx-text-fill: red;");
 
-        // Add password matching validation
         passwordField.textProperty().addListener((observable, oldValue, newValue) -> {
             validatePasswords();
         });
@@ -64,24 +59,20 @@ public class RegisterView {
             validatePasswords();
         });
 
-        // Phone Number Field
         phoneNumberField = new TextField();
         phoneNumberField.setPromptText("Enter your phone number");
         phoneNumberField.setStyle("-fx-background-radius: 5; -fx-padding: 10px;");
 
-        // Address Field
         addressField = new TextField();
         addressField.setPromptText("Enter your address");
         addressField.setStyle("-fx-background-radius: 5; -fx-padding: 10px;");
 
-        // Role ComboBox
         roleComboBox = new ComboBox<>();
         roleComboBox.setPromptText("Select your role");
-        roleComboBox.getItems().addAll("Customer", "Seller", "Admin");
+        roleComboBox.getItems().addAll("Customer", "Seller");
         roleComboBox.setStyle("-fx-background-radius: 5; -fx-padding: 10px;");
         roleComboBox.setMaxWidth(Double.MAX_VALUE);
 
-        // Register Button
         registerButton = new Button("REGISTER");
         registerButton.setStyle(
             "-fx-background-color: #2ecc71;" +
@@ -105,32 +96,148 @@ public class RegisterView {
             "-fx-font-weight: bold;"
         ));
 
-        // Disable register button initially
         registerButton.setDisable(true);
 
-        // Login Link
         loginLink = new Hyperlink("Already have an account? Login here");
         loginLink.setTextFill(Color.BLUE);
+        
+        usernameValidationLabel = createValidationLabel();  
+        passwordValidationLabel = createValidationLabel();  
+        phoneValidationLabel = createValidationLabel();  
+        addressValidationLabel = createValidationLabel(); 
+        
+        addValidationListeners();
     }
-
-    // Password validation method
-    private void validatePasswords() {
-        String password = passwordField.getText();
-        String confirmPassword = confirmPasswordField.getText();
-
-        if (password.isEmpty() || confirmPassword.isEmpty()) {
-            passwordMatchLabel.setText("");
-            registerButton.setDisable(true);
-        } else if (password.equals(confirmPassword)) {
-            passwordMatchLabel.setText("Passwords match ✓");
-            passwordMatchLabel.setStyle("-fx-text-fill: green;");
-            registerButton.setDisable(false);
-        } else {
-            passwordMatchLabel.setText("Passwords do not match ✗");
-            passwordMatchLabel.setStyle("-fx-text-fill: red;");
-            registerButton.setDisable(true);
-        }
+    
+    private Label createValidationLabel() {  
+        Label label = new Label();  
+        label.setStyle("-fx-text-fill: red; -fx-font-size: 10px;");  
+        return label;  
     }
+    
+    private void addValidationListeners() {  
+        
+        usernameField.textProperty().addListener((observable, oldValue, newValue) -> {  
+            if (RegisterController.validateUsername(newValue) != null) {
+            	String label = RegisterController.validateUsername(newValue);
+                usernameValidationLabel.setText(label);  
+                updateRegisterButtonState();  
+                return;  
+            }  
+            
+            // Trim to remove leading/trailing whitespaces  
+            newValue = newValue.trim();  
+            
+            // If all checks pass  
+            usernameValidationLabel.setText("");  
+            updateRegisterButtonState();  
+        });  
+
+        // Password Validation  
+        passwordField.textProperty().addListener((observable, oldValue, newValue) -> {  
+            // Null or empty check  
+            if (RegisterController.validatePassword(newValue) != null) {
+            	String label = RegisterController.validatePassword(newValue);
+                passwordValidationLabel.setText(label);  
+                updateRegisterButtonState();  
+                return;  
+            }  
+            
+            // Trim to remove leading/trailing whitespaces  
+            newValue = newValue.trim();  
+              
+            // If all checks pass  
+            passwordValidationLabel.setText("");  
+            updateRegisterButtonState();  
+        });  
+
+        // Phone Number Validation  
+        phoneNumberField.textProperty().addListener((observable, oldValue, newValue) -> {  
+            // Null or empty check  
+            if (RegisterController.validatePhoneNumber(newValue) != null) {
+            	String label = RegisterController.validatePhoneNumber(newValue);
+                phoneValidationLabel.setText(label);  
+                updateRegisterButtonState();  
+                return;  
+            }  
+            
+            // Trim to remove leading/trailing whitespaces  
+            newValue = newValue.trim();    
+            
+            // If all checks pass  
+            phoneValidationLabel.setText("");  
+            updateRegisterButtonState();  
+        });  
+
+        // Address Validation  
+        addressField.textProperty().addListener((observable, oldValue, newValue) -> {  
+            // Null or empty check  
+            if (RegisterController.validateAddress(newValue) != null) {
+            	String label = RegisterController.validateAddress(newValue);
+                addressValidationLabel.setText(label);  
+                updateRegisterButtonState();  
+                return;  
+            }  
+            
+            // Trim to remove leading/trailing whitespaces  
+            newValue = newValue.trim();  
+         
+            // If all checks pass  
+            addressValidationLabel.setText("");  
+            updateRegisterButtonState();  
+        });  
+
+        // Password Match Validation  
+        confirmPasswordField.textProperty().addListener((observable, oldValue, newValue) -> {  
+            validatePasswords();  
+        });  
+
+        // Tambahkan listener untuk passwordField  
+        passwordField.textProperty().addListener((observable, oldValue, newValue) -> {  
+            validatePasswords();  
+        });  
+    } 
+    
+    private void updateRegisterButtonState() {  
+        boolean isUsernameValid = usernameValidationLabel.getText().isEmpty();  
+        boolean isPasswordValid = passwordValidationLabel.getText().isEmpty();  
+        boolean isPhoneValid = phoneValidationLabel.getText().isEmpty();  
+        boolean isAddressValid = addressValidationLabel.getText().isEmpty();  
+        
+        // Tambahkan kondisi untuk password match  
+        boolean arePasswordsMatching = !passwordField.getText().isEmpty()   
+                                        && passwordField.getText().equals(confirmPasswordField.getText());  
+        
+        boolean isRoleSelected = roleComboBox.getValue() != null;  
+
+        registerButton.setDisable(!(  
+            isUsernameValid &&   
+            isPasswordValid &&   
+            isPhoneValid &&   
+            isAddressValid &&   
+            arePasswordsMatching &&   
+            isRoleSelected  
+        ));  
+    } 
+
+    private void validatePasswords() {  
+        String password = passwordField.getText();  
+        String confirmPassword = confirmPasswordField.getText();  
+
+        if (password.isEmpty() && confirmPassword.isEmpty()) {  
+            passwordMatchLabel.setText("");  
+            passwordMatchLabel.setStyle(""); // Reset style  
+        } else if (password.equals(confirmPassword)) {  
+            passwordMatchLabel.setText("Passwords match ✓");  
+            passwordMatchLabel.setStyle("-fx-text-fill: green;");  
+        } else {  
+            passwordMatchLabel.setText("Passwords do not match ✗");  
+            passwordMatchLabel.setStyle("-fx-text-fill: red;");  
+        }  
+        
+        // Panggil updateRegisterButtonState setelah validasi  
+        updateRegisterButtonState();  
+    }  
 
     public Scene createRegisterScene(Stage primaryStage) {
         // Main Layout
@@ -157,26 +264,32 @@ public class RegisterView {
         registerForm.setEffect(dropShadow);
 
         // Add components to register form
-        registerForm.getChildren().addAll(
-            shopNameLabel,
-            welcomeLabel,
-            new Label("Username"),
-            usernameField,
-            new Label("Password"),
-            passwordField,
-            new Label("Confirm Password"),
-            confirmPasswordField,
-            passwordMatchLabel,
-            new Label("Phone Number"),
-            phoneNumberField,
-            new Label("Address"),
-            addressField,
-            new Label("Role"),
-            roleComboBox,
-            registerButton,
-            loginLink
-        );
+        registerForm.getChildren().addAll(  
+        		shopNameLabel,  
+                welcomeLabel,  
+                new Label("Username"),  
+                usernameField,  
+                usernameValidationLabel,  
+                new Label("Password"),  
+                passwordField,  
+                passwordValidationLabel,  
+                new Label("Confirm Password"),  
+                confirmPasswordField,  
+                passwordMatchLabel,  
+                new Label("Phone Number"),  
+                phoneNumberField,  
+                phoneValidationLabel,  
+                new Label("Address"),  
+                addressField,  
+                addressValidationLabel,  
+                new Label("Role"),  
+                roleComboBox,  
+                registerButton,  
+                loginLink  
+            ); 
 
+        roleComboBox.setOnAction(e -> updateRegisterButtonState());
+        
         // Add register form to main layout
         mainLayout.getChildren().add(registerForm);
 
@@ -218,13 +331,10 @@ public class RegisterView {
     public Hyperlink getLoginLink() {
     	return loginLink;
     }
-
-    public void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+    
+    public void setUsernameValidationLabel(String string) {  
+        this.usernameValidationLabel.setText(string);   
     }
+
 }
 

@@ -4,6 +4,7 @@ import javafx.stage.Stage;
 import Service.UserService;
 import View.LoginView;
 import View.RegisterView;
+import View.popupView;
 
 public class LoginController {
     private UserService userService;
@@ -41,12 +42,12 @@ public class LoginController {
         String password = loginView.getPasswordField().getText();
 
         if (userService.loginUser(username, password)) {
-        	loginView.showAlert("Login Success", "Welcome, " + username);
+        	popupView.getInstance().showSuccessPopup("Login Success","Welcome," + username);
             HomeController homeController = new HomeController(currentStage, username);
             stageClose();
             homeController.showHomeScene(); 
         } else {
-            loginView.showAlert("Error", "Invalid username or password.");
+        	popupView.getInstance().showErrorPopup("Login Failed", "Invalid username or password.");
         }
     }
 
