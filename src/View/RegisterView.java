@@ -187,12 +187,12 @@ public class RegisterView {
             updateRegisterButtonState();  
         });  
 
-        // Password Match Validation  
+         
         confirmPasswordField.textProperty().addListener((observable, oldValue, newValue) -> {  
             validatePasswords();  
         });  
 
-        // Tambahkan listener untuk passwordField  
+        
         passwordField.textProperty().addListener((observable, oldValue, newValue) -> {  
             validatePasswords();  
         });  
@@ -204,7 +204,7 @@ public class RegisterView {
         boolean isPhoneValid = phoneValidationLabel.getText().isEmpty();  
         boolean isAddressValid = addressValidationLabel.getText().isEmpty();  
         
-        // Tambahkan kondisi untuk password match  
+        
         boolean arePasswordsMatching = !passwordField.getText().isEmpty()   
                                         && passwordField.getText().equals(confirmPasswordField.getText());  
         
@@ -226,7 +226,7 @@ public class RegisterView {
 
         if (password.isEmpty() && confirmPassword.isEmpty()) {  
             passwordMatchLabel.setText("");  
-            passwordMatchLabel.setStyle(""); // Reset style  
+            passwordMatchLabel.setStyle(""); 
         } else if (password.equals(confirmPassword)) {  
             passwordMatchLabel.setText("Passwords match ✓");  
             passwordMatchLabel.setStyle("-fx-text-fill: green;");  
@@ -235,7 +235,7 @@ public class RegisterView {
             passwordMatchLabel.setStyle("-fx-text-fill: red;");  
         }  
         
-        // Panggil updateRegisterButtonState setelah validasi  
+         
         updateRegisterButtonState();  
     }  
 

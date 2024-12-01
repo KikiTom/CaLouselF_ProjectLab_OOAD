@@ -15,13 +15,13 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class popupView {
-    // Singleton instance to manage popups consistently
+    
     private static popupView instance;
 
-    // Private constructor to prevent direct instantiation
+   
     private popupView() {}
 
-    // Singleton method to get instance
+    
     public static synchronized popupView getInstance() {
         if (instance == null) {
             instance = new popupView();
@@ -54,11 +54,7 @@ public class popupView {
         });  
     }  
 
-    /**  
-     * Error Popup with modern, attention-grabbing design  
-     * @param title Popup title  
-     * @param message Error message  
-     */  
+   
     public void showErrorPopup(String title, String message) {  
         Platform.runLater(() -> {  
             Stage popupStage = createStyledStage(title);  
@@ -83,12 +79,7 @@ public class popupView {
         });  
     }  
 
-    /**  
-     * User Confirmation Popup with modern design  
-     * @param title Popup title  
-     * @param message Confirmation message  
-     * @return boolean indicating user's choice  
-     */  
+     
     public boolean showConfirmationPopup(String title, String message) {  
         Stage popupStage = createStyledStage(title);  
         
@@ -104,7 +95,7 @@ public class popupView {
         // Holder for user's choice  
         final boolean[] choice = {false};  
         
-        // Styled buttons  
+        
         Button yesButton = createStyledButton("Yes", Color.GREEN);  
         yesButton.setOnAction(e -> {  
             choice[0] = true;  
@@ -129,12 +120,7 @@ public class popupView {
         return choice[0];  
     }  
 
-    /**  
-     * User Input Popup with modern design  
-     * @param title Popup title  
-     * @param message Input prompt  
-     * @return String input from user (null if cancelled)  
-     */  
+    
     public String showInputPopup(String title, String message) {  
         Stage popupStage = createStyledStage(title);  
         
@@ -159,7 +145,7 @@ public class popupView {
         // Holder for user's input  
         final String[] input = {null};  
         
-        // Styled buttons  
+       
         Button submitButton = createStyledButton("Submit", Color.BLUE);  
         submitButton.setOnAction(e -> {  
             input[0] = inputField.getText();  
