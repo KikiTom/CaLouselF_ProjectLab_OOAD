@@ -1,10 +1,20 @@
 package Controller;
 
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.net.URI;
+
 import Service.UserService;
 import View.HomeView;
 import View.LoginView;
 import View.RegisterView;
+import View.SellerHomeView;
 import View.popupView;
 
 public class LoginController {
@@ -66,11 +76,31 @@ public class LoginController {
     	registerStage.show(); 
     }
     
-    private void showHomepageScene(String username) {
-    	HomeView homeView = new HomeView(username);
-    	Stage HomeStage = new Stage();
-    	HomeController homeControlller = new HomeController(userService, HomeStage, username);
-    	HomeStage.setScene(homeView.createHomeScene(HomeStage));
-    	HomeStage.show();
-    }
+    private void showHomepageScene(String username) {  
+        // Get user role from UserService  
+        String userRole = userService.getUserRole(username);  
+        
+        // Navigate based on user role  
+        if ("Seller".equalsIgnoreCase(userRole)) {  
+            // Load profile image directly   
+            
+            SellerHomeView sellerHomeView = new SellerHomeView(  
+                userService.getUserName(username),  
+                userService.getUserAddress(username),  
+                userService.getUserPhone(username)   
+            );  
+            
+            Stage sellerHomeStage = new Stage();  
+            SellerHomeController sellerHomeController = new SellerHomeController(userService, sellerHomeStage, username);  
+            sellerHomeStage.setScene(sellerHomeView.createSellerHomeScene(sellerHomeStage));  
+            sellerHomeStage.show();  
+        } else {  
+            // Default Home Page (for other roles or customers)  
+            HomeView homeView = new HomeView(username);  
+            Stage homeStage = new Stage();  
+            HomeController homeController = new HomeController(userService, homeStage, username);  
+            homeStage.setScene(homeView.createHomeScene(homeStage));  
+            homeStage.show();  
+        }  
+    } 
 }

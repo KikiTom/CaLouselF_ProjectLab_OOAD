@@ -1,3 +1,4 @@
+
 package Service;
 
 import Model.User;
@@ -24,4 +25,29 @@ public class UserServiceImpl implements UserService {
     public User getUserByUsername(String username) {
         return userRepository.getUserByUsername(username);
     }
+
+    @Override
+    public String getUserName(String username) {
+        User user = getUserByUsername(username);
+        return user != null ? user.getUsername() : "";
+    }
+
+    @Override
+    public String getUserAddress(String username) {
+        User user = getUserByUsername(username);
+        return user != null ? user.getAddress() : "";
+    }
+
+    @Override
+    public String getUserPhone(String username) {
+        User user = getUserByUsername(username);
+        return user != null ? user.getPhoneNumber() : "";
+    }
+
+    @Override
+    public String getUserRole(String username) {
+        User user = getUserByUsername(username);
+        return user != null ? user.getRole() : "";
+    }
 }
+
