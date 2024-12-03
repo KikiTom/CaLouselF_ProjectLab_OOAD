@@ -5,11 +5,14 @@ public class Offer {
 	private int userId;
 	private int itemId;
 	private int amount;
+	private boolean isAccepted;
+	public Offer() {}
 	public Offer(int userId, int itemId, int amount) {
 		super();
 		this.userId = userId;
 		this.itemId = itemId;
 		this.amount = amount;
+		this.setAccepted(false);
 	}
 	public int getUserId() {
 		return userId;
@@ -34,6 +37,12 @@ public class Offer {
 	}
 	public void setId(int id) {
 		this.id = id;
+	}
+	public boolean isAccepted() {
+		return isAccepted;
+	}
+	public void setAccepted(boolean isAccepted) {
+		this.isAccepted = isAccepted;
 	}
 	
 	

@@ -8,13 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Model.Item;
+import Repository.RepositoryInterface.*;
 
-public class ItemRepository implements CRUDInterface<Item>{
-	
-	private Database database;
+public class ItemRepository extends RepositoryInheritClass implements GetAll<Item>, GetById<Item>, Create<Item>, Update<Item>, Delete<Item>{
 
     public ItemRepository(Database database) {
-        this.database = database;
+        super(database);
     }
 	
 	@Override

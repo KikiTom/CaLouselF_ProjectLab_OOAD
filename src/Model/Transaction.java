@@ -1,15 +1,15 @@
 package Model;
 
-import java.util.List;
 
 public class Transaction {
 	private int id;
-	private List<Item> itemList;
-	private int total;
-	public Transaction(List<Item> itemList, int total) {
+	private int userId;
+	private int itemId;
+	public Transaction() {}
+	public Transaction(int userId,int itemId) {
 		super();
-		this.itemList = itemList;
-		this.total = total;
+		this.setUserId(userId);
+		this.setItemId(itemId);
 	}
 	public int getId() {
 		return id;
@@ -17,19 +17,17 @@ public class Transaction {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public List<Item> getItemList() {
-		return itemList;
+	public int getUserId() {
+		return userId;
 	}
-	public void setItemList(List<Item> itemList) {
-		this.itemList = itemList;
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
-	public int getTotal() {
-		return total;
+	public int getItemId() {
+		return itemId;
 	}
-	public void setTotal(int total) {
-		this.total = total;
+	public void setItemId(int itemId) {
+		this.itemId = itemId;
 	}
-	
-	
-	
+
 }
