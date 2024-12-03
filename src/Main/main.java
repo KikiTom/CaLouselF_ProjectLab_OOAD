@@ -12,7 +12,7 @@ import Repository.UserRepositoryimpl;
 import View.LoginView;
 import View.RegisterView;
 
-public class Main extends Application {
+public class main extends Application {
 
     @Override
     public void start(Stage primaryStage) {

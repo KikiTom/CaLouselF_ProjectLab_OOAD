@@ -34,6 +34,7 @@ CREATE TABLE `items` (
   `Price` varchar(255) NOT NULL,
   `Category` varchar(255) NOT NULL,
   `Status` varchar(255) NOT NULL,
+  `IsAccepted` boolean NOT NULL,
   `UserID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
