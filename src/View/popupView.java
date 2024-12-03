@@ -1,6 +1,9 @@
 
 package View;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -13,6 +16,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 
 public class popupView {
     
@@ -46,7 +50,11 @@ public class popupView {
             VBox layout = createPopupLayout(iconLabel, titleLabel, messageLabel, closeButton);  
             
             Scene scene = createPopupScene(layout);  
-            popupStage.setScene(scene);  
+            popupStage.setScene(scene);
+            applyEntranceAnimation(popupStage, layout);
+            closeButton.setOnAction(e -> {  
+                applyExitAnimation(popupStage, layout);  
+            });
             popupStage.show();  
         });  
     }  
@@ -71,7 +79,12 @@ public class popupView {
             VBox layout = createPopupLayout(iconLabel, titleLabel, messageLabel, closeButton);  
             
             Scene scene = createPopupScene(layout);  
-            popupStage.setScene(scene);  
+            popupStage.setScene(scene);
+            
+            applyEntranceAnimation(popupStage, layout);
+            closeButton.setOnAction(e -> {  
+                applyExitAnimation(popupStage, layout);  
+            }); 
             popupStage.show();  
         });  
     }  
@@ -111,7 +124,17 @@ public class popupView {
         VBox layout = createPopupLayout(iconLabel, titleLabel, messageLabel, buttonBox);  
         
         Scene scene = createPopupScene(layout);  
-        popupStage.setScene(scene);  
+        popupStage.setScene(scene);
+        applyEntranceAnimation(popupStage, layout);
+        
+        yesButton.setOnAction(e -> {  
+            choice[0] = true;  
+            applyExitAnimation(popupStage, layout);  
+        }); 
+        noButton.setOnAction(e -> {  
+            choice[0] = false;  
+            applyExitAnimation(popupStage, layout);  
+        });
         popupStage.showAndWait();  
         
         return choice[0];  
@@ -245,6 +268,55 @@ public class popupView {
         scene.setFill(Color.TRANSPARENT);  
         
         return scene;  
+    }
+    
+    private void applyEntranceAnimation(Stage popupStage, VBox layout) {  
+        // Faster, more aggressive entrance  
+        layout.setScaleX(0.5);  
+        layout.setScaleY(0.5);  
+        layout.setOpacity(0);  
+
+        Timeline entranceTimeline = new Timeline(  
+            new KeyFrame(Duration.ZERO,   
+                new KeyValue(layout.scaleXProperty(), 0.5),  
+                new KeyValue(layout.scaleYProperty(), 0.5),  
+                new KeyValue(layout.opacityProperty(), 0)  
+            ),  
+            new KeyFrame(Duration.millis(200),   
+                new KeyValue(layout.scaleXProperty(), 1.1),  
+                new KeyValue(layout.scaleYProperty(), 1.1),  
+                new KeyValue(layout.opacityProperty(), 0.9)  
+            ),  
+            new KeyFrame(Duration.millis(250),   
+                new KeyValue(layout.scaleXProperty(), 1),  
+                new KeyValue(layout.scaleYProperty(), 1),  
+                new KeyValue(layout.opacityProperty(), 1)  
+            )  
+        );  
+        entranceTimeline.play();  
+    }  
+
+    private void applyExitAnimation(Stage popupStage, VBox layout) {  
+        Timeline exitTimeline = new Timeline(  
+            new KeyFrame(Duration.ZERO,   
+                new KeyValue(layout.scaleXProperty(), 1),  
+                new KeyValue(layout.scaleYProperty(), 1),  
+                new KeyValue(layout.opacityProperty(), 1)  
+            ),  
+            new KeyFrame(Duration.millis(150),   
+                new KeyValue(layout.scaleXProperty(), 0.6),  
+                new KeyValue(layout.scaleYProperty(), 0.6),  
+                new KeyValue(layout.opacityProperty(), 0.2)  
+            ),  
+            new KeyFrame(Duration.millis(200),   
+                new KeyValue(layout.scaleXProperty(), 0.3),  
+                new KeyValue(layout.scaleYProperty(), 0.3),  
+                new KeyValue(layout.opacityProperty(), 0)  
+            )  
+        );  
+        
+        exitTimeline.setOnFinished(e -> popupStage.close());  
+        exitTimeline.play();  
     }  
 
     // Utility method to convert Color to CSS RGB  

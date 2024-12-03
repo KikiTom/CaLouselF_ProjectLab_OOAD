@@ -14,10 +14,11 @@ public class SellerHomeController {
     private Stage currentStage;  
     private String username;  
 
-    public SellerHomeController(UserService userService, Stage currentStage, String username) {  
+    public SellerHomeController(UserService userService, Stage currentStage, SellerHomeView sellerHomeView , String username) {  
         this.currentStage = currentStage;  
         this.username = username;  
-        this.userService = userService;  
+        this.userService = userService;
+        this.sellerHomeView = sellerHomeView;
 
         // Assuming you have a method to get user details  
         String name = userService.getUserName(username);  
@@ -56,13 +57,12 @@ public class SellerHomeController {
         LoginView loginView = new LoginView();  
         Stage loginStage = new Stage();  
         LoginController loginController = new LoginController(userService, loginView, loginStage);  
-        loginStage.setScene(loginView.createLoginScene(loginStage));  
-        loginStage.show();  
+        loginController.showLoginScene(loginStage);
     }  
 
-    public void showSellerHomeScene() {  
-        currentStage.setScene(sellerHomeView.createSellerHomeScene(currentStage));  
-        currentStage.show();  
+    public void showSellerHomeScene(Stage primaryStage) {  
+        primaryStage.setScene(sellerHomeView.createSellerHomeScene(primaryStage));  
+        primaryStage.showAndWait();
     }  
 
     private void closeHomeScene() {  

@@ -12,11 +12,11 @@ public class HomeController {
     private Stage currentStage;  
     private String username;  
 
-    public HomeController(UserService userService,Stage currentStage, String username) {  
+    public HomeController(UserService userService,Stage currentStage, HomeView homeView, String username) {  
         this.currentStage = currentStage;  
         this.username = username;
         this.userService = userService;
-        this.homeView = new HomeView(username);  
+        this.homeView = homeView;  
         
         setupMenuButtons();  
         setupLogoutButton();  
@@ -53,12 +53,12 @@ public class HomeController {
         Stage loginStage = new Stage();
         LoginController loginController = new LoginController(userService, loginView, loginStage);
         loginStage.setScene(loginView.createLoginScene(loginStage));
-        loginStage.show();
+        loginStage.showAndWait();
     }
 
-    public void showHomeScene() {  
-    	currentStage.setScene(homeView.createHomeScene(currentStage));  
-    	currentStage.show();  
+    public void showHomeScene(Stage Primarystage) {  
+    	Primarystage.setScene(homeView.createHomeScene(Primarystage));  
+    	Primarystage.showAndWait();  
     }  
     
     private void closeHomeScene() {

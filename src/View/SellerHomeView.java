@@ -1,11 +1,6 @@
 
 package View;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -13,8 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -24,133 +18,206 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 public class SellerHomeView {
+    // Modernized color palette
+    private static final String PRIMARY_COLOR = "#4A90E2";      // Vibrant Blue
+    private static final String SECONDARY_COLOR = "#34495E";    // Dark Blue-Gray
+    private static final String ACCENT_COLOR = "#2ECC71";       // Fresh Green
+    private static final String BACKGROUND_COLOR = "#F7F9FC";   // Light Blue-White
+    private static final String TEXT_COLOR = "#2C3E50";         // Dark Charcoal
+
     private Label welcomeLabel;
     private Label nameLabel;
+    private Label statsItemsLabel;
+    private Label statsSalesLabel;
+    private Label statsRevenueLabel;
     private Label addressLabel;
     private Label phoneLabel;
-    
+
     private Image profileImage;
     private ImageView profileImageView;
-    
+
     private Button uploadItemButton;
     private Button viewOfferedItemButton;
     private Button viewItemButton;
+    private Button analyticsButton;
     private Button logoutButton;
+    
+    private VBox statsItemsBox;  
+    private VBox statsSalesBox;  
+    private VBox statsRevenueBox;
 
-    private VBox menuOptionsBox;
+    public SellerHomeView(String name, String address, String phone) {  
+        // Dummy data generation for seller statistics  
+        String totalItems = generateDummyItemCount();  
+        String totalSales = generateDummyTotalSales();  
+        String totalRevenue = generateDummyRevenue();  
 
-    public SellerHomeView(String name, String address, String phone) {
-        // Welcome Label
-        welcomeLabel = new Label("Seller Dashboard");
-        welcomeLabel.setFont(Font.font("Arial", FontWeight.BOLD, 20));
-        welcomeLabel.setTextFill(Color.DARKBLUE);
+        // Welcome Label  
+        welcomeLabel = new Label("Seller Dashboard");  
+        welcomeLabel.setFont(Font.font("Segoe UI", FontWeight.BOLD, 24));  
+        welcomeLabel.setTextFill(Color.web(TEXT_COLOR));  
 
-        // Profile Details Labels
-        nameLabel = new Label(name);
-        nameLabel.setFont(Font.font("Arial", 16));
-        nameLabel.setTextFill(Color.GRAY);
+        // Profile Details Labels  
+        nameLabel = new Label(name);  
+        nameLabel.setFont(Font.font("Segoe UI", 18));  
+        nameLabel.setTextFill(Color.web(SECONDARY_COLOR));  
 
-        addressLabel = new Label(address);
-        addressLabel.setFont(Font.font("Arial", 14));
-        addressLabel.setTextFill(Color.DARKGRAY);
+        addressLabel = new Label(address);  
+        addressLabel.setFont(Font.font("Segoe UI", 14));  
+        addressLabel.setTextFill(Color.web(SECONDARY_COLOR));  
 
-        phoneLabel = new Label(phone);
-        phoneLabel.setFont(Font.font("Arial", 14));
-        phoneLabel.setTextFill(Color.DARKGRAY); 
+        phoneLabel = new Label(phone);  
+        phoneLabel.setFont(Font.font("Segoe UI", 14));  
+        phoneLabel.setTextFill(Color.web(SECONDARY_COLOR));  
+
+        statsItemsBox = createStatLabel("Total Items", totalItems);  
+        statsSalesBox = createStatLabel("Total Sales", totalSales);  
+        statsRevenueBox = createStatLabel("Total Revenue", totalRevenue);
         
-        // Profile Image
-        profileImage = new Image("file:resources/Seller_Image_Profile.png"); 
+        // Profile Image  
+        profileImage = new Image("file:resources/Seller_Image_Profile.png");   
         
-        profileImageView = new ImageView();
-        profileImageView.setImage(profileImage);
-        profileImageView.setFitWidth(100);  
-        profileImageView.setFitHeight(100);  
-        profileImageView.setPreserveRatio(true);
+        profileImageView = new ImageView();  
+        profileImageView.setImage(profileImage);  
+        profileImageView.setFitWidth(120);  
+        profileImageView.setFitHeight(120);  
+        profileImageView.setPreserveRatio(true);  
         
-        // Create circular clip for profile image
-        Circle clip = new Circle(50, 50, 50);
-        profileImageView.setClip(clip);
+        // Create circular clip for profile image  
+        Circle clip = new Circle(60, 60, 60);  
+        profileImageView.setClip(clip);  
 
-        // Main Menu Buttons
-        uploadItemButton = createStyledButton("Upload Item");
-        viewOfferedItemButton = createStyledButton("View Offered Items");
-        viewItemButton = createStyledButton("View Items");
+        // Main Menu Buttons  
+        uploadItemButton = createModernButton("Upload Item", PRIMARY_COLOR);  
+        viewOfferedItemButton = createModernButton("View Offered Items", SECONDARY_COLOR);  
+        viewItemButton = createModernButton("View Items", ACCENT_COLOR);  
+        analyticsButton = createModernButton("Sales Analytics", "#8E44AD");  
+        
+        // Logout Button  
+        logoutButton = createLogoutButton();  
+    }  
+    
+    private VBox createStatLabel(String title, String value) {  
+        // Create main container  
+        VBox statBox = new VBox(5);  
+        statBox.setAlignment(Pos.CENTER);  
+        statBox.setStyle(  
+            "-fx-background-color: white;" +  
+            "-fx-background-radius: 10;" +  
+            "-fx-padding: 10px;" +  
+            "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 1);"  
+        );  
 
-        // Logout Button
-        logoutButton = new Button("Logout");
-        logoutButton.setStyle(
-            "-fx-background-color: #e74c3c;" +
-            "-fx-text-fill: white;" +
-            "-fx-background-radius: 5;" +
-            "-fx-padding: 10px 20px;"
-        );
+        // Title Label  
+        Label titleLabel = new Label(title);  
+        titleLabel.setFont(Font.font("Segoe UI", 12));  
+        titleLabel.setTextFill(Color.web(SECONDARY_COLOR));  
+        titleLabel.setStyle("-fx-opacity: 0.7;");  
 
-        // Menu Options Box (initially hidden)
-        menuOptionsBox = new VBox(10);
-        menuOptionsBox.setAlignment(Pos.CENTER);
-        menuOptionsBox.setVisible(false);
-    }
+        // Value Label  
+        Label valueLabel = new Label(value);  
+        valueLabel.setFont(Font.font("Segoe UI", FontWeight.BOLD, 16));  
+        valueLabel.setTextFill(Color.web(PRIMARY_COLOR));  
 
-    private Button createStyledButton(String text) {
+        // Add labels to container  
+        statBox.getChildren().addAll(titleLabel, valueLabel);  
+
+        return statBox;  
+    }  
+
+    // Helper methods to generate dummy data  
+    private String generateDummyItemCount() {  
+        // Simulate a reasonable range of items for a seller  
+        return String.valueOf(new java.util.Random().nextInt(50) + 10);  
+    }  
+
+    private String generateDummyTotalSales() {  
+        // Generate random sales count between 10 and 500  
+        int sales = new java.util.Random().nextInt(491) + 10;  
+        return String.valueOf(sales);  
+    }  
+
+    private String generateDummyRevenue() {  
+        // Generate random revenue between \$500 and \$10,000  
+        double revenue = 500 + (new java.util.Random().nextDouble() * 9500);  
+        return String.format("$%.2f", revenue);  
+    }  
+
+    private Button createModernButton(String text, String backgroundColor) {
         Button button = new Button(text);
         button.setStyle(
-            "-fx-background-color: #3498db;" +
+            "-fx-background-color: " + backgroundColor + ";" +
             "-fx-text-fill: white;" +
-            "-fx-background-radius: 5;" +
-            "-fx-padding: 10px 20px;" +
+            "-fx-background-radius: 10;" +
+            "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 2);" +
+            "-fx-padding: 12px 24px;" +
             "-fx-font-size: 14px;" +
+            "-fx-font-family: 'Segoe UI';" +
             "-fx-max-width: 250px;"
         );
         
-        // Hover effects
+        // Smoother hover and click effects
         button.setOnMouseEntered(e -> button.setStyle(
-            "-fx-background-color: #2980b9;" +
-            "-fx-text-fill: white;" +
-            "-fx-background-radius: 5;" +
-            "-fx-padding: 10px 20px;" +
-            "-fx-font-size: 14px;" +
-            "-fx-max-width: 250px;"
+            button.getStyle() + 
+            "-fx-background-color: derive(" + backgroundColor + ", -10%);"
         ));
         
         button.setOnMouseExited(e -> button.setStyle(
-            "-fx-background-color: #3498db;" +
-            "-fx-text-fill: white;" +
-            "-fx-background-radius: 5;" +
-            "-fx-padding: 10px 20px;" +
-            "-fx-font-size: 14px;" +
-            "-fx-max-width: 250px;"
+            button.getStyle().replaceAll("-fx-background-color: derive\\([^)]+\\);", 
+            "-fx-background-color: " + backgroundColor + ";")
         ));
         
         return button;
     }
-         
 
-    public Scene createSellerHomeScene(Stage primaryStage) {
-        // Main Layout
-        VBox mainLayout = new VBox(20);
-        mainLayout.setAlignment(Pos.CENTER);
-        mainLayout.setPadding(new Insets(40));
-        mainLayout.setStyle("-fx-background-color: #f4f4f4;");
-
-        // Profile Section
-        VBox profileSection = new VBox(10);
-        profileSection.setAlignment(Pos.CENTER);
-        profileSection.getChildren().addAll(
-            profileImageView,
-            welcomeLabel,
-            nameLabel,
-            addressLabel,
-            phoneLabel
+    private Button createLogoutButton() {
+        Button logoutBtn = new Button("Logout");
+        logoutBtn.setStyle(
+            "-fx-background-color: #E74C3C;" +
+            "-fx-text-fill: white;" +
+            "-fx-background-radius: 10;" +
+            "-fx-padding: 10px 20px;" +
+            "-fx-font-size: 12px;" +
+            "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 2);"
         );
+        return logoutBtn;
+    }
 
-        // Main Menu Buttons Section
-        VBox mainMenuSection = new VBox(15);
-        mainMenuSection.setAlignment(Pos.CENTER);
+    public Scene createSellerHomeScene(Stage primaryStage) {  
+        VBox mainLayout = new VBox(20);  
+        mainLayout.setAlignment(Pos.CENTER);  
+        mainLayout.setPadding(new Insets(40));  
+        mainLayout.setStyle("-fx-background-color: " + BACKGROUND_COLOR + ";");  
 
-        mainMenuSection.getChildren().addAll(
-        	uploadItemButton,
-        	viewOfferedItemButton,
-        	viewItemButton
+        // Profile Section with Statistics  
+        VBox profileSection = new VBox(15);  
+        profileSection.setAlignment(Pos.CENTER);  
+        
+        HBox statsBox = new HBox(30);  
+        statsBox.setAlignment(Pos.CENTER);  
+        statsBox.getChildren().addAll(  
+            createStatLabel("Total Items", generateDummyItemCount()),  
+            createStatLabel("Total Sales", generateDummyTotalSales()),  
+            createStatLabel("Total Revenue", generateDummyRevenue())  
+        );
+        
+        
+
+        profileSection.getChildren().addAll(  
+            profileImageView,  
+            welcomeLabel,  
+            nameLabel,  
+            statsBox  
+        ); 
+
+        // Buttons Section
+        VBox buttonSection = new VBox(15);
+        buttonSection.setAlignment(Pos.CENTER);
+        buttonSection.getChildren().addAll(
+            uploadItemButton,
+            viewOfferedItemButton,
+            viewItemButton,
+            analyticsButton
         );
 
         // Logout Section
@@ -158,25 +225,30 @@ public class SellerHomeView {
         logoutSection.setAlignment(Pos.CENTER);
         logoutSection.getChildren().add(logoutButton);
 
-        // Add Menu Options Box
-        mainMenuSection.getChildren().add(menuOptionsBox);
-
-        // Add all sections to main layout
         mainLayout.getChildren().addAll(
             profileSection,
-            mainMenuSection,
+            buttonSection,
             logoutSection
         );
 
-        // Create scene
-        Scene scene = new Scene(mainLayout, 400, 700);
+        Scene scene = new Scene(mainLayout, 450, 700);
         primaryStage.setResizable(false);
         return scene;
     }
 
     // Getters for buttons
-    public Button getLogoutButton() {
-        return logoutButton;
-    }
+    public Button getLogoutButton() { return logoutButton; }
+    
+    public VBox getStatsItemsBox() {  
+        return statsItemsBox;  
+    }  
+
+    public VBox getStatsSalesBox() {  
+        return statsSalesBox;  
+    }  
+
+    public VBox getStatsRevenueBox() {  
+        return statsRevenueBox;  
+    }  
 }
 

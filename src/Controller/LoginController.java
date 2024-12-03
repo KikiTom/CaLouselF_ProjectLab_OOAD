@@ -37,8 +37,8 @@ public class LoginController {
     private void setupregisterHyperlink() {
         loginView.getRegisterLink().setOnAction(event -> {
         	closeloginScene();
+        	System.out.println("Pindah ke Register Scene...");
         	showRegisterScene();
-            System.out.println("Pindah ke Register Scene...");
         });
     }
 
@@ -72,8 +72,7 @@ public class LoginController {
     	RegisterView registerView = new RegisterView();  
     	Stage registerStage = new Stage();  
     	RegisterController registerController = new RegisterController(userService, registerView, registerStage);  
-    	registerStage.setScene(registerView.createRegisterScene(registerStage));  
-    	registerStage.show(); 
+    	registerController.showRegisterScene(registerStage);
     }
     
     private void showHomepageScene(String username) {  
@@ -91,16 +90,14 @@ public class LoginController {
             );  
             
             Stage sellerHomeStage = new Stage();  
-            SellerHomeController sellerHomeController = new SellerHomeController(userService, sellerHomeStage, username);  
-            sellerHomeStage.setScene(sellerHomeView.createSellerHomeScene(sellerHomeStage));  
-            sellerHomeStage.show();  
+            SellerHomeController sellerHomeController = new SellerHomeController(userService, sellerHomeStage, sellerHomeView, username);  
+            sellerHomeController.showSellerHomeScene(sellerHomeStage);
         } else {  
             // Default Home Page (for other roles or customers)  
             HomeView homeView = new HomeView(username);  
             Stage homeStage = new Stage();  
-            HomeController homeController = new HomeController(userService, homeStage, username);  
-            homeStage.setScene(homeView.createHomeScene(homeStage));  
-            homeStage.show();  
+            HomeController homeController = new HomeController(userService, homeStage, homeView, username);  
+            homeController.showHomeScene(homeStage);
         }  
     } 
 }

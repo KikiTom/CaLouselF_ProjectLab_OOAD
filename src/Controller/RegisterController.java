@@ -274,7 +274,7 @@ public class RegisterController {
 
     public void showRegisterScene(Stage primaryStage) {
         primaryStage.setScene(registerView.createRegisterScene(primaryStage));
-        primaryStage.show();
+        primaryStage.showAndWait();
     }
     
     private void closeRegisterScene() {
@@ -287,7 +287,6 @@ public class RegisterController {
         LoginView loginView = new LoginView();
         Stage loginStage = new Stage();
         LoginController loginController = new LoginController(userService, loginView, loginStage);
-        loginStage.setScene(loginView.createLoginScene(loginStage));
-        loginStage.show();
+        loginController.showLoginScene(loginStage);
     }
 }
