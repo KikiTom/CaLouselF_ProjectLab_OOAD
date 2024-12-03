@@ -1,19 +1,18 @@
 package View;
 
-import Controller.RegisterController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 
 public class RegisterView {
 	private Label shopNameLabel, passwordMatchLabel, welcomeLabel;
@@ -47,6 +46,7 @@ public class RegisterView {
 
 		// Input Fields with Responsive Styling
 		usernameField = createResponsiveTextField("Choose a username");
+		roleComboBox = createResponsiveComboBox();
 		passwordField = createResponsivePasswordField("Create a strong password");
 		confirmPasswordField = createResponsivePasswordField("Confirm your password");
 		phoneNumberField = createResponsiveTextField("Enter your phone number");
@@ -58,12 +58,6 @@ public class RegisterView {
 		passwordValidationLabel = createValidationLabel();
 		phoneValidationLabel = createValidationLabel();
 		addressValidationLabel = createValidationLabel();
-
-		// Role ComboBox
-		roleComboBox = new ComboBox<>();
-		roleComboBox.setPromptText("Select your role");
-		roleComboBox.getItems().addAll("Customer", "Seller");
-		styleComboBox(roleComboBox);
 
 		// Register Button
 		registerButton = createResponsiveButton("REGISTER");
@@ -79,7 +73,7 @@ public class RegisterView {
 		TextField textField = new TextField();
 		textField.setPromptText(prompt);
 		textField.setStyle(
-				"-fx-background-radius: 5;" + "-fx-padding: 10px;" + "-fx-max-width: 300px;" + "-fx-min-width: 200px;");
+				"-fx-background-radius: 5;" + "-fx-padding: 10px;" + "-fx-max-width: 250px;" + "-fx-min-width: 200px;");
 		return textField;
 	}
 
@@ -87,30 +81,33 @@ public class RegisterView {
 		PasswordField passwordField = new PasswordField();
 		passwordField.setPromptText(prompt);
 		passwordField.setStyle(
-				"-fx-background-radius: 5;" + "-fx-padding: 10px;" + "-fx-max-width: 300px;" + "-fx-min-width: 200px;");
+				"-fx-background-radius: 5;" + "-fx-padding: 10px;" + "-fx-max-width: 250px;" + "-fx-min-width: 200px;");
 		return passwordField;
 	}
 
-	private void styleComboBox(ComboBox<String> comboBox) {
+	private ComboBox<String> createResponsiveComboBox() {
+		ComboBox<String> comboBox = new ComboBox<>();
+		comboBox.setPromptText("Select your role");
+		comboBox.getItems().addAll("Customer", "Seller");
 		comboBox.setStyle(
-				"-fx-background-radius: 5;" + "-fx-padding: 10px;" + "-fx-max-width: 300px;" + "-fx-min-width: 200px;");
-		comboBox.setMaxWidth(Double.MAX_VALUE);
+				"-fx-background-radius: 5;" + "-fx-padding: 10px;" + "-fx-max-width: 250px;" + "-fx-min-width: 200px;");
+		return comboBox;
 	}
 
 	private Button createResponsiveButton(String text) {
 		Button button = new Button(text);
 		button.setStyle("-fx-background-color: #2ecc71;" + "-fx-text-fill: white;" + "-fx-background-radius: 5;"
 				+ "-fx-padding: 10px 20px;" + "-fx-font-weight: bold;" + "-fx-max-width: 300px;"
-				+ "-fx-min-width: 200px;");
+				+ "-fx-min-width: 250px;");
 
 		// Hover effects
 		button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: #27ae60;" + "-fx-text-fill: white;"
 				+ "-fx-background-radius: 5;" + "-fx-padding: 10px 20px;" + "-fx-font-weight: bold;"
-				+ "-fx-max-width: 300px;" + "-fx-min-width: 200px;"));
+				+ "-fx-max-width: 300px;" + "-fx-min-width: 250px;"));
 
 		button.setOnMouseExited(e -> button.setStyle("-fx-background-color: #2ecc71;" + "-fx-text-fill: white;"
 				+ "-fx-background-radius: 5;" + "-fx-padding: 10px 20px;" + "-fx-font-weight: bold;"
-				+ "-fx-max-width: 300px;" + "-fx-min-width: 200px;"));
+				+ "-fx-max-width: 300px;" + "-fx-min-width: 250px;"));
 
 		return button;
 	}
@@ -140,17 +137,37 @@ public class RegisterView {
 		registerForm.setAlignment(Pos.CENTER);
 		registerForm.setStyle("-fx-background-color: white;" + "-fx-background-radius: 10;" + "-fx-padding: 30px;");
 		registerForm.setEffect(dropShadow);
-		registerForm.setMaxWidth(400); // Limit max width
+		registerForm.setMaxWidth(600); // Increased width for two columns
 		VBox.setVgrow(registerForm, Priority.ALWAYS);
 
-		// Add components to register form
-		registerForm.getChildren().addAll(shopNameLabel, welcomeLabel,
-				createLabeledField("Username", usernameField, usernameValidationLabel),
-				createLabeledField("Password", passwordField, passwordValidationLabel),
-				createLabeledField("Confirm Password", confirmPasswordField, passwordMatchLabel),
-				createLabeledField("Phone Number", phoneNumberField, phoneValidationLabel),
-				createLabeledField("Address", addressField, addressValidationLabel),
-				createLabeledField("Role", roleComboBox, null), registerButton, loginLink);
+		// Create GridPane for two-column layout
+		GridPane formGrid = new GridPane();
+		formGrid.setHgap(20);
+		formGrid.setVgap(10);
+		formGrid.setAlignment(Pos.CENTER);
+
+		// First Column
+		formGrid.add(createLabeledField("Username", usernameField, usernameValidationLabel), 0, 0);
+		formGrid.add(createLabeledField("Password", passwordField, passwordValidationLabel), 0, 1);
+		formGrid.add(createLabeledField("Phone Number", phoneNumberField, phoneValidationLabel), 0, 2);
+
+		// Second Column
+		formGrid.add(createLabeledField("Role", roleComboBox, null), 1, 0);
+		formGrid.add(createLabeledField("Confirm Password", confirmPasswordField, passwordMatchLabel), 1, 1);
+		formGrid.add(createLabeledField("Address", addressField, addressValidationLabel), 1, 2);
+
+		// Add shop name and welcome labels
+		VBox headerBox = new VBox(10);
+		headerBox.setAlignment(Pos.CENTER);
+		headerBox.getChildren().addAll(shopNameLabel, welcomeLabel);
+
+		// Add register button and login link
+		VBox footerBox = new VBox(10);
+		footerBox.setAlignment(Pos.CENTER);
+		footerBox.getChildren().addAll(registerButton, loginLink);
+
+		// Combine all components
+		registerForm.getChildren().addAll(headerBox, formGrid, footerBox);
 
 		// Add register form to main layout
 		mainLayout.getChildren().add(registerForm);
@@ -158,7 +175,7 @@ public class RegisterView {
 		// Create scene with responsive sizing
 		Scene scene = new Scene(mainLayout);
 		scene.widthProperty().addListener((obs, oldVal, newVal) -> {
-			registerForm.setMaxWidth(Math.min(newVal.doubleValue() * 0.8, 400));
+			registerForm.setMaxWidth(Math.min(newVal.doubleValue() * 0.9, 600));
 		});
 
 		return scene;
