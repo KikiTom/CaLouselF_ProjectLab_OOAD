@@ -1,17 +1,21 @@
 package Controller;  
 
-import javafx.stage.Stage;  
+import javafx.stage.Stage;
+import Service.UserService;
 import View.HomeView;  
-import View.LoginView;  
+import View.LoginView;
+import View.popupView;  
 
-public class HomeController {  
+public class HomeController { 
+	private UserService userService;
     private HomeView homeView;  
-    private Stage primaryStage;  
+    private Stage currentStage;  
     private String username;  
 
-    public HomeController(Stage primaryStage, String username) {  
-        this.primaryStage = primaryStage;  
-        this.username = username;  
+    public HomeController(UserService userService,Stage currentStage, String username) {  
+        this.currentStage = currentStage;  
+        this.username = username;
+        this.userService = userService;
         this.homeView = new HomeView(username);  
         
         setupMenuButtons();  
@@ -37,14 +41,29 @@ public class HomeController {
 
     private void setupLogoutButton() {  
         homeView.getLogoutButton().setOnAction(e -> {  
-            // Kembali ke halaman login  
-            LoginView loginView = new LoginView();  
-            primaryStage.setScene(loginView.createLoginScene(primaryStage));  
+        	if(popupView.getInstance().showConfirmationPopup("Logout", "Are you sure want Logout?")) {
+        		closeHomeScene();
+        		showLoginScene();
+        	}
         });  
-    }  
+    }
+    
+    private void showLoginScene() {
+        LoginView loginView = new LoginView();
+        Stage loginStage = new Stage();
+        LoginController loginController = new LoginController(userService, loginView, loginStage);
+        loginStage.setScene(loginView.createLoginScene(loginStage));
+        loginStage.show();
+    }
 
     public void showHomeScene() {  
-        primaryStage.setScene(homeView.createHomeScene(primaryStage));  
-        primaryStage.show();  
+    	currentStage.setScene(homeView.createHomeScene(currentStage));  
+    	currentStage.show();  
     }  
+    
+    private void closeHomeScene() {
+        if (currentStage != null) {  
+            currentStage.close();  
+        }
+    }
 }

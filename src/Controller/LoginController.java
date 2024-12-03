@@ -2,6 +2,7 @@ package Controller;
 
 import javafx.stage.Stage;
 import Service.UserService;
+import View.HomeView;
 import View.LoginView;
 import View.RegisterView;
 import View.popupView;
@@ -25,16 +26,10 @@ public class LoginController {
     
     private void setupregisterHyperlink() {
         loginView.getRegisterLink().setOnAction(event -> {
-        	stageClose();
+        	closeloginScene();
         	showRegisterScene();
             System.out.println("Pindah ke Register Scene...");
         });
-    }
-    
-    private void stageClose() {
-    	if (currentStage != null) {
-    		currentStage.close();
-    	}
     }
 
     private void handleLogin() {
@@ -43,9 +38,9 @@ public class LoginController {
 
         if (userService.loginUser(username, password)) {
         	popupView.getInstance().showSuccessPopup("Login Success","Welcome," + username);
-            HomeController homeController = new HomeController(currentStage, username);
-            stageClose();
-            homeController.showHomeScene(); 
+        	System.out.println("Pindah ke Home Scene...");
+        	closeloginScene();
+        	showHomepageScene(username);
         } else {
         	popupView.getInstance().showErrorPopup("Login Failed", "Invalid username or password.");
         }
@@ -56,6 +51,12 @@ public class LoginController {
         primaryStage.show();
     }
     
+    private void closeloginScene() {
+    	if (currentStage != null) {
+    		currentStage.close();
+    	}
+    }
+    
     private void showRegisterScene() {
         // Membuat dan menampilkan RegisterView
     	RegisterView registerView = new RegisterView();  
@@ -63,5 +64,13 @@ public class LoginController {
     	RegisterController registerController = new RegisterController(userService, registerView, registerStage);  
     	registerStage.setScene(registerView.createRegisterScene(registerStage));  
     	registerStage.show(); 
+    }
+    
+    private void showHomepageScene(String username) {
+    	HomeView homeView = new HomeView(username);
+    	Stage HomeStage = new Stage();
+    	HomeController homeControlller = new HomeController(userService, HomeStage, username);
+    	HomeStage.setScene(homeView.createHomeScene(HomeStage));
+    	HomeStage.show();
     }
 }

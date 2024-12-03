@@ -17,10 +17,7 @@ import javafx.stage.StageStyle;
 public class popupView {
     
     private static popupView instance;
-
-   
     private popupView() {}
-
     
     public static synchronized popupView getInstance() {
         if (instance == null) {

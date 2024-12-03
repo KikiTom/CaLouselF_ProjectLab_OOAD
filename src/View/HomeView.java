@@ -148,4 +148,5 @@ public class HomeView {
     public Button getLogoutButton() {  
         return logoutButton;  
     }  
+    
 }
