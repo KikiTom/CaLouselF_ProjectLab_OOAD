@@ -1,18 +1,16 @@
 package Model;
 
-import java.util.List;
 
 public class WishList {
 	private int id;
-	List<Item> itemList;
-	public WishList(List<Item> itemList) {
-		super();
-		this.itemList = itemList;
+	private int userId;
+	private Item item;
+	public WishList() {
+
 	}
-	public WishList(int id, List<Item> itemList) {
+	public WishList(Item item) {
 		super();
-		this.id = id;
-		this.itemList = itemList;
+		this.setItem(item);
 	}
 	public int getId() {
 		return id;
@@ -20,12 +18,17 @@ public class WishList {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public List<Item> getItemList() {
-		return itemList;
+	public Item getItem() {
+		return item;
 	}
-	public void setItemList(List<Item> itemList) {
-		this.itemList = itemList;
+	public void setItem(Item item) {
+		this.item = item;
 	}
-	
+	public int getUserId() {
+		return userId;
+	}
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
 	
 }

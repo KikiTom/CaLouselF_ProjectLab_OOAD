@@ -61,6 +61,7 @@ public class OfferRepository extends RepositoryInheritClass implements GetAll<Of
                 offer.setUserId(userId);
                 offer.setItemId(itemId);
                 offer.setAmount(amount);
+                offer.setAccepted(isAccepted);
             }
             return offer;
             
@@ -100,7 +101,35 @@ public class OfferRepository extends RepositoryInheritClass implements GetAll<Of
 		return offerList;
 	}
 	
-
+	public List<Offer> getOfferByItemId(int itemId) {
+		List<Offer> offerList = new ArrayList<>();
+		
+		try (Connection connection = database.getConnection()) {
+            String query = "SELECT * FROM offers WHERE ItemId = ?";
+           
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setInt(1, itemId);
+            ResultSet rs = stmt.executeQuery();
+            
+            while(rs.next()) {
+            	int id = rs.getInt("Id");    
+            	int userId = rs.getInt("UserId");
+                int amount = rs.getInt("Amount");
+                Boolean isAccepted = rs.getBoolean("IsAccepted");
+               
+                Offer offer = new Offer(userId,itemId,amount);
+                offer.setAccepted(isAccepted);
+                offer.setId(id);
+                offerList.add(offer);
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+		return offerList;
+	}
+	
 	@Override
 	public boolean update(int id, Offer entity) {
 		try (Connection connection = database.getConnection()) {

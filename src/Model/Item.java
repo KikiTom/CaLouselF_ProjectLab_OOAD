@@ -2,13 +2,13 @@ package Model;
 
 public class Item {
 	private int id;
-	private int userId;
 	private String name;
-	private String category;
 	private String size;
+	private int price;
+	private String category;
 	private String status;
 	private Boolean isAccepted;
-	private int price;
+	private int userId;
 	public Item() {}
 	public Item(String name, Boolean isAccepted, String status,String category, String size, int price, int userId) {
 		super();

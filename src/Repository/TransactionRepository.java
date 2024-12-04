@@ -24,7 +24,7 @@ public class TransactionRepository extends RepositoryInheritClass implements Get
             String query = "INSERT INTO items (UserId, ItemId) VALUES (?, ?)";
             PreparedStatement stmt = connection.prepareStatement(query);
             stmt.setInt(1, entity.getUserId());
-            stmt.setInt(2, entity.getItemId());
+            stmt.setInt(2, entity.getItem().getId());
             
             int rowsInserted = stmt.executeUpdate();
             return rowsInserted > 0;
@@ -37,9 +37,13 @@ public class TransactionRepository extends RepositoryInheritClass implements Get
 	@Override
 	public Transaction getById(int id) {
 		try (Connection connection = database.getConnection()) {
-            String query = "SELECT * FROM transactions Where Id = ?";
+			String query = ""
+            		+ "SELECT transaction.Id, transaction.ItemId, items.Name, items.Size, items.Price, items.Category, items.Status, items.IsAccepted "
+            		+ "FROM transactions JOIN items ON transaction.ItemId = items.Id "
+            		+ "Where transaction.Id = ?";
             
             Transaction transaction = new Transaction();
+            Item item = new Item();
             
             PreparedStatement stmt = connection.prepareStatement(query);
             stmt.setInt(1, id);
@@ -48,11 +52,26 @@ public class TransactionRepository extends RepositoryInheritClass implements Get
             if(rs.next()) {
         	    
             	int userId = rs.getInt("UserId");
-            	int itemId = rs.getInt("ItemId");           	
-                               
+            	int itemId = rs.getInt("ItemId");
+            	String name = rs.getString("Name");
+            	String size = rs.getString("Size");
+            	int price = rs.getInt("Price");
+            	String category = rs.getString("Name");
+            	String status = rs.getString("Status");
+            	Boolean isAccepted = rs.getBoolean("IsAccepted");
+            	
                 transaction.setId(id);
                 transaction.setUserId(userId);
-                transaction.setItemId(itemId);
+                
+                item.setId(itemId);
+                item.setName(name);
+                item.setSize(size);
+                item.setCategory(category);
+                item.setPrice(price);
+                item.setStatus(status);
+                item.setIsAccepted(isAccepted);
+                
+                transaction.setItem(item);
             }
             return transaction;
         } catch (SQLException e) {
@@ -65,25 +84,42 @@ public class TransactionRepository extends RepositoryInheritClass implements Get
 		List<Transaction> transactionList = new ArrayList<>();
 		
 		try (Connection connection = database.getConnection()) {
-            String query = "SELECT * FROM transactions JOIN items ON transactions.itemId = items.Id Where transactions.userId = ?";
-            
-            
-            
+            String query = ""
+            		+ "SELECT transaction.Id, items.Id, items.Name, items.Size, items.Price, items.Category, items.Status, items.IsAccepted "
+            		+ "FROM transactions JOIN items ON transaction.ItemId = items.Id "
+            		+ "Where transaction.UserId = ?";
+                  
             PreparedStatement stmt = connection.prepareStatement(query);
             stmt.setInt(1, Id);
             ResultSet rs = stmt.executeQuery();
             
             while(rs.next()) {
             	Transaction transaction = new Transaction();
+            	Item item = new Item();
             	
-            	int id = rs.getInt("Id");    
+            	int id = rs.getInt("Id");
             	int userId = rs.getInt("UserId");
-            	int itemId = rs.getInt("UserId");
-            	//String status = rs.getString("Status");
-                               
+            	int itemId = rs.getInt("ItemId");
+            	String name = rs.getString("Name");
+            	String size = rs.getString("Size");
+            	int price = rs.getInt("Price");
+            	String category = rs.getString("Name");
+            	String status = rs.getString("Status");
+            	Boolean isAccepted = rs.getBoolean("IsAccepted");
+            	
                 transaction.setId(id);
                 transaction.setUserId(userId);
-                transaction.setUserId(itemId);
+                
+                item.setId(itemId);
+                item.setName(name);
+                item.setSize(size);
+                item.setCategory(category);
+                item.setPrice(price);
+                item.setStatus(status);
+                item.setIsAccepted(isAccepted);
+                
+                transaction.setItem(item);
+                
                 transactionList.add(transaction);
             }
             

@@ -43,7 +43,5 @@ public class Offer {
 	}
 	public void setAccepted(boolean isAccepted) {
 		this.isAccepted = isAccepted;
-	}
-	
-	
+	}		
 }

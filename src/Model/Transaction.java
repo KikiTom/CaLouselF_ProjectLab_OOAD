@@ -4,12 +4,12 @@ package Model;
 public class Transaction {
 	private int id;
 	private int userId;
-	private int itemId;
+	private Item item;
 	public Transaction() {}
-	public Transaction(int userId,int itemId) {
+	public Transaction(int userId, Item item) {
 		super();
 		this.setUserId(userId);
-		this.setItemId(itemId);
+		this.setItem(item);
 	}
 	public int getId() {
 		return id;
@@ -23,11 +23,10 @@ public class Transaction {
 	public void setUserId(int userId) {
 		this.userId = userId;
 	}
-	public int getItemId() {
-		return itemId;
+	public Item getItem() {
+		return item;
 	}
-	public void setItemId(int itemId) {
-		this.itemId = itemId;
+	public void setItem(Item item) {
+		this.item = item;
 	}
-
 }
