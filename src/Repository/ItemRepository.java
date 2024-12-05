@@ -8,13 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Model.Item;
+import Repository.RepositoryInterface.*;
 
-public class ItemRepository implements CRUDInterface<Item>{
-	
-	private Database database;
+public class ItemRepository extends RepositoryInheritClass implements GetAll<Item>, GetById<Item>, Create<Item>, Update<Item>, Delete<Item>{
 
     public ItemRepository(Database database) {
-        this.database = database;
+        super(database);
     }
 	
 	@Override
@@ -127,7 +126,22 @@ public class ItemRepository implements CRUDInterface<Item>{
 		    e.printStackTrace();
 		    return false;
 		}
-
+	}
+	
+	public boolean UpdateStatus(int id, String status) {
+		try (Connection connection = database.getConnection()) {
+		    String query = "UPDATE items SET Status = ? WHERE Id = ?";
+		    PreparedStatement stmt = connection.prepareStatement(query);
+		    
+		    stmt.setString(1, status);
+		    stmt.setInt(2, id);
+		    
+		    int rowsUpdated = stmt.executeUpdate();
+		    return rowsUpdated > 0;
+		} catch (SQLException e) {
+		    e.printStackTrace();
+		    return false;
+		}
 	}
 	
 	public boolean UpdateAccepted(int id) {
@@ -151,7 +165,7 @@ public class ItemRepository implements CRUDInterface<Item>{
 		try (Connection connection = database.getConnection()) {
 		    String query = "DELETE items WHERE Id = ?";
 		    PreparedStatement stmt = connection.prepareStatement(query);
-
+		    
 		    stmt.setInt(1, id);
 		    
 		    int rowsDeleted = stmt.executeUpdate();
