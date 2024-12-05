@@ -3,7 +3,6 @@ package Main;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import Controller.LoginController;
-import Controller.RegisterController;
 import Service.UserService;
 import Service.UserServiceImpl;
 import Repository.Database;
@@ -28,7 +27,6 @@ public class Main extends Application {
         LoginController loginController = new LoginController(userService, loginView, primaryStage);
 
         // Show the Login scene initially
-       primaryStage.setResizable(false);
        loginController.showLoginScene(primaryStage);
     }
 

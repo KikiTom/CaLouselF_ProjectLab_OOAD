@@ -5,8 +5,7 @@ import View.SellerHomeView;
 import View.LoginView;  
 import View.popupView;  
 import javafx.stage.Stage;
-import javafx.scene.control.Button;
-import javafx.scene.image.Image;  
+import javafx.scene.control.Button;  
 
 public class SellerHomeController {  
     private UserService userService;  
