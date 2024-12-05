@@ -215,7 +215,7 @@ public class RegisterController {
         String digitsOnly = phoneNumber.substring(3);  
         
         if (digitsOnly.length() != 9) {  
-            return "Phone number must have 10 digits after +62.";  
+            return "Phone number must have 9 digits after +62.";  
         }  
         
         for (char c : digitsOnly.toCharArray()) {  
