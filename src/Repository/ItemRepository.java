@@ -49,6 +49,38 @@ public class ItemRepository extends RepositoryInheritClass implements GetAll<Ite
 		return itemList;
 	}
 
+	public List<Item> getByUserId(int userId){
+		List<Item> itemList = new ArrayList<>();
+		
+		try (Connection connection = database.getConnection()) {
+            String query = "SELECT * FROM items WHERE UserId = ?";
+           
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+            
+            while(rs.next()) {
+            	int id = rs.getInt("Id");    
+                String name = rs.getString("Name"); 
+                String size = rs.getString("Size");              
+                int price = rs.getInt("Price");
+                String status = rs.getString("Status");
+                String category = rs.getString("Category");
+                Boolean isAccepted = rs.getBoolean("IsAccepted");
+                
+                // Create a new Item object and add it to the list
+                Item item = new Item(name,isAccepted,status,category,size,price,userId);
+                item.setId(id);
+                itemList.add(item);
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+		return itemList;
+	}
+	
 	@Override
 	public Item getById(int id) {
 		Item item = new Item();
