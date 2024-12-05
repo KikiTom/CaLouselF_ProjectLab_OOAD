@@ -5,11 +5,11 @@ import javafx.stage.Stage;
 import Controller.LoginController;
 import Service.UserService;
 import Service.UserServiceImpl;
+import TestView.testing;
 import Repository.Database;
 import Repository.UserRepository;
 import Repository.UserRepositoryimpl;
 import View.LoginView;
-import View.RegisterView;
 
 public class Main extends Application {
 
@@ -21,13 +21,13 @@ public class Main extends Application {
         UserService userService = new UserServiceImpl(userRepository);
 
         LoginView loginView = new LoginView();
-        RegisterView registerView = new RegisterView();
 
         // Initialize controllers
         LoginController loginController = new LoginController(userService, loginView, primaryStage);
 
         // Show the Login scene initially
-       loginController.showLoginScene(primaryStage);
+//       loginController.showLoginScene(primaryStage);
+        testing testing = new testing(primaryStage);
     }
 
     public static void main(String[] args) {
