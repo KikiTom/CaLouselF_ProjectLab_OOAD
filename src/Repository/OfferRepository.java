@@ -12,9 +12,8 @@ import Model.Offer;
 import Repository.RepositoryInterface.GetAll;
 import Repository.RepositoryInterface.GetById;
 import Repository.RepositoryInterface.Create;
-import Repository.RepositoryInterface.Update;
 
-public class OfferRepository extends RepositoryInheritClass implements GetAll<Offer>, GetById<Offer>, Create<Offer>, Update<Offer>{
+public class OfferRepository extends RepositoryInheritClass implements GetAll<Offer>, GetById<Offer>, Create<Offer> {
 	private Database database;
 
     public OfferRepository(Database database) {
@@ -24,12 +23,13 @@ public class OfferRepository extends RepositoryInheritClass implements GetAll<Of
 	@Override
 	public boolean create(Offer entity) {
 		try (Connection connection = database.getConnection()) {
-            String query = "INSERT INTO items (UserId, ItemId, Amount, IsAccepted) VALUES (?, ?, ?, ?)";
+            String query = "INSERT INTO items (UserId, ItemId, Amount, Status, IsAccepted) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement stmt = connection.prepareStatement(query);
             stmt.setInt(1, entity.getUserId());
             stmt.setInt(2, entity.getItemId());
             stmt.setInt(3, entity.getAmount());
-            stmt.setBoolean(4, entity.isAccepted());
+            stmt.setString(4, entity.getStatus());
+            stmt.setBoolean(5, entity.isAccepted());
             
             int rowsInserted = stmt.executeUpdate();
             return rowsInserted > 0;
@@ -55,12 +55,14 @@ public class OfferRepository extends RepositoryInheritClass implements GetAll<Of
             	int userId = rs.getInt("UserId");
             	int itemId = rs.getInt("ItemId");
                 int amount = rs.getInt("Amount");
+                String status = rs.getString("Status");
                 Boolean isAccepted = rs.getBoolean("IsAccepted");
                                
                 offer.setId(id);
                 offer.setUserId(userId);
                 offer.setItemId(itemId);
                 offer.setAmount(amount);
+                offer.setStatus(status);
                 offer.setAccepted(isAccepted);
             }
             return offer;
@@ -86,9 +88,10 @@ public class OfferRepository extends RepositoryInheritClass implements GetAll<Of
             	int userId = rs.getInt("UserId");
             	int itemId = rs.getInt("ItemId");
                 int amount = rs.getInt("Amount");
+                String status = rs.getString("Status");
                 Boolean isAccepted = rs.getBoolean("IsAccepted");
                
-                Offer offer = new Offer(userId,itemId,amount);
+                Offer offer = new Offer(userId,itemId,amount,status);
                 offer.setAccepted(isAccepted);
                 offer.setId(id);
                 offerList.add(offer);
@@ -115,9 +118,10 @@ public class OfferRepository extends RepositoryInheritClass implements GetAll<Of
             	int id = rs.getInt("Id");    
             	int userId = rs.getInt("UserId");
                 int amount = rs.getInt("Amount");
+                String status = rs.getString("Status");
                 Boolean isAccepted = rs.getBoolean("IsAccepted");
                
-                Offer offer = new Offer(userId,itemId,amount);
+                Offer offer = new Offer(userId,itemId,amount,status);
                 offer.setAccepted(isAccepted);
                 offer.setId(id);
                 offerList.add(offer);
@@ -130,13 +134,29 @@ public class OfferRepository extends RepositoryInheritClass implements GetAll<Of
 		return offerList;
 	}
 	
-	@Override
-	public boolean update(int id, Offer entity) {
+	public boolean updateAcception(int id) {
 		try (Connection connection = database.getConnection()) {
             String query = "UPDATE offers SET IsAccepted = ? Where Id = ?";
            
             PreparedStatement stmt = connection.prepareStatement(query);
             stmt.setBoolean(1, true);
+            stmt.setInt(2, id);
+            
+            int rowsUpdated = stmt.executeUpdate();
+		    return rowsUpdated > 0;
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+	}
+	
+	public boolean updateStatus(int id, String status) {
+		try (Connection connection = database.getConnection()) {
+            String query = "UPDATE offers SET Status = ? Where Id = ?";
+           
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setString(1, status);
             stmt.setInt(2, id);
             
             int rowsUpdated = stmt.executeUpdate();

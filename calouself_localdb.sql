@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 04, 2024 at 02:03 PM
+-- Generation Time: Dec 06, 2024 at 03:15 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.24
 
@@ -49,7 +49,8 @@ CREATE TABLE `offers` (
   `UserId` int(11) DEFAULT NULL,
   `ItemId` int(11) DEFAULT NULL,
   `Amount` int(11) NOT NULL,
-  `IsAccepted` tinyint(1) NOT NULL
+  `IsAccepted` tinyint(1) NOT NULL,
+  `Status` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------

@@ -81,7 +81,7 @@ public class TransactionRepository extends RepositoryInheritClass implements Get
 	}
 
 	public List<Transaction> getByItemId(int itemId){
-List<Transaction> transactionList = new ArrayList<>();
+		List<Transaction> transactionList = new ArrayList<>();
 		
 		try (Connection connection = database.getConnection()) {
             String query = ""
