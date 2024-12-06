@@ -1,5 +1,6 @@
 package Controller;
 
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -62,83 +63,106 @@ public class RegisterController {
         PasswordField confirmPasswordField = registerView.getConfirmPasswordField();  
         TextField phoneNumberField = registerView.getPhoneNumberField();  
         TextField addressField = registerView.getAddressField();  
+        ComboBox<String> roleComboBox = registerView.getRoleComboBox();  
 
+        // Listener untuk username  
         usernameField.textProperty().addListener((observable, oldValue, newValue) -> {  
-            if (validateUsername(newValue) != null) {  
-                String label = validateUsername(newValue);  
-                usernameValidationLabel.setText(label);  
-                updateRegisterButtonState();  
-                return;  
+            String validationMessage = validateUsername(newValue);  
+            if (validationMessage != null) {  
+                usernameValidationLabel.setText(validationMessage);  
+            } else {  
+                usernameValidationLabel.setText("");  
             }  
-            
-            newValue = newValue.trim();  
-            
-            usernameValidationLabel.setText("");  
             updateRegisterButtonState();  
         });  
 
+        // Listener untuk password  
         passwordField.textProperty().addListener((observable, oldValue, newValue) -> {  
-            if (validatePassword(newValue) != null) {  
-                String label = validatePassword(newValue);  
-                passwordValidationLabel.setText(label);  
-                updateRegisterButtonState();  
-                return;  
+            String validationMessage = validatePassword(newValue);  
+            if (validationMessage != null) {  
+                passwordValidationLabel.setText(validationMessage);  
+            } else {  
+                passwordValidationLabel.setText("");  
             }  
-            
-            newValue = newValue.trim();  
-            
-            passwordValidationLabel.setText("");  
+            validatePasswords();  
             updateRegisterButtonState();  
         });  
 
-        phoneNumberField.textProperty().addListener((observable, oldValue, newValue) -> {  
-            if (validatePhoneNumber(newValue) != null) {  
-                String label = validatePhoneNumber(newValue);  
-                phoneValidationLabel.setText(label);  
-                updateRegisterButtonState();  
-                return;  
-            }  
-            
-            newValue = newValue.trim();  
-            
-            phoneValidationLabel.setText("");  
-            updateRegisterButtonState();  
-        });  
-
-        addressField.textProperty().addListener((observable, oldValue, newValue) -> {  
-            if (validateAddress(newValue) != null) {  
-                String label = validateAddress(newValue);  
-                addressValidationLabel.setText(label);  
-                updateRegisterButtonState();  
-                return;  
-            }  
-            
-            newValue = newValue.trim();  
-            
-            addressValidationLabel.setText("");  
-            updateRegisterButtonState();  
-        });  
-
+        // Listener untuk konfirmasi password  
         confirmPasswordField.textProperty().addListener((observable, oldValue, newValue) -> {  
             validatePasswords();  
+            updateRegisterButtonState();  
         });  
 
-        passwordField.textProperty().addListener((observable, oldValue, newValue) -> {  
-            validatePasswords();  
+        // Listener untuk nomor telepon  
+        phoneNumberField.textProperty().addListener((observable, oldValue, newValue) -> {  
+            String validationMessage = validatePhoneNumber(newValue);  
+            if (validationMessage != null) {  
+                phoneValidationLabel.setText(validationMessage);  
+            } else {  
+                phoneValidationLabel.setText("");  
+            }  
+            updateRegisterButtonState();  
+        });  
+
+        // Listener untuk alamat  
+        addressField.textProperty().addListener((observable, oldValue, newValue) -> {  
+            String validationMessage = validateAddress(newValue);  
+            if (validationMessage != null) {  
+                addressValidationLabel.setText(validationMessage);  
+            } else {  
+                addressValidationLabel.setText("");  
+            }  
+            updateRegisterButtonState();  
+        });  
+
+        // Listener untuk role  
+        roleComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {  
+            updateRegisterButtonState();  
         });  
     }  
 
+    private void validatePasswords() {  
+        String password = registerView.getPasswordField().getText();  
+        String confirmPassword = registerView.getConfirmPasswordField().getText();  
+        
+        if (!password.isEmpty() && !confirmPassword.isEmpty()) {  
+            if (!password.equals(confirmPassword)) {  
+            	passwordMatchLabel.setText("Passwords do not match");  
+            	passwordMatchLabel.setStyle("-fx-text-fill: red;"); // Tetap mempertahankan style  
+            } else {  
+            	passwordMatchLabel.setText("Passwords match");  
+            	passwordMatchLabel.setStyle("-fx-text-fill: green;"); // Tambahkan style hijau saat cocok  
+            }  
+        } else {  
+            // Jika salah satu password kosong, tetap tampilkan label kosong  
+        	passwordMatchLabel.setText("");  
+        	passwordMatchLabel.setStyle(""); // Kembalikan style default  
+        }  
+    }  
+
     private void updateRegisterButtonState() {  
-        boolean isUsernameValid = usernameValidationLabel.getText().isEmpty();  
-        boolean isPasswordValid = passwordValidationLabel.getText().isEmpty();  
-        boolean isPhoneValid = phoneValidationLabel.getText().isEmpty();  
-        boolean isAddressValid = addressValidationLabel.getText().isEmpty();  
+        // Validasi setiap field  
+        boolean isUsernameValid = usernameValidationLabel.getText().isEmpty()   
+                                   && !registerView.getUsernameField().getText().trim().isEmpty();  
+        
+        boolean isPasswordValid = passwordValidationLabel.getText().isEmpty()   
+                                   && !registerView.getPasswordField().getText().trim().isEmpty();  
+        
+        boolean isPhoneValid = phoneValidationLabel.getText().isEmpty()   
+                                && !registerView.getPhoneNumberField().getText().trim().isEmpty();  
+        
+        boolean isAddressValid = addressValidationLabel.getText().isEmpty()   
+                                  && !registerView.getAddressField().getText().trim().isEmpty();  
         
         boolean arePasswordsMatching = !registerView.getPasswordField().getText().isEmpty()  
-                                        && registerView.getPasswordField().getText().equals(registerView.getConfirmPasswordField().getText());  
+                                        && registerView.getPasswordField().getText().equals(  
+                                            registerView.getConfirmPasswordField().getText()  
+                                        );  
         
         boolean isRoleSelected = registerView.getRoleComboBox().getValue() != null;  
 
+        // Aktifkan tombol register hanya jika semua kondisi terpenuhi  
         registerView.getRegisterButton().setDisable(!(  
             isUsernameValid &&  
             isPasswordValid &&  
@@ -147,25 +171,9 @@ public class RegisterController {
             arePasswordsMatching &&  
             isRoleSelected  
         ));  
-    }  
-
-    private void validatePasswords() {  
-        String password = registerView.getPasswordField().getText();  
-        String confirmPassword = registerView.getConfirmPasswordField().getText();  
-
-        if (password.isEmpty() && confirmPassword.isEmpty()) {  
-            passwordMatchLabel.setText("");  
-            passwordMatchLabel.setStyle("");  
-        } else if (password.equals(confirmPassword)) {  
-            passwordMatchLabel.setText("Passwords match ✓");  
-            passwordMatchLabel.setStyle("-fx-text-fill: green;");  
-        } else {  
-            passwordMatchLabel.setText("Passwords do not match ✗");  
-            passwordMatchLabel.setStyle("-fx-text-fill: red;");  
-        }  
-        
-        updateRegisterButtonState();  
     }
+    
+    
     
     // validate area
     private String validateUsername(String username) {  

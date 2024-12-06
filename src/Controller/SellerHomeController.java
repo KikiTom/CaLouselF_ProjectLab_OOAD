@@ -1,5 +1,8 @@
 package Controller;  
 
+import Repository.Database;
+import Repository.ItemRepository;
+import Service.ItemService;
 import Service.UserService;  
 import View.SellerHomeView;  
 import View.LoginView;  
@@ -9,7 +12,9 @@ import javafx.scene.control.Button;
 
 public class SellerHomeController {  
     private UserService userService;  
-    private SellerHomeView sellerHomeView;  
+    private SellerHomeView sellerHomeView;
+    private ItemService itemService;  
+    private ItemRepository itemRepository;
     private Stage currentStage;  
     private String username;
     private int useriD;
@@ -21,14 +26,18 @@ public class SellerHomeController {
         this.useriD = userService.getUserID(username);
         this.sellerHomeView = new SellerHomeView(currentStage, username);
         
-        // Setup komponen view  
+        Database database = Database.getInstance(); 
+        itemRepository = new ItemRepository(database); 
+        itemService = new ItemService(itemRepository, userService, sellerHomeView);
+        // Setup komponen view
+        itemService.populateItemRows(username);
         setupComponents();  
     }  
 
     private void setupComponents() {  
         // Setup logout  
         setupLogoutButton();  
-    }  
+    }
 
     private void setupLogoutButton() {  
         try {   

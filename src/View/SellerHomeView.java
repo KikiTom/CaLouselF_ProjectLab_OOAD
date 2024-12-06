@@ -22,7 +22,7 @@ public class SellerHomeView {
 	private StackPane contentArea;
 	private String username;
 
-	public SellerHomeView(Stage primaryStage,String username) {
+	public SellerHomeView(Stage primaryStage, String username) {
 		this.primaryStage = primaryStage;
 		this.username = username;
 		initializeComponents();
@@ -30,14 +30,11 @@ public class SellerHomeView {
 
 	public Scene createSellerHomeScene() {
 		mainLayout = createMainLayout();
-	    mainLayout.setStyle(  
-	            "-fx-background-color: #2C3E50;" +   
-	            "-fx-background-radius: 15px;" +   
-	            "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 0);"  
-	        ); 
+		mainLayout.setStyle("-fx-background-color: #2C3E50;" + "-fx-background-radius: 15px;"
+				+ "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 0);");
 		sellerHomeScene = new Scene(mainLayout, 1200, 700);
 		sellerHomeScene.setFill(Color.TRANSPARENT);
-		
+
 		primaryStage.initStyle(StageStyle.DECORATED);
 
 		makeDraggable(mainLayout, primaryStage);
@@ -145,11 +142,11 @@ public class SellerHomeView {
 		VBox itemsContainer = new VBox(10);
 		itemsContainer.setStyle("-fx-background-color: white;");
 
-		// Create 10 sample items
-		for (int i = 0; i < 10; i++) {
-			HBox item = createItemRow();
-			itemsContainer.getChildren().add(item);
-		}
+		
+		
+		HBox item = createItemRow();
+		itemsContainer.getChildren().add(item);
+		
 
 		scrollPane.setContent(itemsContainer);
 		scrollPane.setPrefHeight(400);
@@ -207,22 +204,6 @@ public class SellerHomeView {
 
 	private Label createStatusLabel(String status) {
 		Label statusLabel = createStandardLabel(status, COLUMN_WIDTHS[5], "#2C3E50");
-
-		switch (status.toLowerCase()) {
-		case "available":
-			statusLabel.setStyle("-fx-text-fill: #2ECC71;" + "-fx-font-size: 12px;" + "-fx-font-weight: bold;");
-			break;
-		case "waiting approval":
-			statusLabel.setStyle("-fx-text-fill: #95A5A6;" + "-fx-font-size: 12px;" + "-fx-font-weight: bold;");
-			break;
-		case "denied":
-			statusLabel.setStyle("-fx-text-fill: #E74C3C;" + "-fx-font-size: 12px;" + "-fx-font-weight: bold;");
-			break;
-		default:
-			statusLabel.setStyle("-fx-text-fill: #95A5A6;" + "-fx-font-size: 12px;" + "-fx-font-weight: bold;"
-					+ "-fx-alignment: center;");
-		}
-
 		return statusLabel;
 	}
 
@@ -257,27 +238,74 @@ public class SellerHomeView {
 		spacer.setPrefWidth(10);
 
 		// Create other labels
-		Label categoryLabel = createCategoryLabel("Clothes");
-		Label nameLabel = createNameLabel("BAJU SUNIB ALA ALAAAAAAAAAAA");
-		Label sizeLabel = createSizeLabel("XXL");
+		Label categoryLabel = createCategoryLabel("");
+		Label nameLabel = createNameLabel("");
+		Label sizeLabel = createSizeLabel("");
 
 		// Price dan Sold Quantity dalam satu VBox
 		VBox priceBox = new VBox(5);
 		priceBox.setAlignment(Pos.CENTER);
-
-		Label priceLabel = createPriceLabel("$10.99");
-
-		// Contoh dengan berbagai kondisi penjualan
-		Label soldQuantityLabel = createSoldQuantityLabel(25); // Sudah terjual
-
+		
+		Label priceLabel = createPriceLabel("");
+		Label soldQuantityLabel = createSoldQuantityLabel(0);
+		
 		priceBox.getChildren().addAll(priceLabel, soldQuantityLabel);
 
-		Label statusLabel = createStatusLabel("Waiting Approval");
+		Label statusLabel = createStatusLabel("");
 
 		// Add components to row
 		itemRow.getChildren().addAll(editLabel, spacer, categoryLabel, nameLabel, sizeLabel, priceBox, statusLabel);
 
 		return itemRow;
+	}
+
+	public void updateItemRowLabels(HBox itemRow, String category, String name, String size, String price,
+			int soldQuantity, String status) {
+		try {
+			// Update category label  
+			Label categoryLabel = (Label) itemRow.getChildren().get(2);
+			categoryLabel.setText(category);
+
+			// Update name label  
+			Label nameLabel = (Label) itemRow.getChildren().get(3);
+			nameLabel.setText(name);
+
+			// Update size label  
+			Label sizeLabel = (Label) itemRow.getChildren().get(4);
+			sizeLabel.setText(size);
+
+			// Update price dan sold quantity  
+			VBox priceBox = (VBox) itemRow.getChildren().get(5);
+			Label priceLabel = (Label) priceBox.getChildren().get(0);
+
+			// Tambahkan $ di depan harga jika belum ada  
+			priceLabel.setText(price.startsWith("Rp.") ? price : "Rp. " + price + ",00");
+
+			Label soldQuantityLabel = (Label) priceBox.getChildren().get(1);
+			soldQuantityLabel = createSoldQuantityLabel(soldQuantity);
+			priceBox.getChildren().set(1, soldQuantityLabel);
+
+			// Update status label  
+	        Label statusLabel = (Label) itemRow.getChildren().get(6);  
+	        statusLabel.setText(status);
+	        switch (status.toLowerCase()) {  
+            case "available":  
+                statusLabel.setStyle("-fx-text-fill: #2ECC71;" + "-fx-font-size: 12px;" + "-fx-font-weight: bold;");  
+                break;  
+            case "waiting approval":  
+                statusLabel.setStyle("-fx-text-fill: #95A5A6;" + "-fx-font-size: 12px;" + "-fx-font-weight: bold;");  
+                break;  
+            case "denied":  
+                statusLabel.setStyle("-fx-text-fill: #E74C3C;" + "-fx-font-size: 12px;" + "-fx-font-weight: bold;");  
+                break;  
+            default:  
+                statusLabel.setStyle("-fx-text-fill: #95A5A6;" + "-fx-font-size: 12px;" + "-fx-font-weight: bold;"  
+                        + "-fx-alignment: center;");  
+	        }
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println("Error updating item row labels: " + e.getMessage());
+		}
 	}
 
 	private HBox createTableFooter() {
@@ -373,20 +401,51 @@ public class SellerHomeView {
 	public StackPane getContentArea() {
 		return contentArea;
 	}
-    public Button getLogoutButton() {    
-        if (sidebarComponent == null) {  
-            System.err.println("Sidebar component is null!");  
-            return null;  
-        }  
 
-        // Dapatkan logout button dari sidebar component  
-        Button logoutButton = sidebarComponent.getLogoutButton();  
-        
-        if (logoutButton == null) {  
-            System.err.println("Logout button from sidebar component is null!");  
-        }  
-        
-        return logoutButton;  
-    } 
-	
+	public Button getLogoutButton() {
+		if (sidebarComponent == null) {
+			System.err.println("Sidebar component is null!");
+			return null;
+		}
+
+		// Dapatkan logout button dari sidebar component
+		Button logoutButton = sidebarComponent.getLogoutButton();
+
+		if (logoutButton == null) {
+			System.err.println("Logout button from sidebar component is null!");
+		}
+
+		return logoutButton;
+	}
+
+	public HBox getcreateItemRow() {
+		return createItemRow();
+	}
+
+	public Label getCategoryLabel(HBox itemRow) {
+		return (Label) itemRow.getChildren().get(2);
+	}
+
+	public Label getNameLabel(HBox itemRow) {
+		return (Label) itemRow.getChildren().get(3);
+	}
+
+	public Label getSizeLabel(HBox itemRow) {
+		return (Label) itemRow.getChildren().get(4);
+	}
+
+	public Label getPriceLabel(HBox itemRow) {
+		VBox priceBox = (VBox) itemRow.getChildren().get(5);
+		return (Label) priceBox.getChildren().get(0);
+	}
+
+	public Label getSoldQuantityLabel(HBox itemRow) {
+		VBox priceBox = (VBox) itemRow.getChildren().get(5);
+		return (Label) priceBox.getChildren().get(1);
+	}
+
+	public Label getStatusLabel(HBox itemRow) {
+		return (Label) itemRow.getChildren().get(6);
+	}
+
 }
