@@ -9,6 +9,7 @@ public interface UserService {
     User getUserByUsername(String username);
     
     // New methods for retrieving user details
+    int getUserID(String username);
     String getUserName(String username);
     String getUserAddress(String username);
     String getUserPhone(String username);

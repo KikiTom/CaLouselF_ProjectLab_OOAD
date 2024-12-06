@@ -98,7 +98,7 @@ public class LoginView {
 		return label;
 	}
 
-	public Scene createLoginScene(Stage primaryStage) {
+	public Scene createLoginScene() {
 		// Main Layout with Responsive Design
 		VBox mainLayout = new VBox(20);
 		mainLayout.setAlignment(Pos.CENTER);

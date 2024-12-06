@@ -49,5 +49,11 @@ public class UserServiceImpl implements UserService {
         User user = getUserByUsername(username);
         return user != null ? user.getRole() : "";
     }
+
+	@Override
+	public int getUserID(String username) {
+		User user = getUserByUsername(username);
+		return user.getId();
+	}
 }
 

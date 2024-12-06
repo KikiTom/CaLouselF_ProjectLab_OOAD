@@ -118,7 +118,7 @@ public class RegisterView {
 		return label;
 	}
 
-	public Scene createRegisterScene(Stage primaryStage) {
+	public Scene createRegisterScene() {
 		// Main Layout with Responsive Design
 		VBox mainLayout = new VBox(20);
 		mainLayout.setAlignment(Pos.CENTER);

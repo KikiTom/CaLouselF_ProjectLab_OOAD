@@ -57,7 +57,7 @@ public class LoginController {
     }
 
     public void showLoginScene(Stage primaryStage) {
-        primaryStage.setScene(loginView.createLoginScene(primaryStage));
+        primaryStage.setScene(loginView.createLoginScene());
         primaryStage.show();
     }
     
@@ -81,16 +81,9 @@ public class LoginController {
         
         // Navigate based on user role  
         if ("Seller".equalsIgnoreCase(userRole)) {  
-            // Load profile image directly   
-            
-            SellerHomeView sellerHomeView = new SellerHomeView(  
-                userService.getUserName(username),  
-                userService.getUserAddress(username),  
-                userService.getUserPhone(username)   
-            );  
-            
-            Stage sellerHomeStage = new Stage();  
-            SellerHomeController sellerHomeController = new SellerHomeController(userService, sellerHomeStage, sellerHomeView, username);  
+        	Stage sellerHomeStage = new Stage();
+        	SellerHomeView sellerHomeView = new SellerHomeView(sellerHomeStage, username); 
+            SellerHomeController sellerHomeController = new SellerHomeController(userService, sellerHomeStage, username);  
             sellerHomeController.showSellerHomeScene(sellerHomeStage);
         } else {  
             // Default Home Page (for other roles or customers)  

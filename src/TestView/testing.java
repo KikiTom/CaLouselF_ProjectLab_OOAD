@@ -356,7 +356,7 @@ public class testing {
 	private Label createStatusLabel(String status) {  
         Label statusLabel = createStandardLabel(status, COLUMN_WIDTHS[5], "#2C3E50");  
         
-        switch (status.toLowerCase()) {  
+        switch (status) {  
             case "Available":  
             	statusLabel.setStyle(  
                         "-fx-text-fill: #2ECC71;" +  
@@ -371,7 +371,7 @@ public class testing {
                         "-fx-font-weight: bold;" 
                     );  
                 break;  
-            case "denied":  
+            case "Denied":  
             	statusLabel.setStyle(  
                         "-fx-text-fill: #E74C3C;" +    
                         "-fx-font-size: 12px;" +  
@@ -453,9 +453,9 @@ public class testing {
 	    Label soldQuantityLabel1 = createSoldQuantityLabel(25);  // Sudah terjual  
 	    Label soldQuantityLabel2 = createSoldQuantityLabel(0);   // Belum terjual  
 	    
-	    priceBox.getChildren().addAll(priceLabel, soldQuantityLabel2);  
+	    priceBox.getChildren().addAll(priceLabel, soldQuantityLabel1);  
 	    
-	    Label statusLabel = createStatusLabel("Waiting Approval");  
+	    Label statusLabel = createStatusLabel("Available");  
 	    
 	    // Add components to row  
 	    itemRow.getChildren().addAll(  

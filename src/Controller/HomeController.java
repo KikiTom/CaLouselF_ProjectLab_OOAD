@@ -52,7 +52,7 @@ public class HomeController {
         LoginView loginView = new LoginView();
         Stage loginStage = new Stage();
         LoginController loginController = new LoginController(userService, loginView, loginStage);
-        loginStage.setScene(loginView.createLoginScene(loginStage));
+        loginStage.setScene(loginView.createLoginScene());
         loginStage.showAndWait();
     }
 

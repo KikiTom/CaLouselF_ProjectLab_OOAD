@@ -273,7 +273,7 @@ public class RegisterController {
     
 
     public void showRegisterScene(Stage primaryStage) {
-        primaryStage.setScene(registerView.createRegisterScene(primaryStage));
+        primaryStage.setScene(registerView.createRegisterScene());
         primaryStage.showAndWait();
     }
     

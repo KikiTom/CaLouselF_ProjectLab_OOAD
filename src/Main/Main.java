@@ -10,6 +10,7 @@ import Repository.Database;
 import Repository.UserRepository;
 import Repository.UserRepositoryimpl;
 import View.LoginView;
+import View.SellerHomeView;
 
 public class Main extends Application {
 
@@ -26,8 +27,12 @@ public class Main extends Application {
         LoginController loginController = new LoginController(userService, loginView, primaryStage);
 
         // Show the Login scene initially
-//       loginController.showLoginScene(primaryStage);
-        testing testing = new testing(primaryStage);
+       loginController.showLoginScene(primaryStage);
+//        testing testing = new testing(primaryStage);
+//        SellerHomeView sellerHomeView = new SellerHomeView(primaryStage);  
+//        primaryStage.setScene(sellerHomeView.createSellerHomeScene());  
+//        
+//        primaryStage.show(); 
     }
 
     public static void main(String[] args) {
