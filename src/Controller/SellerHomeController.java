@@ -128,7 +128,7 @@ public class SellerHomeController {
                 sellerHomeView.getSidebarComponent(),
                 itemService
             );
-            uploadController.showSellerUploadScene(currentStage);
+            uploadController.showView();
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Error navigating to Upload Item view: " + e.getMessage());

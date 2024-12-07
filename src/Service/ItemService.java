@@ -52,14 +52,26 @@ public class ItemService {
      * @param item the item to add
      * @return true if successful, false otherwise
      */
-    public boolean addItem(Item item) {
-        try {
-            return itemRepository.create(item);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("Error adding item: " + e.getMessage());
-            return false;
-        }
+    public boolean uploadItem(int userId, String itemName, String category, String size, double price) {  
+        try {  
+            // Buat objek Item dengan status default  
+            Item newItem = new Item(  
+                itemName,       // name  
+                false,          // isAccepted (default false)  
+                "Waiting Approval", // status  
+                category,       // category  
+                size,           // size  
+                (int) price,    // price (convert double to int)  
+                userId          // userId  
+            );  
+
+            // Gunakan repository untuk menyimpan item  
+            return itemRepository.create(newItem);  
+        } catch (Exception e) {  
+            e.printStackTrace();  
+            System.err.println("Error uploading item: " + e.getMessage());  
+            return false;  
+        }  
     }
     
     /**  
