@@ -14,198 +14,239 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 public class SellerComponentView {
-	private Button[] sidebarButtons;
-	private Button activeButton;
-	private Button logoutButton;
-	private Label profileNameLabel;
+    private Button[] sidebarButtons;
+    private Button activeButton;
+    private Button logoutButton;
+    private Label profileNameLabel;
 
-	public SellerComponentView() {
-	}
+    public SellerComponentView() {
+    }
 
-	public VBox getSidebar(String username) {
-		VBox sidebar = createSidebar(username);
+    public VBox getSidebar(String username, String location) {
+        VBox sidebar = createSidebar(username,location);
 
-		// Pastikan logoutButton diinisialisasi
-		logoutButton = createLogoutButton();
+        // Ensure logoutButton is initialized
+        logoutButton = createLogoutButton();
 
-		// Tambahkan logoutButton ke sidebar
-		sidebar.getChildren().add(logoutButton);
-		VBox.setMargin(logoutButton, new Insets(0, 0, 20, 0));
-		return sidebar;
-	}
+        // Add logoutButton to sidebar
+        sidebar.getChildren().add(logoutButton);
+        VBox.setMargin(logoutButton, new Insets(0, 0, 20, 0));
+        return sidebar;
+    }
 
-	public Button getLogoutButton() {
-		if (logoutButton == null) {
-			System.err.println("Logout button is not initialized!");
-		}
-		return logoutButton;
-	}
+    public Button getLogoutButton() {
+        if (logoutButton == null) {
+            System.err.println("Logout button is not initialized!");
+        }
+        return logoutButton;
+    }
 
-	public void setButtonAction(int index, Runnable action) {
-		if (index >= 0 && index < sidebarButtons.length) {
-			sidebarButtons[index].setOnAction(e -> {
-				setActiveButton(sidebarButtons[index]);
-				action.run();
-			});
-		}
-	}
+    /**
+     * Assigns an action to a sidebar button based on its index.
+     *
+     * @param index  the index of the button
+     * @param action the action to assign
+     */
+    public void setButtonAction(int index, Runnable action) {
+        if (index >= 0 && index < sidebarButtons.length) {
+            sidebarButtons[index].setOnAction(e -> {
+                setActiveButton(sidebarButtons[index]);
+                action.run();
+            });
+        }
+    }
 
-	public void setLogoutAction(Runnable action) {
-		Button logoutButton = createLogoutButton();
-		logoutButton.setOnAction(e -> {
-			System.out.println("Logout clicked");
-			action.run();
-		});
-	}
+    private VBox createSidebar(String username, String location) {
+        VBox sidebar = new VBox(10);
+        sidebar.setStyle("-fx-background-color: #2C3E50;");
+        sidebar.setAlignment(Pos.TOP_CENTER);
+        sidebar.setPrefWidth(250);
 
-	private VBox createSidebar(String username) {
-		VBox sidebar = new VBox(10);
-		sidebar.setStyle("-fx-background-color: #2C3E50;");
-		sidebar.setAlignment(Pos.TOP_CENTER);
-		sidebar.setPrefWidth(250);
+        // Profile Image
+        ImageView profileImage = createProfileImage();
 
-		// Profile Image
-		ImageView profileImage = createProfileImage();
+        // Profile Name
+        Label profileName = createProfileNameLabel(username);
 
-		// Profile Name
-		Label profileName = createProfileNameLabel(username);
+        // Sidebar Buttons
+        String[][] buttonData = { 
+            { "View Items", "file:resources/grid.png" },
+            { "Upload Item", "file:resources/upload.png" }, 
+            { "View Offered Items", "file:resources/email.png" } 
+        };
 
-		// Sidebar Buttons
-		String[][] buttonData = { { "View Items", "file:resources/grid.png" },
-				{ "Upload Item", "file:resources/upload.png" }, { "View Offered Items", "file:resources/email.png" } };
+        VBox buttonContainer = createButtonContainer(buttonData,location);
 
-		VBox buttonContainer = createButtonContainer(buttonData);
+        // Spacer to push logout button to bottom
+        Region spacer = new Region();
+        VBox.setVgrow(spacer, Priority.ALWAYS);
 
-		// Spacer to push logout button to bottom
-		Region spacer = new Region();
-		VBox.setVgrow(spacer, Priority.ALWAYS);
+        sidebar.getChildren().addAll(profileImage, profileName, buttonContainer, spacer);
 
-		sidebar.getChildren().addAll(profileImage, profileName, buttonContainer, spacer);
+        VBox.setMargin(profileImage, new Insets(30, 0, 10, 0));
+        return sidebar;
+    }
 
-		VBox.setMargin(profileImage, new Insets(30, 0, 10, 0));
-		return sidebar;
-	}
+    private ImageView createProfileImage() {
+        Image profileimg = new Image("file:resources/Seller_Image_Profile.png");
+        ImageView profileImage = new ImageView(profileimg);
+        profileImage.setFitHeight(100);
+        profileImage.setFitWidth(100);
+        profileImage.setPreserveRatio(true);
 
-	private ImageView createProfileImage() {
-		Image profileimg = new Image("file:resources/Seller_Image_Profile.png");
-		ImageView profileImage = new ImageView(profileimg);
-		profileImage.setFitHeight(100);
-		profileImage.setFitWidth(100);
-		profileImage.setPreserveRatio(true);
+        // Add circular clip to profile image
+        Circle clip = new Circle(50, 50, 50);
+        profileImage.setClip(clip);
 
-		// Add circular clip to profile image
-		Circle clip = new Circle(50, 50, 50);
-		profileImage.setClip(clip);
+        return profileImage;
+    }
 
-		return profileImage;
-	}
+    private Label createProfileNameLabel(String username) {
+        Label profileName = new Label(username);
+        profileName.setTextFill(Color.WHITE);
+        profileName.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+        return profileName;
+    }
 
-	private Label createProfileNameLabel(String username) {
-		Label profileName = new Label(username);
-		profileName.setTextFill(Color.WHITE);
-		profileName.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
-		return profileName;
-	}
+    private VBox createButtonContainer(String[][] buttonData, String location) {  
+        // Tambahkan null dan length check  
+        if (buttonData == null || buttonData.length == 0) {  
+            System.out.println("Warning: buttonData is null or empty");  
+            return new VBox(); // Return empty VBox  
+        }  
 
-	private VBox createButtonContainer(String[][] buttonData) {
-		VBox buttonContainer = new VBox(10);
-		buttonContainer.setAlignment(Pos.CENTER);
-		buttonContainer.setPadding(new Insets(20, 0, 0, 0));
+        // Null check untuk location  
+        if (location == null) {  
+            location = ""; // Default ke string kosong  
+        }  
 
-		// Initialize buttons array
-		sidebarButtons = new Button[buttonData.length];
+        VBox buttonContainer = new VBox(10);  
+        buttonContainer.setAlignment(Pos.CENTER);  
+        buttonContainer.setPadding(new Insets(20, 0, 0, 0));  
 
-		for (int i = 0; i < buttonData.length; i++) {
-			Button btn = createSidebarButton(buttonData[i][0], buttonData[i][1]);
+        // Inisialisasi sidebarButtons dengan ukuran yang benar  
+        sidebarButtons = new Button[buttonData.length];  
 
-			// Store reference to buttons
-			sidebarButtons[i] = btn;
+        boolean activeButtonSet = false; // Flag untuk melacak apakah tombol aktif sudah diset  
 
-			// Add click handler to set active button
-			if (buttonData[i][0].contains("View Items"))
-				btn.setOnAction(e -> setActiveButton(btn));
+        for (int i = 0; i < buttonData.length; i++) {  
+            // Tambahkan null check untuk setiap baris buttonData  
+            if (buttonData[i] == null || buttonData[i].length < 2) {  
+                System.out.println("Warning: Invalid button data at index " + i);  
+                continue;  
+            }  
 
-			buttonContainer.getChildren().add(btn);
-		}
+            Button btn = createSidebarButton(buttonData[i][0], buttonData[i][1]);  
 
-		// Set first button as active by default
-		if (sidebarButtons.length > 0) {
-			setActiveButton(sidebarButtons[0]);
-		}
+            // Store reference to buttons  
+            sidebarButtons[i] = btn;  
+            
+            // Gunakan equalsIgnoreCase untuk pencocokan yang lebih fleksibel  
+            if (!activeButtonSet && buttonData[i][0].toLowerCase().contains(location.toLowerCase())) {  
+                setActiveButton(btn);  
+                activeButtonSet = true;  
+            }  
 
-		return buttonContainer;
-	}
+            buttonContainer.getChildren().add(btn);  
+        }  
 
-	private Button createSidebarButton(String text, String iconPath) {
-		Button btn = new Button(text);
-		btn.setPrefWidth(220);
-		btn.setPrefHeight(50);
+        // Jika tidak ada tombol aktif, set tombol pertama sebagai default  
+        if (!activeButtonSet && sidebarButtons.length > 0) {  
+            setActiveButton(sidebarButtons[0]);  
+        }  
 
-		Image iconimg = new Image(iconPath);
-		ImageView icon = new ImageView(iconimg);
-		icon.setFitHeight(25);
-		icon.setFitWidth(25);
+        return buttonContainer;  
+    }  
 
-		btn.setGraphic(icon);
-		btn.setGraphicTextGap(15);
+    private Button createSidebarButton(String text, String iconPath) {
+        Button btn = new Button(text);
+        btn.setPrefWidth(220);
+        btn.setPrefHeight(50);
 
-		// Default styling
-		btn.setStyle(getButtonStyle("#34495E", false));
+        Image iconimg = new Image(iconPath);
+        ImageView icon = new ImageView(iconimg);
+        icon.setFitHeight(25);
+        icon.setFitWidth(25);
 
-		// Hover effects
-		btn.setOnMouseEntered(e -> {
-			if (btn != activeButton) {
-				btn.setStyle(getButtonStyle("#2C3E50", false));
-			}
-		});
+        btn.setGraphic(icon);
+        btn.setGraphicTextGap(15);
 
-		btn.setOnMouseExited(e -> {
-			if (btn != activeButton) {
-				btn.setStyle(getButtonStyle("#34495E", false));
-			}
-		});
+        // Default styling
+        btn.setStyle(getButtonStyle("#34495E", false));
 
-		return btn;
-	}
+        // Hover effects
+        btn.setOnMouseEntered(e -> {
+            if (btn != activeButton) {
+                btn.setStyle(getButtonStyle("#2C3E50", false));
+            }
+        });
 
-	private Button createLogoutButton() {
-		Button logoutBtn = new Button("Logout");
-		logoutBtn.setPrefWidth(220);
-		logoutBtn.setPrefHeight(50);
-		
-		System.out.println("Logout button created: " + logoutBtn);
-		
-		Image logoutIcon = new Image("file:resources/logout.png");
-		ImageView icon = new ImageView(logoutIcon);
-		icon.setFitHeight(25);
-		icon.setFitWidth(25);
+        btn.setOnMouseExited(e -> {
+            if (btn != activeButton) {
+                btn.setStyle(getButtonStyle("#34495E", false));
+            }
+        });
 
-		logoutBtn.setGraphic(icon);
-		logoutBtn.setGraphicTextGap(15);
+        return btn;
+    }
 
-		logoutBtn.setStyle(getButtonStyle("#34495E", false));
+    private Button createLogoutButton() {
+        Button logoutBtn = new Button("Logout");
+        logoutBtn.setPrefWidth(220);
+        logoutBtn.setPrefHeight(50);
+        
+        System.out.println("Logout button created: " + logoutBtn);
+        
+        Image logoutIcon = new Image("file:resources/logout.png");
+        ImageView icon = new ImageView(logoutIcon);
+        icon.setFitHeight(25);
+        icon.setFitWidth(25);
 
-		logoutBtn.setOnMouseEntered(e -> logoutBtn.setStyle(getButtonStyle("#34495E", true)));
+        logoutBtn.setGraphic(icon);
+        logoutBtn.setGraphicTextGap(15);
 
-		logoutBtn.setOnMouseExited(e -> logoutBtn.setStyle(getButtonStyle("#34495E", false)));
+        logoutBtn.setStyle(getButtonStyle("#34495E", false));
 
-		return logoutBtn;
-	}
+        logoutBtn.setOnMouseEntered(e -> logoutBtn.setStyle(getButtonStyle("#34495E", true)));
 
-	private String getButtonStyle(String backgroundColor, boolean isActive) {
-		return String.format(
-				"-fx-background-color: %s;" + "-fx-text-fill: white;" + "-fx-font-size: 14px;"
-						+ "-fx-background-radius: 10px;"
-						+ "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,%s), %s, 0, 0, 0);",
-				backgroundColor, isActive ? "0.3" : "0.1", isActive ? "5" : "3");
-	}
+        logoutBtn.setOnMouseExited(e -> logoutBtn.setStyle(getButtonStyle("#34495E", false)));
 
-	private void setActiveButton(Button activeBtn) {
-		for (Button btn : sidebarButtons) {
-			btn.setStyle(getButtonStyle("#34495E", false));
-		}
+        return logoutBtn;
+    }
 
-		activeBtn.setStyle(getButtonStyle("#2980B9", true));
-		this.activeButton = activeBtn;
-	}
+    private String getButtonStyle(String backgroundColor, boolean isActive) {
+        return String.format(
+                "-fx-background-color: %s;" + 
+                "-fx-text-fill: white;" + 
+                "-fx-font-size: 14px;" +
+                "-fx-background-radius: 10px;" +
+                "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,%s), %s, 0, 0, 0);",
+                backgroundColor, 
+                isActive ? "0.3" : "0.1", 
+                isActive ? "5" : "3");
+    }
+
+    private void setActiveButton(Button activeBtn) {  
+        // Tambahkan null check  
+        if (activeBtn == null) {  
+            System.out.println("Warning: Attempted to set null button as active");  
+            return;  
+        }  
+
+        // Pastikan sidebarButtons sudah diinisialisasi  
+        if (sidebarButtons == null) {  
+            System.out.println("Warning: sidebarButtons is null");  
+            return;  
+        }  
+
+        for (Button btn : sidebarButtons) {  
+            // Tambahkan null check tambahan  
+            if (btn != null) {  
+                btn.setStyle(getButtonStyle("#34495E", false));  
+            }  
+        }  
+
+        activeBtn.setStyle(getButtonStyle("#2980B9", true));  
+        this.activeButton = activeBtn;  
+    }
 }

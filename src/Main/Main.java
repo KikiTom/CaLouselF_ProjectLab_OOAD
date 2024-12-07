@@ -25,9 +25,12 @@ public class Main extends Application {
 
         // Initialize controllers
         LoginController loginController = new LoginController(userService, loginView, primaryStage);
-
+        
+        
+        
         // Show the Login scene initially
-       loginController.showLoginScene(primaryStage);
+        loginController.showLoginScene(primaryStage);
+        
 //        testing testing = new testing(primaryStage);
 //        SellerHomeView sellerHomeView = new SellerHomeView(primaryStage);  
 //        primaryStage.setScene(sellerHomeView.createSellerHomeScene());  
