@@ -1,7 +1,9 @@
 package Service;
 
 import Model.Item;
+import Model.Transaction;
 import Repository.ItemRepository;
+import Repository.TransactionRepository;
 import Service.UserService;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,11 +11,18 @@ import java.util.stream.Collectors;
 public class ItemService {  
     private ItemRepository itemRepository;  
     private UserService userService;
+    private TransactionRepository transactionRepository;
 
     public ItemService(ItemRepository itemRepository, UserService userService) {  
         this.itemRepository = itemRepository;  
         this.userService = userService;
-    }  
+    }
+    
+    public ItemService(ItemRepository itemRepository, UserService userService, TransactionRepository transactionRepository) {  
+        this.itemRepository = itemRepository;  
+        this.userService = userService;  
+        this.transactionRepository = transactionRepository;  
+    }
 
     /**
      * Fetches all items for a given username.
@@ -52,6 +61,26 @@ public class ItemService {
             return false;
         }
     }
+    
+    /**  
+     * Menghitung total item yang dimiliki oleh pengguna  
+     *  
+     * @param username nama pengguna  
+     * @return jumlah total item  
+     */  
+    public int getTotalItemsByUsername(String username) {  
+        try {  
+            int userId = userService.getUserID(username);  
+            return (int) itemRepository.getAll().stream()  
+                .filter(item -> item.getUserId() == userId)  
+                .count();  
+        } catch (Exception e) {  
+            e.printStackTrace();  
+            return 0;  
+        }  
+    }  
 
+      
+    
     // Additional business logic methods can be added here
 }

@@ -87,21 +87,21 @@ public class SellerUploadController {
     public String validateAndUploadItem(Item item) {  
         // Validate input  
         if (item.getName() == null || item.getName().trim().isEmpty()) {  
-            return "Item name cannot be empty";  
+            return "Item name cannot be empty!";  
         }else if(item.getName().length() < 3) {
-        	return "Item name Must at least be 3 character long";
+        	return "Item name Must at least be 3 character long!";
         }
 
         if (item.getCategory() == null || item.getCategory().trim().isEmpty()) {  
-            return "Category must be selected";  
+            return "Category must be selected!";  
         }
         
         if (item.getSize() == null || item.getSize().trim().isEmpty()) {  
-            return "Size must be selected";  
+            return "Size must be selected!";  
         }
 
         if (item.getPrice() <= 0) {  
-            return "Price must be greater than 0";  
+            return "Price must be greater than 0 or Must be Number!";  
         }  
 
         try {  

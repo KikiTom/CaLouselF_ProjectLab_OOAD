@@ -84,10 +84,10 @@ public class TransactionRepository extends RepositoryInheritClass implements Get
 		List<Transaction> transactionList = new ArrayList<>();
 		
 		try (Connection connection = database.getConnection()) {
-            String query = ""
-            		+ "SELECT transaction.Id, items.Id, items.Name, items.Size, items.Price, items.Category, items.Status, items.IsAccepted "
-            		+ "FROM transactions JOIN items ON transaction.ItemId = items.Id "
-            		+ "Where transaction.ItemId = ?";
+			String query = ""  
+				    + "SELECT transaction.Id, transaction.UserId, items.Id, items.Name, items.Size, items.Price, items.Category, items.Status, items.IsAccepted "  
+				    + "FROM transaction JOIN items ON transaction.ItemId = items.Id "  
+				    + "WHERE transaction.ItemId = ?"; 
                   
             PreparedStatement stmt = connection.prepareStatement(query);
             stmt.setInt(1, itemId);
