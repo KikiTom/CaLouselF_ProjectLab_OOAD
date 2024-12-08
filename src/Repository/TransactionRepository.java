@@ -85,9 +85,9 @@ public class TransactionRepository extends RepositoryInheritClass implements Get
 		
 		try (Connection connection = database.getConnection()) {
             String query = ""
-            		+ "SELECT transaction.Id, items.Id, items.Name, items.Size, items.Price, items.Category, items.Status, items.IsAccepted "
-            		+ "FROM transactions JOIN items ON transaction.ItemId = items.Id "
-            		+ "Where transaction.ItemId = ?";
+            		+ "SELECT transactions.Id, items.Id, items.Name, items.Size, items.Price, items.Category, items.Status, items.IsAccepted "
+            		+ "FROM transactions JOIN items ON transactions.ItemId = items.Id "
+            		+ "Where transactions.ItemId = ?";
                   
             PreparedStatement stmt = connection.prepareStatement(query);
             stmt.setInt(1, itemId);
@@ -135,9 +135,9 @@ public class TransactionRepository extends RepositoryInheritClass implements Get
 		
 		try (Connection connection = database.getConnection()) {
             String query = ""
-            		+ "SELECT transaction.Id, items.Id, items.Name, items.Size, items.Price, items.Category, items.Status, items.IsAccepted "
-            		+ "FROM transactions JOIN items ON transaction.ItemId = items.Id "
-            		+ "Where transaction.UserId = ?";
+            		+ "SELECT transactions.Id, items.Id, items.Name, items.Size, items.Price, items.Category, items.Status, items.IsAccepted "
+            		+ "FROM transactions JOIN items ON transactions.ItemId = items.Id "
+            		+ "Where transactions.UserId = ?";
                   
             PreparedStatement stmt = connection.prepareStatement(query);
             stmt.setInt(1, Id);
