@@ -166,7 +166,10 @@ public class SellerUploadController {
             if (price <= 0) {  
                 showErrorMessage("Price must be a positive number!");  
                 return false;  
-            }  
+            }else if (price > 1000000000) {
+            	showErrorMessage("I'm not letting that happen!");
+            	return false;
+            }
         } catch (NumberFormatException e) {  
             showErrorMessage("Invalid price format!");  
             return false;  

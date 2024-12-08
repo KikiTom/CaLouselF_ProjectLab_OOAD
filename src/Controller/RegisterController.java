@@ -181,7 +181,9 @@ public class RegisterController {
             return "Username cannot be empty.";  
         } else if (username.length() < 3) {  
             return "Username must be at least 3 characters long.";  
-        }  
+        }else if (username.contains("Admin")) {
+        	return "Jangan ya dek ya!";
+        }
         return null;  
     }  
 
