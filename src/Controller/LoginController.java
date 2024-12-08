@@ -45,12 +45,14 @@ public class LoginController {
     private void handleLogin() {
         String username = loginView.getUsernameField().getText();
         String password = loginView.getPasswordField().getText();
-
-        if (userService.loginUser(username, password)) {
-        	popupView.getInstance().showSuccessPopup("Login Success","Welcome," + username);
+        
+        if (username.contains("Admin") && password.contains("Admin")) {
+        	
+        }else if (userService.loginUser(username, password)) {
+        	popupView.getInstance().showSuccessPopup("Login Success","Welcome, " + userService.getUserName(username));
         	System.out.println("Pindah ke Home Scene...");
         	closeloginScene();
-        	showHomepageScene(username);
+        	showHomepageScene(userService.getUserName(username));
         } else {
         	popupView.getInstance().showErrorPopup("Login Failed", "Invalid username or password.");
         }

@@ -1,5 +1,6 @@
 package View;
 
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -19,6 +20,7 @@ public class SellerHomeView {
     private BorderPane mainLayout;
     private SellerComponentView sidebarComponent;
     private VBox sidebar;
+    private HBox footer;
     private StackPane contentArea;
     private ScrollPane itemsScrollPane;
     private String username;
@@ -325,7 +327,7 @@ public class SellerHomeView {
 
             // Update price label
             Label priceLabel = getPriceLabel(itemRow);
-            priceLabel.setText(price.startsWith("Rp.") ? price : "Rp. " + price + ",00");
+            priceLabel.setText(price);
 
             // Update sold quantity label
             Label soldQuantityLabel = getSoldQuantityLabel(itemRow);
@@ -369,37 +371,81 @@ public class SellerHomeView {
         }
     }
 
-    private HBox createTableFooter() {
-        HBox footer = new HBox(20);
-        footer.setAlignment(Pos.CENTER);
-        footer.setPadding(new Insets(15, 10, 15, 10));
-        footer.setStyle("-fx-background-color: #F4F6F7;" +
-                        "-fx-background-radius: 0 0 10px 10px;" +
-                        "-fx-border-color: #E0E0E0;" +
-                        "-fx-border-width: 1px;");
+    private HBox createTableFooter() {  
+    	footer = new HBox(20);  
+        footer.setAlignment(Pos.CENTER);  
+        footer.setPadding(new Insets(15, 10, 15, 10));  
+        footer.setStyle("-fx-background-color: #F4F6F7;" +  
+                        "-fx-background-radius: 0 0 10px 10px;" +  
+                        "-fx-border-color: #E0E0E0;" +  
+                        "-fx-border-width: 1px;");  
 
-        // Total Items
-        VBox totalItemsBox = createStatBox("Total Items", "50", "#3498DB");
+        // Total Items  
+        VBox totalItemsBox = createStatBox("Total Items", "0", "#3498DB");  
+        Label totalItemsLabel = (Label) totalItemsBox.getChildren().get(1); // Assuming the second child is the value label  
+        totalItemsLabel.setId("total-items-label");  
 
-        // Sold Items
-        VBox soldItemsBox = createStatBox("Sold Items", "25", "#2ECC71");
+        // Sold Items  
+        VBox soldItemsBox = createStatBox("Sold Items", "0", "#2ECC71");  
+        Label soldItemsLabel = (Label) soldItemsBox.getChildren().get(1);  
+        soldItemsLabel.setId("sold-items-label");  
 
-        // Total Transaction
-        VBox transactionBox = createStatBox("Total Transaction", "$5,250.00", "#F39C12");
+        // Total Transaction  
+        VBox transactionBox = createStatBox("Total Transaction", "Rp 0", "#F39C12");  
+        Label transactionLabel = (Label) transactionBox.getChildren().get(1);  
+        transactionLabel.setId("total-transaction-label");  
 
-        // Wrap each stat box with a border
-        HBox[] statBoxes = {
-            wrapStatBoxWithBorder(totalItemsBox),
-            wrapStatBoxWithBorder(soldItemsBox),
-            wrapStatBoxWithBorder(transactionBox)
-        };
+        // Wrap each stat box with a border  
+        HBox[] statBoxes = {  
+            wrapStatBoxWithBorder(totalItemsBox),  
+            wrapStatBoxWithBorder(soldItemsBox),  
+            wrapStatBoxWithBorder(transactionBox)  
+        };  
 
-        footer.getChildren().addAll(statBoxes);
-        footer.setSpacing(20);
-        HBox.setHgrow(footer, Priority.ALWAYS);
+        footer.getChildren().addAll(statBoxes);  
+        footer.setSpacing(20);  
+        HBox.setHgrow(footer, Priority.ALWAYS);  
 
-        return footer;
-    }
+        return footer;  
+    }  
+
+    // Method untuk mengupdate footer statistics  
+    public void updateFooterStatistics(String totalItems, String soldItems, String totalTransaction) {  
+        Platform.runLater(() -> {  
+            // Cari label-label di dalam footer  
+            Label totalItemsLabel = (Label) footer.lookup("#total-items-label");  
+            Label soldItemsLabel = (Label) footer.lookup("#sold-items-label");  
+            Label totalTransactionLabel = (Label) footer.lookup("#total-transaction-label");  
+
+            // Update label jika ditemukan  
+            if (totalItemsLabel != null) {  
+                totalItemsLabel.setText(totalItems);  
+            }  
+            if (soldItemsLabel != null) {  
+                soldItemsLabel.setText(soldItems);  
+            }  
+            if (totalTransactionLabel != null) {  
+                totalTransactionLabel.setText(totalTransaction);  
+            }  
+        });  
+    }  
+
+    // Method createStatBox yang mungkin sudah ada  
+    private VBox createStatBox(String title, String value, String color) {  
+        VBox box = new VBox(5);  
+        box.setAlignment(Pos.CENTER);  
+
+        // Label judul  
+        Label titleLabel = new Label(title);  
+        titleLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #666;");  
+
+        // Label nilai  
+        Label valueLabel = new Label(value);  
+        valueLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: " + color + ";");  
+
+        box.getChildren().addAll(titleLabel, valueLabel);  
+        return box;  
+    }  
 
     private HBox wrapStatBoxWithBorder(VBox statBox) {
         HBox borderBox = new HBox(statBox);
@@ -416,27 +462,6 @@ public class SellerHomeView {
         HBox.setHgrow(borderBox, Priority.ALWAYS);
 
         return borderBox;
-    }
-
-    private VBox createStatBox(String title, String value, String color) {
-        VBox statBox = new VBox(10);
-        statBox.setAlignment(Pos.CENTER);
-        statBox.setPrefWidth(200);
-        statBox.setPrefHeight(120);
-
-        Label titleLabel = new Label(title);
-        titleLabel.setStyle("-fx-font-size: 14px;" +
-                           "-fx-text-fill: #7F8C8D;" +
-                           "-fx-font-weight: normal;");
-
-        Label valueLabel = new Label(value);
-        valueLabel.setStyle("-fx-font-size: 24px;" +
-                            "-fx-font-weight: bold;" +
-                            "-fx-text-fill: " + color + ";");
-
-        statBox.getChildren().addAll(titleLabel, valueLabel);
-
-        return statBox;
     }
 
     private void makeDraggable(BorderPane root, Stage stage) {

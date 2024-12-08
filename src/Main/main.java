@@ -1,11 +1,12 @@
 package Main;
 
 import javafx.application.Application;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
 import Controller.LoginController;
 import Service.UserService;
 import Service.UserServiceImpl;
-import TestView.testing;
+import TestView.Testing;
 import Repository.Database;
 import Repository.UserRepository;
 import Repository.UserRepositoryimpl;
@@ -31,7 +32,11 @@ public class main extends Application {
         // Show the Login scene initially
         loginController.showLoginScene(primaryStage);
         
-//        testing testing = new testing(primaryStage);
+//          Testing testing = new Testing(primaryStage);
+//          Scene scene = new Scene(testing);
+//          primaryStage.setScene(scene);
+//          primaryStage.setTitle("Employee Management System");
+//          primaryStage.show();
 //        SellerHomeView sellerHomeView = new SellerHomeView(primaryStage);  
 //        primaryStage.setScene(sellerHomeView.createSellerHomeScene());  
 //        

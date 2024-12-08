@@ -2,7 +2,9 @@ package Controller;
 
 import Repository.Database;
 import Repository.ItemRepository;
+import Repository.TransactionRepository;
 import Service.ItemService;
+import Service.TransactionService;
 import Service.UserService;
 import View.SellerHomeView;
 import View.LoginView;
@@ -21,12 +23,14 @@ import java.util.List;
 import Model.Item;
 
 public class SellerHomeController {
-    private UserService userService;
-    private SellerHomeView sellerHomeView;
-    private ItemService itemService;
-    private ItemRepository itemRepository;
-    private Stage currentStage;
-    private String username;
+	private UserService userService;  
+    private SellerHomeView sellerHomeView;  
+    private ItemService itemService;  
+    private ItemRepository itemRepository;  
+    private TransactionService transactionService;  
+    private TransactionRepository transactionRepository;  
+    private Stage currentStage;  
+    private String username;  
     private int useriD;
 
     public SellerHomeController(UserService userService, Stage currentStage, String username) {
@@ -36,16 +40,26 @@ public class SellerHomeController {
         this.useriD = userService.getUserID(username);
         this.sellerHomeView = new SellerHomeView(currentStage, username);
         
-        Database database = Database.getInstance();
-        itemRepository = new ItemRepository(database);
-        itemService = new ItemService(itemRepository, userService);
+        // Inisialisasi Database  
+        Database database = Database.getInstance();  
         
-        // Setup components and populate items
-        setupComponents();
-        populateItemRows();
+        // Inisialisasi Repository  
+        itemRepository = new ItemRepository(database);  
+        transactionRepository = new TransactionRepository(database);  
         
-        // Initialize button actions
-        initializeSidebarButtonActions();
+        // Inisialisasi Service  
+        itemService = new ItemService(itemRepository, userService, transactionRepository);  
+        transactionService = new TransactionService(transactionRepository, itemRepository, itemService);
+        
+        // Setup components and populate items  
+        setupComponents();  
+        populateItemRows();  
+        
+        // Update footer statistics  
+        updateFooterStatistics();  
+        
+        // Initialize button actions  
+        initializeSidebarButtonActions(); 
     }
 
     private void setupComponents() {
@@ -114,7 +128,7 @@ public class SellerHomeController {
                 sellerHomeView.getSidebarComponent(),
                 itemService
             );
-            uploadController.showSellerUploadScene(currentStage);
+            uploadController.showView();
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Error navigating to Upload Item view: " + e.getMessage());
@@ -159,14 +173,14 @@ public class SellerHomeController {
                                 item.getCategory(),
                                 item.getName(),
                                 item.getSize(),
-                                String.valueOf(item.getPrice()),
-                                5,
+                                formatCurrency(item.getPrice()),
+                                transactionService.getTransactionCountByItemId(item.getId()),
                                 item.getStatus());
                         itemsContainer.getChildren().add(itemRow);
                     }
 
                     // Optionally, update footer statistics
-                    // updateFooterStatistics(items);
+                    updateFooterStatistics(); 
                 } else {
                     System.err.println("ScrollPane not found in ContentArea");
                 }
@@ -176,7 +190,39 @@ public class SellerHomeController {
             System.err.println("Error in populateItemRows: " + e.getMessage());
         }
     }
+    
+    private void updateFooterStatistics() {  
+        try {  
+            // Dapatkan statistik dari ItemService dan TransactionService  
+            int totalItems = itemService.getTotalItemsByUsername(username);  
+            int totalTransactionValue = transactionService.getTotalTransactionValueByUsername(username);  
+            
+            // Hitung jumlah item terjual (bisa disesuaikan dengan logika bisnis Anda)  
+            List<Item> items = itemService.getItemsByUsername(username);  
+            long soldItems = items.stream()  
+                .mapToLong(item -> transactionService.getTransactionCountByItemId(item.getId()))  
+                .sum();  
 
+            // Update footer di view  
+            sellerHomeView.updateFooterStatistics(  
+                String.valueOf(totalItems),  
+                String.valueOf(soldItems),  
+                formatCurrency(totalTransactionValue)  
+            );  
+        } catch (Exception e) {  
+            e.printStackTrace();  
+            System.err.println("Error updating footer statistics: " + e.getMessage());  
+        }  
+    }
+
+    // Method utilitas untuk format mata uang  
+    private String formatCurrency(int amount) {  
+        // Gunakan NumberFormat untuk memformat angka  
+    	return "Rp. " + String.format("%,d", amount).replace(',', '.');  
+    }  
+    
+    
+    
     /**
      * Finds the ScrollPane within the content area.
      *
