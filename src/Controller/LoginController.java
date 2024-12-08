@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.net.URI;
 
 import Service.UserService;
+import View.AdminHomeView;
 import View.HomeView;
 import View.LoginView;
 import View.RegisterView;
@@ -47,7 +48,9 @@ public class LoginController {
         String password = loginView.getPasswordField().getText();
         
         if (username.contains("Admin") && password.contains("Admin")) {
-        	
+        	popupView.getInstance().showSuccessPopup("Login Success","Welcome, ADMIN");
+        	closeloginScene();
+        	showAdminpageScene();
         }else if (userService.loginUser(username, password)) {
         	popupView.getInstance().showSuccessPopup("Login Success","Welcome, " + userService.getUserName(username));
         	System.out.println("Pindah ke Home Scene...");
@@ -77,9 +80,17 @@ public class LoginController {
     	registerController.showRegisterScene(registerStage);
     }
     
+    private void showAdminpageScene() {
+    	AdminHomeView adminHomeView = new AdminHomeView("Admin");
+    	Stage adminStage = new Stage();
+    	AdminHomeController adminhomecontroller = new AdminHomeController(adminStage, adminHomeView, userService);
+    	adminhomecontroller.showAdminHomeScene();
+    }
+    
     private void showHomepageScene(String username) {  
         // Get user role from UserService  
         String userRole = userService.getUserRole(username);  
+        
         
         // Navigate based on user role  
         if ("Seller".equalsIgnoreCase(userRole)) {  

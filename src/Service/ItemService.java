@@ -92,7 +92,55 @@ public class ItemService {
         }  
     }  
 
-      
+    /**  
+    * Fetches all pending (not yet approved) items.  
+    *  
+    * @return list of pending items  
+    */  
+   public List<Item> getPendingItems() {  
+       try {  
+           // Ambil semua item, filter yang belum di-approve  
+           return itemRepository.getAll().stream()  
+               .filter(item -> item.getIsAccepted() == false && item.getStatus().contains("Waiting Approval"))  
+               .collect(Collectors.toList());  
+       } catch (Exception e) {  
+           e.printStackTrace();  
+           System.err.println("Error in getPendingItems: " + e.getMessage());  
+           return List.of(); // Return empty list on error  
+       }  
+   }  
+
+   /**  
+    * Approve an item by its ID.  
+    *  
+    * @param itemId the ID of the item to approve  
+    * @return true if approval was successful, false otherwise  
+    */  
+   public boolean approveItem(int itemId) {  
+       try {  
+    	   return itemRepository.UpdateAccepted(itemId) && itemRepository.UpdateStatus(itemId, "Available");
+       } catch (Exception e) {  
+           e.printStackTrace();  
+           System.err.println("Error approving item: " + e.getMessage());  
+           return false;  
+       }  
+   }  
+
+   /**  
+    * Decline an item by its ID.  
+    *  
+    * @param itemId the ID of the item to decline  
+    * @return true if declining was successful, false otherwise  
+    */  
+   public boolean declineItem(int itemId, String Reason) {  
+       try {  
+           return itemRepository.UpdateStatus(itemId, "Decline, " + Reason);
+       } catch (Exception e) {  
+           e.printStackTrace();  
+           System.err.println("Error declining item: " + e.getMessage());  
+           return false;  
+       }  
+   } 
     
     // Additional business logic methods can be added here
 }

@@ -49,8 +49,10 @@ public class popupView {
             
             VBox layout = createPopupLayout(iconLabel, titleLabel, messageLabel, closeButton);  
             
-            Scene scene = createPopupScene(layout);  
+            Scene scene = createPopupScene(layout);
+            scene.setFill(Color.TRANSPARENT);
             popupStage.setScene(scene);
+            popupStage.centerOnScreen();
             applyEntranceAnimation(popupStage, layout);
             closeButton.setOnAction(e -> {  
                 applyExitAnimation(popupStage, layout);  
@@ -78,9 +80,10 @@ public class popupView {
             
             VBox layout = createPopupLayout(iconLabel, titleLabel, messageLabel, closeButton);  
             
-            Scene scene = createPopupScene(layout);  
+            Scene scene = createPopupScene(layout);
+            scene.setFill(Color.TRANSPARENT);
             popupStage.setScene(scene);
-            
+            popupStage.centerOnScreen();
             applyEntranceAnimation(popupStage, layout);
             closeButton.setOnAction(e -> {  
                 applyExitAnimation(popupStage, layout);  
@@ -123,8 +126,10 @@ public class popupView {
         
         VBox layout = createPopupLayout(iconLabel, titleLabel, messageLabel, buttonBox);  
         
-        Scene scene = createPopupScene(layout);  
+        Scene scene = createPopupScene(layout);
+        scene.setFill(Color.TRANSPARENT);
         popupStage.setScene(scene);
+        popupStage.centerOnScreen();
         applyEntranceAnimation(popupStage, layout);
         
         yesButton.setOnAction(e -> {  
@@ -180,8 +185,10 @@ public class popupView {
         
         VBox layout = createPopupLayout(iconLabel, titleLabel, messageLabel, inputField, buttonBox);  
         
-        Scene scene = createPopupScene(layout);  
-        popupStage.setScene(scene);  
+        Scene scene = createPopupScene(layout);
+        scene.setFill(Color.TRANSPARENT);
+        popupStage.setScene(scene);
+        popupStage.centerOnScreen();
         popupStage.showAndWait();  
         
         return input[0];  
