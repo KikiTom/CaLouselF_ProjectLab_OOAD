@@ -331,14 +331,24 @@ public class SellerHomeView {
 
             // Update sold quantity label
             Label soldQuantityLabel = getSoldQuantityLabel(itemRow);
-            soldQuantityLabel.setText(soldQuantity > 0 ? soldQuantity + " sold" : "Not Sold");
-            soldQuantityLabel.setStyle("-fx-font-weight: bold;" +
-                                       "-fx-background-radius: 15px;" +
-                                       "-fx-padding: 3px 8px;" +
-                                       (soldQuantity > 0 ?
-                                        "-fx-background-color: rgba(46, 204, 113, 0.1);" :
-                                        "-fx-background-color: rgba(231, 76, 60, 0.1);" +
-                                        "-fx-text-fill: " + (soldQuantity > 0 ? "#2ECC71" : "#E74C3C") + ";"));
+            if (status.equals("Waiting Approval")) {
+                soldQuantityLabel.setText("Pending");
+                soldQuantityLabel.setStyle("-fx-font-weight: bold;" +
+                                           "-fx-background-radius: 15px;" +
+                                           "-fx-padding: 3px 8px;" +
+                                           "-fx-background-color: rgba(255, 165, 0, 0.1);" +  // Warna oranye untuk pending approval
+                                           "-fx-text-fill: #FFA500;");  // Warna teks oranye
+            } else {
+                // Jika tidak dalam status "Waiting Approval", cek jumlah sold
+                soldQuantityLabel.setText(soldQuantity > 0 ? soldQuantity + " sold" : "Not Sold");
+                soldQuantityLabel.setStyle("-fx-font-weight: bold;" +
+                                           "-fx-background-radius: 15px;" +
+                                           "-fx-padding: 3px 8px;" +
+                                           (soldQuantity > 0 ? 
+                                            "-fx-background-color: rgba(46, 204, 113, 0.1);" :
+                                            "-fx-background-color: rgba(231, 76, 60, 0.1);") +
+                                           "-fx-text-fill: " + (soldQuantity > 0 ? "#2ECC71" : "#E74C3C") + ";");
+            }
 
             // Update status label
             Label statusLabel = getStatusLabel(itemRow);
@@ -372,7 +382,7 @@ public class SellerHomeView {
     }
 
     private HBox createTableFooter() {  
-    	footer = new HBox(20);  
+        footer = new HBox(20);  
         footer.setAlignment(Pos.CENTER);  
         footer.setPadding(new Insets(15, 10, 15, 10));  
         footer.setStyle("-fx-background-color: #F4F6F7;" +  
@@ -382,18 +392,24 @@ public class SellerHomeView {
 
         // Total Items  
         VBox totalItemsBox = createStatBox("Total Items", "0", "#3498DB");  
-        Label totalItemsLabel = (Label) totalItemsBox.getChildren().get(1); // Assuming the second child is the value label  
-        totalItemsLabel.setId("total-items-label");  
+        Label totalItemsLabel = (Label) totalItemsBox.getChildren().get(0); // First child (title label)  
+        totalItemsLabel.setStyle("-fx-font-weight: bold;"); // Make title bold  
+        Label totalValueLabel = (Label) totalItemsBox.getChildren().get(1);   
+        totalValueLabel.setId("total-items-label");  
 
         // Sold Items  
         VBox soldItemsBox = createStatBox("Sold Items", "0", "#2ECC71");  
-        Label soldItemsLabel = (Label) soldItemsBox.getChildren().get(1);  
-        soldItemsLabel.setId("sold-items-label");  
+        Label soldTitleLabel = (Label) soldItemsBox.getChildren().get(0);  
+        soldTitleLabel.setStyle("-fx-font-weight: bold;"); // Make title bold  
+        Label soldValueLabel = (Label) soldItemsBox.getChildren().get(1);  
+        soldValueLabel.setId("sold-items-label");  
 
         // Total Transaction  
         VBox transactionBox = createStatBox("Total Transaction", "Rp 0", "#F39C12");  
-        Label transactionLabel = (Label) transactionBox.getChildren().get(1);  
-        transactionLabel.setId("total-transaction-label");  
+        Label transactionTitleLabel = (Label) transactionBox.getChildren().get(0);  
+        transactionTitleLabel.setStyle("-fx-font-weight: bold;"); // Make title bold  
+        Label transactionValueLabel = (Label) transactionBox.getChildren().get(1);  
+        transactionValueLabel.setId("total-transaction-label");  
 
         // Wrap each stat box with a border  
         HBox[] statBoxes = {  
