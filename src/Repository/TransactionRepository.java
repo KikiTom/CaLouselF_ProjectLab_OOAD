@@ -21,7 +21,7 @@ public class TransactionRepository extends RepositoryInheritClass implements Get
     @Override
     public boolean create(Transaction entity) {
     	try (Connection connection = database.getConnection()) {
-            String query = "INSERT INTO items (UserId, ItemId) VALUES (?, ?)";
+            String query = "INSERT INTO transactions (UserId, ItemId) VALUES (?, ?)";
             PreparedStatement stmt = connection.prepareStatement(query);
             stmt.setInt(1, entity.getUserId());
             stmt.setInt(2, entity.getItem().getId());
@@ -38,9 +38,9 @@ public class TransactionRepository extends RepositoryInheritClass implements Get
 	public Transaction getById(int id) {
 		try (Connection connection = database.getConnection()) {
 			String query = ""
-            		+ "SELECT transaction.Id, transaction.ItemId, items.Name, items.Size, items.Price, items.Category, items.Status, items.IsAccepted "
-            		+ "FROM transactions JOIN items ON transaction.ItemId = items.Id "
-            		+ "Where transaction.Id = ?";
+            		+ "SELECT transactions.Id, transactions.ItemId, items.Name, items.Size, items.Price, items.Category, items.Status, items.IsAccepted "
+            		+ "FROM transactions JOIN items ON transactions.ItemId = items.Id "
+            		+ "Where transactions.Id = ?";
             
             Transaction transaction = new Transaction();
             Item item = new Item();

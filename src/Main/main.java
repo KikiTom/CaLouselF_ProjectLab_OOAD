@@ -12,9 +12,9 @@ import Repository.UserRepositoryimpl;
 import View.LoginView;
 import View.SellerHomeView;
 
-public class Main extends Application {
+public class main extends Application {
 
-    @Override
+    @Override 
     public void start(Stage primaryStage) {
         // Initialize repository, service, and views
         Database database = Database.getInstance();
