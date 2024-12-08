@@ -164,14 +164,14 @@ public class SellerUploadView {
                 "Pakaian Olahraga", "Aksesoris");  
         categoryComboBox.setPromptText("Select category");  
         categoryComboBox.setStyle(inputStyle);  
-        categoryComboBox.setPrefWidth(300);  
+     
 
         Label sizeLabel = new Label("Size");  
         sizeLabel.setStyle(labelStyle);  
         sizeComboBox = new ComboBox<>();  
         sizeComboBox.setPromptText("Select Size");  
         sizeComboBox.setStyle(inputStyle);  
-        sizeComboBox.setPrefWidth(300);  
+ 
         categoryComboBox.setOnAction(e -> {  
             String selectedCategory = categoryComboBox.getSelectionModel().getSelectedItem();  
             if (selectedCategory != null) {  
