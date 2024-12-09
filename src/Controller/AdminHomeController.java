@@ -131,9 +131,7 @@ public class AdminHomeController {
                 } else {
                     popupView.getInstance().showErrorPopup("Partial Success", "Some items could not be declined.");
                 }
-            } else {
-                popupView.getInstance().showErrorPopup("Error", "Decline reason cannot be empty!");
-            }
+            } 
         });
     }
 

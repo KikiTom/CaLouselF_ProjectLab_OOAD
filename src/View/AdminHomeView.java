@@ -59,7 +59,14 @@ public class AdminHomeView {
             "-fx-background-insets: 0;" +  
             "-fx-background-radius: 5;" +  
             "-fx-font-size: 13px;"  
-        );  
+        ); 
+        tableView.setPlaceholder(new Label("No Requested Item For Now!") {{  
+            setStyle(  
+                "-fx-font-size: 16px;" +  
+                "-fx-text-fill: #888;" +  
+                "-fx-padding: 20px;"  
+            );  
+        }}); 
         
         // Define columns dengan lebar proporsional  
         TableColumn<Item, Boolean> selectCol = new TableColumn<>("Select");  
@@ -231,7 +238,7 @@ public class AdminHomeView {
         // Bersihkan item yang ada
     	Database database = Database.getInstance();
     	UserRepository userRepository = new UserRepositoryimpl(database);
-        tableView.getItems().clear();  
+        tableView.getItems().clear(); 
 
         // Tambahkan item baru  
         for (Item item : items) {  
