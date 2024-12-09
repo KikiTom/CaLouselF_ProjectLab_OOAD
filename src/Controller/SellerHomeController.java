@@ -18,7 +18,9 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import Model.Item;
 
@@ -150,7 +152,29 @@ public class SellerHomeController {
         try {
             // Fetch items using the service
             List<Item> items = itemService.getItemsByUsername(username);
+            
+            List<Item> sortedItems = items.stream()  
+                    .sorted((item1, item2) -> {  
+                        // Custom sorting logic  
+                        List<String> priorityOrder = Arrays.asList(  
+                            "Decline",   
+                            "Waiting Approval",   
+                            "Available"  
+                        );  
 
+                        int index1 = findStatusPriority(priorityOrder, item1.getStatus());  
+                        int index2 = findStatusPriority(priorityOrder, item2.getStatus());  
+
+                        // Jika prioritas sama, urutkan berdasarkan nama item  
+                        if (index1 == index2) {  
+                            return item1.getName().compareTo(item2.getName());  
+                        }  
+
+                        return Integer.compare(index1, index2);  
+                    })  
+                    .collect(Collectors.toList());
+            
+            
             // Update UI on the JavaFX Application Thread
             Platform.runLater(() -> {
                 // Option 1: Using the getter method
@@ -167,7 +191,7 @@ public class SellerHomeController {
                     itemsContainer.getChildren().clear();
 
                     // Add new items
-                    for (Item item : items) {
+                    for (Item item : sortedItems) {
                         HBox itemRow = sellerHomeView.getcreateItemRow();
                         sellerHomeView.updateItemRowLabels(itemRow,
                                 item.getCategory(),
@@ -189,6 +213,28 @@ public class SellerHomeController {
             e.printStackTrace();
             System.err.println("Error in populateItemRows: " + e.getMessage());
         }
+    }
+    
+    private int findStatusPriority(List<String> priorityOrder, String status) {  
+        // Prioritas utama: Cek status Decline  
+        if (isDeclineStatus(status)) {  
+            return priorityOrder.indexOf("Decline");  
+        }  
+        
+        // Untuk status lainnya, lakukan pencocokan  
+        for (int i = 0; i < priorityOrder.size(); i++) {  
+            if (status != null && status.contains(priorityOrder.get(i))) {  
+                return i;  
+            }  
+        }  
+        
+        // Jika status tidak cocok, tempatkan di akhir  
+        return priorityOrder.size();  
+    }  
+
+    // Metode tambahan untuk memeriksa status Decline  
+    private boolean isDeclineStatus(String status) {  
+        return status != null && status.startsWith("Decline,");  
     }
     
     private void updateFooterStatistics() {  

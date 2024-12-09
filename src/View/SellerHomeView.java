@@ -331,50 +331,59 @@ public class SellerHomeView {
 
             // Update sold quantity label
             Label soldQuantityLabel = getSoldQuantityLabel(itemRow);
-            if (status.equals("Waiting Approval")) {
-                soldQuantityLabel.setText("Pending");
-                soldQuantityLabel.setStyle("-fx-font-weight: bold;" +
-                                           "-fx-background-radius: 15px;" +
-                                           "-fx-padding: 3px 8px;" +
-                                           "-fx-background-color: rgba(255, 165, 0, 0.1);" +  // Warna oranye untuk pending approval
-                                           "-fx-text-fill: #FFA500;");  // Warna teks oranye
-            } else {
-                // Jika tidak dalam status "Waiting Approval", cek jumlah sold
-                soldQuantityLabel.setText(soldQuantity > 0 ? soldQuantity + " sold" : "Not Sold");
-                soldQuantityLabel.setStyle("-fx-font-weight: bold;" +
-                                           "-fx-background-radius: 15px;" +
-                                           "-fx-padding: 3px 8px;" +
-                                           (soldQuantity > 0 ? 
-                                            "-fx-background-color: rgba(46, 204, 113, 0.1);" :
-                                            "-fx-background-color: rgba(231, 76, 60, 0.1);") +
-                                           "-fx-text-fill: " + (soldQuantity > 0 ? "#2ECC71" : "#E74C3C") + ";");
+            if (status.toLowerCase().contains("decline")) {  
+                soldQuantityLabel.setText("Rejected");  
+                soldQuantityLabel.setStyle("-fx-font-weight: bold;" +  
+                                           "-fx-background-radius: 15px;" +  
+                                           "-fx-padding: 3px 8px;" +  
+                                           "-fx-background-color: rgba(192, 57, 43, 0.1);" +  // Deep red  
+                                           "-fx-text-fill: #C0392B;");  // Dark red  
+            } else if (status.equals("Waiting Approval")) {  
+                soldQuantityLabel.setText("Pending");  
+                soldQuantityLabel.setStyle("-fx-font-weight: bold;" +  
+                                           "-fx-background-radius: 15px;" +  
+                                           "-fx-padding: 3px 8px;" +  
+                                           "-fx-background-color: rgba(255, 165, 0, 0.1);" +  // Warna oranye untuk pending approval  
+                                           "-fx-text-fill: #FFA500;");  // Warna teks oranye  
+            } else {  
+                // Jika tidak dalam status "Waiting Approval" atau "Decline", cek jumlah sold  
+                soldQuantityLabel.setText(soldQuantity > 0 ? soldQuantity + " sold" : "Not Sold");  
+                soldQuantityLabel.setStyle("-fx-font-weight: bold;" +  
+                                           "-fx-background-radius: 15px;" +  
+                                           "-fx-padding: 3px 8px;" +  
+                                           (soldQuantity > 0 ?   
+                                            "-fx-background-color: rgba(46, 204, 113, 0.1);" :  // Soft green for sold  
+                                            "-fx-background-color: rgba(149, 165, 166, 0.1);") +  // Soft gray for not sold  
+                                           "-fx-text-fill: " + (soldQuantity > 0 ? "#2ECC71" : "#95A5A6") + ";");  // Green for sold, gray for not sold  
             }
 
             // Update status label
             Label statusLabel = getStatusLabel(itemRow);
             statusLabel.setText(status);
-            switch (status.toLowerCase()) {
-                case "available":
-                    statusLabel.setStyle("-fx-text-fill: #2ECC71;" +
-                                        "-fx-font-size: 12px;" +
-                                        "-fx-font-weight: bold;");
-                    break;
-                case "waiting approval":
-                    statusLabel.setStyle("-fx-text-fill: #95A5A6;" +
-                                        "-fx-font-size: 12px;" +
-                                        "-fx-font-weight: bold;");
-                    break;
-                case "denied":
-                    statusLabel.setStyle("-fx-text-fill: #E74C3C;" +
-                                        "-fx-font-size: 12px;" +
-                                        "-fx-font-weight: bold;");
-                    break;
-                default:
-                    statusLabel.setStyle("-fx-text-fill: #95A5A6;" +
-                                        "-fx-font-size: 12px;" +
-                                        "-fx-font-weight: bold;" +
-                                        "-fx-alignment: center;");
-            }
+            switch (status.toLowerCase()) {  
+            case "available":  
+                statusLabel.setStyle("-fx-text-fill: #2ECC71;" +  
+                                    "-fx-font-size: 12px;" +  
+                                    "-fx-font-weight: bold;");  
+                break;  
+            case "waiting approval":  
+                statusLabel.setStyle("-fx-text-fill: #95A5A6;" +  
+                                    "-fx-font-size: 12px;" +  
+                                    "-fx-font-weight: bold;");  
+                break;  
+            default:  
+                if (status.toLowerCase().contains("decline")) {
+                	statusLabel.setText("Decline");
+                    statusLabel.setStyle("-fx-text-fill: #E74C3C;" +  
+                                        "-fx-font-size: 12px;" +  
+                                        "-fx-font-weight: bold;");  
+                } else {  
+                    statusLabel.setStyle("-fx-text-fill: #95A5A6;" +  
+                                        "-fx-font-size: 12px;" +  
+                                        "-fx-font-weight: bold;" +  
+                                        "-fx-alignment: center;");  
+                }  
+        }
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Error updating item row labels: " + e.getMessage());
