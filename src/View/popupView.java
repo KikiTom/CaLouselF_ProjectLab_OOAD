@@ -188,7 +188,6 @@ public class popupView {
         Scene scene = createPopupScene(layout);
         scene.setFill(Color.TRANSPARENT);
         popupStage.setScene(scene);
-        popupStage.centerOnScreen();
         popupStage.showAndWait();  
         
         return input[0];  

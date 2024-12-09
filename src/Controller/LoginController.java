@@ -47,7 +47,7 @@ public class LoginController {
         String username = loginView.getUsernameField().getText();
         String password = loginView.getPasswordField().getText();
         
-        if (username.contains("Admin") && password.contains("Admin")) {
+        if (username.contains("admin") && password.contains("admin")) {
         	popupView.getInstance().showSuccessPopup("Login Success","Welcome, ADMIN");
         	closeloginScene();
         	showAdminpageScene();
