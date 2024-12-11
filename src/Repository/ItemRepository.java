@@ -195,7 +195,7 @@ public class ItemRepository extends RepositoryInheritClass implements GetAll<Ite
 	@Override
 	public boolean delete(int id) {
 		try (Connection connection = database.getConnection()) {
-		    String query = "DELETE items WHERE Id = ?";
+		    String query = "DELETE FROM items WHERE Id = ?";
 		    PreparedStatement stmt = connection.prepareStatement(query);
 		    
 		    stmt.setInt(1, id);

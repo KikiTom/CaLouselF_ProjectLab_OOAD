@@ -1,10 +1,8 @@
 package Service;
 
 import Model.Item;
-import Model.Transaction;
 import Repository.ItemRepository;
 import Repository.TransactionRepository;
-import Service.UserService;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -141,6 +139,30 @@ public class ItemService {
            return false;  
        }  
    } 
+   
+   public List<Item> getallitem(){
+	   return itemRepository.getAll();
+   }
+   
+   public boolean deleteitembyid(int itemId) {
+	   try {
+		   return itemRepository.delete(itemId);
+	   }catch (Exception e) {
+		   e.printStackTrace();  
+           System.err.println("Error deleting item: " + e.getMessage());  
+           return false;  
+	   }
+    }
+   
+   public boolean updateItem(Item item) {
+	   try {
+		   return itemRepository.update(item.getId(), item);
+	   }catch (Exception e) {
+		   e.printStackTrace();  
+           System.err.println("Error updating item: " + e.getMessage());  
+           return false; 
+	   }
+   }
     
     // Additional business logic methods can be added here
 }

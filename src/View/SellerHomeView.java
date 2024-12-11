@@ -178,37 +178,45 @@ public class SellerHomeView {
         return label;
     }
 
-    private Label createEditButton() {
-        Label editLabel = new Label("Edit");
-        editLabel.setAlignment(Pos.CENTER);
-        editLabel.setTextAlignment(TextAlignment.CENTER);
-        editLabel.setPrefWidth(COLUMN_WIDTHS[0]);
-        editLabel.setStyle("-fx-background-color: #3498DB;" +
-                           "-fx-text-fill: white;" +
-                           "-fx-background-radius: 20px;" +
-                           "-fx-padding: 5px 10px;" +
-                           "-fx-alignment: center;");
+    private Label createEditButton() {  
+        Label editLabel = new Label("Edit");  
+        editLabel.setAlignment(Pos.CENTER);  
+        editLabel.setTextAlignment(TextAlignment.CENTER);  
+        editLabel.setPrefWidth(COLUMN_WIDTHS[0]);  
+        
+        // Default style for Edit  
+        editLabel.setStyle("-fx-background-color: #3498DB;" +  
+                           "-fx-text-fill: white;" +  
+                           "-fx-background-radius: 20px;" +  
+                           "-fx-padding: 5px 10px;" +  
+                           "-fx-alignment: center;");  
 
-        // Hover effects
-        editLabel.setOnMouseEntered(e -> {
-            editLabel.setStyle("-fx-background-color: #2980B9;" +
-                               "-fx-text-fill: white;" +
-                               "-fx-background-radius: 20px;" +
-                               "-fx-padding: 5px 10px;" +
-                               "-fx-alignment: center;" +
-                               "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 0);");
-        });
+        // Hover effects with dynamic styling based on current text  
+        editLabel.setOnMouseEntered(e -> {  
+            String currentText = editLabel.getText();  
+            String hoverColor = currentText.equals("Delete") ? "#C0392B" : "#2980B9";  
+            
+            editLabel.setStyle("-fx-background-color: " + hoverColor + ";" +  
+                               "-fx-text-fill: white;" +  
+                               "-fx-background-radius: 20px;" +  
+                               "-fx-padding: 5px 10px;" +  
+                               "-fx-alignment: center;" +  
+                               "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 0);");  
+        });  
 
-        editLabel.setOnMouseExited(e -> {
-            editLabel.setStyle("-fx-background-color: #3498DB;" +
-                               "-fx-text-fill: white;" +
-                               "-fx-background-radius: 20px;" +
-                               "-fx-padding: 5px 10px;" +
-                               "-fx-alignment: center;");
-        });
+        editLabel.setOnMouseExited(e -> {  
+            String currentText = editLabel.getText();  
+            String backgroundColor = currentText.equals("Delete") ? "#E74C3C" : "#3498DB";  
+            
+            editLabel.setStyle("-fx-background-color: " + backgroundColor + ";" +  
+                               "-fx-text-fill: white;" +  
+                               "-fx-background-radius: 20px;" +  
+                               "-fx-padding: 5px 10px;" +  
+                               "-fx-alignment: center;");  
+        });  
 
-        return editLabel;
-    }
+        return editLabel;  
+    } 
 
     private Label createCategoryLabel(String category) {
         return createStandardLabel(category, COLUMN_WIDTHS[1], "#2C3E50");
@@ -230,6 +238,8 @@ public class SellerHomeView {
         Label statusLabel = createStandardLabel(status, COLUMN_WIDTHS[5], "#2C3E50");
         return statusLabel;
     }
+    
+    
 
     private Label createSoldQuantityLabel(int soldQuantity) {
         Label soldLabel = new Label(soldQuantity > 0 ? soldQuantity + " sold" : "Not Sold");
@@ -313,6 +323,37 @@ public class SellerHomeView {
     public void updateItemRowLabels(HBox itemRow, String category, String name, String size, String price,
                                     int soldQuantity, String status) {
         try {
+        	
+        	Label editLabel = getEditLabel(itemRow);  
+            switch (status.toLowerCase()) {  
+                case "waiting approval":  
+                    editLabel.setText("Delete");  
+                    editLabel.setStyle("-fx-background-color: #E74C3C;" +  
+                                       "-fx-text-fill: white;" +  
+                                       "-fx-background-radius: 20px;" +  
+                                       "-fx-padding: 5px 10px;" +  
+                                       "-fx-alignment: center;");  
+                    break;  
+                case "available":  
+                    editLabel.setText("Edit");  
+                    editLabel.setStyle("-fx-background-color: #3498DB;" +  
+                                       "-fx-text-fill: white;" +  
+                                       "-fx-background-radius: 20px;" +  
+                                       "-fx-padding: 5px 10px;" +  
+                                       "-fx-alignment: center;");  
+                    break;  
+                default:  
+                    if (status.toLowerCase().contains("decline")) {  
+                        editLabel.setText("Delete");  
+                        editLabel.setStyle("-fx-background-color: #E74C3C;" +  
+                                           "-fx-text-fill: white;" +  
+                                           "-fx-background-radius: 20px;" +  
+                                           "-fx-padding: 5px 10px;" +  
+                                           "-fx-alignment: center;");  
+                    }  
+            }  
+        	
+        	
             // Update category label
             Label categoryLabel = getCategoryLabel(itemRow);
             categoryLabel.setText(category);
@@ -556,8 +597,12 @@ public class SellerHomeView {
     public HBox getcreateItemRow() {
         return createItemRow();
     }
-
+    
     // Label retrieval methods to encapsulate the UI structure
+    
+    public Label getEditLabel(HBox itemRow) {  
+        return (Label) itemRow.getChildren().get(0);   
+    }
 
     public Label getCategoryLabel(HBox itemRow) {
         return (Label) itemRow.getChildren().get(2);
