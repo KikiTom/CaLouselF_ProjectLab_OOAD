@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 06, 2024 at 03:15 PM
+-- Generation Time: Dec 11, 2024 at 11:09 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.24
 
@@ -37,6 +37,14 @@ CREATE TABLE `items` (
   `IsAccepted` tinyint(1) NOT NULL,
   `UserId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `items`
+--
+
+INSERT INTO `items` (`Id`, `Name`, `Size`, `Price`, `Category`, `Status`, `IsAccepted`, `UserId`) VALUES
+(2, 'celemek', 'L', '20000', 'Atasan', 'Available', 1, 2),
+(4, 'adasd', 'S', '111111', 'Pakaian Formal', 'Decline, jelek aja sih', 0, 2);
 
 -- --------------------------------------------------------
 
@@ -86,7 +94,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`Id`, `Username`, `Password`, `Phone_Number`, `Address`, `Role`) VALUES
-(1, 'kikitom', '12345', '082312642525', 'jambi', 'Seller');
+(1, 'kikitom', '12345', '082312642525', 'jambi', 'Seller'),
+(2, 'uji123', '12345678!', '+62123456789', 'address 1', 'Seller');
 
 -- --------------------------------------------------------
 
@@ -149,13 +158,13 @@ ALTER TABLE `wishlist`
 -- AUTO_INCREMENT for table `items`
 --
 ALTER TABLE `items`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `offers`
 --
 ALTER TABLE `offers`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `transaction`
@@ -167,7 +176,7 @@ ALTER TABLE `transaction`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `wishlist`
@@ -189,6 +198,7 @@ ALTER TABLE `items`
 -- Constraints for table `offers`
 --
 ALTER TABLE `offers`
+  ADD CONSTRAINT `fk_itemid` FOREIGN KEY (`ItemId`) REFERENCES `items` (`Id`) ON DELETE CASCADE,
   ADD CONSTRAINT `offers_ibfk_1` FOREIGN KEY (`UserId`) REFERENCES `users` (`Id`),
   ADD CONSTRAINT `offers_ibfk_2` FOREIGN KEY (`ItemId`) REFERENCES `items` (`Id`);
 
