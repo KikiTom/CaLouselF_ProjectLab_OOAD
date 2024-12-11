@@ -85,8 +85,19 @@ public class SellerUploadController {
 
         // View Offered Items Button Action (Index 2)  
         sidebarComponent.setButtonAction(2, () -> {  
-//            navigateToOfferedItemsView();  
+            navigateToOfferedItemsView();  
         });  
+    }
+    
+    private void navigateToOfferedItemsView() {
+    	SellerOfferController OfferController = new SellerOfferController(
+        		userService,
+                currentStage,
+                username,
+                sellerUploadView.getSidebarComponent(),
+                itemService
+        		);
+        OfferController.showOfferScene(currentStage);
     }
     
     private void navigateToHomeView() {

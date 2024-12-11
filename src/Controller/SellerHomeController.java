@@ -259,12 +259,34 @@ public class SellerHomeController {
                     handleEditItem(item);  
                     break;  
                 default:  
-                    if (item.getStatus().toLowerCase().contains("decline")) {  
-                        handleDeleteItem(item);  
-                    }  
+                    if (item.getStatus().toLowerCase().contains("decline")) {
+                    	String cleanStatus = item.getStatus().replaceFirst(".*Decline, ", "");
+                    	popupView.getInstance().showErrorPopup("Reason Decline", cleanStatus);
+                    	try {
+                    		handledeleteitemwithreason(item);
+                    	}catch (Exception e) {  
+                            e.printStackTrace();  
+                            popupView.getInstance().showErrorPopup(  
+                                "Delete Error",   
+                                "An error occurred while deleting the item"  
+                            );  
+                        }  
+                    }else {
+                    	handleDeleteItem(item);
+                    }
             }
         });  
-    }  
+    }
+    
+    private void handledeleteitemwithreason(Item item) {
+    	boolean deleteSuccess = itemService.deleteitembyid(item.getId());     
+        if (deleteSuccess) {  
+            // Refresh items after successful deletion  
+            Platform.runLater(() -> {  
+                populateItemRows();
+            });  
+        }
+    }
 
     private void handleEditItem(Item item) {  
         try {  

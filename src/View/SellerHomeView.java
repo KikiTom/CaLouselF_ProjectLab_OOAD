@@ -349,7 +349,7 @@ public class SellerHomeView {
                                            "-fx-text-fill: white;" +  
                                            "-fx-background-radius: 20px;" +  
                                            "-fx-padding: 5px 10px;" +  
-                                           "-fx-alignment: center;");  
+                                           "-fx-alignment: center;"); 
                     }  
             }  
         	
