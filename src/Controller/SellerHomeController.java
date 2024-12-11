@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.application.Platform;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -70,6 +71,27 @@ public class SellerHomeController {
         
         // Additional component setups can be added here
     }
+    
+    public void refreshParentView() {  
+        Platform.runLater(() -> {  
+            try {  
+                // Refresh daftar item  
+                populateItemRows();  
+                
+                // Update statistik footer  
+                updateFooterStatistics();  
+                
+                // Optional: Tambahkan log atau notifikasi  
+                System.out.println("Parent view refreshed successfully");  
+            } catch (Exception e) {  
+                e.printStackTrace();  
+                popupView.getInstance().showErrorPopup(  
+                    "Refresh Error",   
+                    "Unable to refresh view"  
+                );  
+            }  
+        });  
+    } 
 
     private void setupLogoutButton() {
         try {
@@ -142,7 +164,14 @@ public class SellerHomeController {
      * Implement similarly to navigateToUploadItemView().
      */
     private void navigateToOfferedItemsView() {
-        // Implement Offered Items navigation here
+        SellerOfferController OfferController = new SellerOfferController(
+        		userService,
+                currentStage,
+                username,
+                sellerHomeView.getSidebarComponent(),
+                itemService
+        		);
+        OfferController.showOfferScene(currentStage);
     }
 
     /**
@@ -200,6 +229,8 @@ public class SellerHomeController {
                                 formatCurrency(item.getPrice()),
                                 transactionService.getTransactionCountByItemId(item.getId()),
                                 item.getStatus());
+                        
+                        setupItemRowEditActions(itemRow, item); 
                         itemsContainer.getChildren().add(itemRow);
                     }
 
@@ -214,6 +245,87 @@ public class SellerHomeController {
             System.err.println("Error in populateItemRows: " + e.getMessage());
         }
     }
+    
+    private void setupItemRowEditActions(HBox itemRow, Item item) {  
+        Label editLabel = sellerHomeView.getEditLabel(itemRow);  
+        
+        editLabel.setOnMouseClicked(event -> {  
+            // Determine action based on status  
+            switch (item.getStatus().toLowerCase()) {  
+                case "waiting approval":  
+                    handleDeleteItem(item);  
+                    break;  
+                case "available":  
+                    handleEditItem(item);  
+                    break;  
+                default:  
+                    if (item.getStatus().toLowerCase().contains("decline")) {  
+                        handleDeleteItem(item);  
+                    }  
+            }
+        });  
+    }  
+
+    private void handleEditItem(Item item) {  
+        try {  
+            Platform.runLater(() -> {  
+                // Create an edit dialog or navigate to edit view  
+                SellerEditItemController editController = new SellerEditItemController(  
+                    userService,   
+                    currentStage,   
+                    username,   
+                    item,  
+                    itemService  
+                );  
+                
+                // Optional: Set parent controller for direct refresh  
+                editController.setParentController(this);  
+                
+                editController.showEditItemView();
+            });
+        } catch (Exception e) {  
+            e.printStackTrace();  
+            popupView.getInstance().showErrorPopup("Edit Error", "Unable to edit item");  
+        }  
+    }  
+
+    public void handleDeleteItem(Item item) {  
+        try {  
+            // Show confirmation popup  
+            boolean confirmDelete = popupView.getInstance().showConfirmationPopup(  
+                "Delete Item",   
+                "Are you sure you want to delete this item?"  
+            );  
+            
+            if (confirmDelete) {  
+                // Perform delete operation  
+                boolean deleteSuccess = itemService.deleteitembyid(item.getId());  
+                
+                if (deleteSuccess) {  
+                    // Refresh items after successful deletion  
+                    Platform.runLater(() -> {  
+                        populateItemRows();  
+                        popupView.getInstance().showSuccessPopup(  
+                            "Delete Successful",   
+                            "Item has been deleted successfully"  
+                        );
+                        populateItemRows();
+                    });  
+                } else {  
+                    popupView.getInstance().showErrorPopup(  
+                        "Delete Failed",   
+                        "Unable to delete the item"  
+                    );  
+                }  
+            }  
+        } catch (Exception e) {  
+            e.printStackTrace();  
+            popupView.getInstance().showErrorPopup(  
+                "Delete Error",   
+                "An error occurred while deleting the item"  
+            );  
+        }  
+    }  
     
     private int findStatusPriority(List<String> priorityOrder, String status) {  
         // Prioritas utama: Cek status Decline  
@@ -243,7 +355,7 @@ public class SellerHomeController {
             int totalItems = itemService.getTotalItemsByUsername(username);  
             int totalTransactionValue = transactionService.getTotalTransactionValueByUsername(username);  
             
-            // Hitung jumlah item terjual (bisa disesuaikan dengan logika bisnis Anda)  
+            // Hitung jumlah item terjual  
             List<Item> items = itemService.getItemsByUsername(username);  
             long soldItems = items.stream()  
                 .mapToLong(item -> transactionService.getTransactionCountByItemId(item.getId()))  

@@ -18,6 +18,10 @@ public class TransactionService {
         this.itemRepository = itemRepository;
     }
     
+    public TransactionService(TransactionRepository transactionRepository) {
+    	this.transactionRepository = transactionRepository;
+    }
+    
     public TransactionService(TransactionRepository transactionRepository, UserService userService) {  
         this.transactionRepository = transactionRepository;
         this.userService = userService;
