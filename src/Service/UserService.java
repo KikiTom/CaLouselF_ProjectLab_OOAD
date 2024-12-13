@@ -11,6 +11,7 @@ public interface UserService {
     // New methods for retrieving user details
     int getUserID(String username);
     String getUserName(String username);
+    String getUserNamebyid(int userid);
     String getUserAddress(String username);
     String getUserPhone(String username);
     String getUserRole(String username);

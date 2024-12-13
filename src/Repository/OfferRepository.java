@@ -14,7 +14,6 @@ import Repository.RepositoryInterface.GetById;
 import Repository.RepositoryInterface.Create;
 
 public class OfferRepository extends RepositoryInheritClass implements GetAll<Offer>, GetById<Offer>, Create<Offer> {
-	private Database database;
 
     public OfferRepository(Database database) {
         super(database);
@@ -88,9 +87,8 @@ public class OfferRepository extends RepositoryInheritClass implements GetAll<Of
             	int userId = rs.getInt("UserId");
             	int itemId = rs.getInt("ItemId");
                 int amount = rs.getInt("Amount");
-                String status = rs.getString("Status");
                 Boolean isAccepted = rs.getBoolean("IsAccepted");
-               
+                String status = rs.getString("Status");
                 Offer offer = new Offer(userId,itemId,amount,status);
                 offer.setAccepted(isAccepted);
                 offer.setId(id);

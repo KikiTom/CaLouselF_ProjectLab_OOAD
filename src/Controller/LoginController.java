@@ -10,9 +10,12 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.URI;
 
+import Repository.Database;
+import Repository.ItemRepository;
+import Service.ItemService;
 import Service.UserService;
 import View.AdminHomeView;
-import View.HomeView;
+import View.CustomerHomeView;
 import View.LoginView;
 import View.RegisterView;
 import View.SellerHomeView;
@@ -102,12 +105,18 @@ public class LoginController {
         	SellerHomeView sellerHomeView = new SellerHomeView(sellerHomeStage, username); 
             SellerHomeController sellerHomeController = new SellerHomeController(userService, sellerHomeStage, username);  
             sellerHomeController.showSellerHomeScene(sellerHomeStage);
-        } else {  
-            // Default Home Page (for other roles or customers)  
-            HomeView homeView = new HomeView(username);  
-            Stage homeStage = new Stage();  
-            HomeController homeController = new HomeController(userService, homeStage, homeView, username);  
-            homeController.showHomeScene(homeStage);
+        } else if ("Customer".equalsIgnoreCase(userRole)) {  
+            // Default Home Page (for other roles or customers) 
+        	Stage BuyerHomeStage = new Stage();
+        	ItemRepository itemRepository = new ItemRepository(Database.getInstance());
+        	ItemService itemService = new ItemService(itemRepository, userService);  
+            CustomerHomeView homeView = new CustomerHomeView(username, itemService);  
+            Stage customerHomeStage = new Stage();  
+            
+            // Buat controller dan tampilkan home  
+            CustomerHomeController homeController =   
+                new CustomerHomeController(username, itemService);  
+            homeController.show(customerHomeStage);  
         }  
     } 
 }

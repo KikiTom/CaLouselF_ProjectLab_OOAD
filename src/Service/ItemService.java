@@ -163,6 +163,27 @@ public class ItemService {
            return false; 
 	   }
    }
+   
+   public List<Item> Getaccepteditem(){
+	   try {
+		   return itemRepository.getAll().stream()  
+	               .filter(item -> item.getIsAccepted() == true)  
+	               .collect(Collectors.toList());
+	   }catch (Exception e) {
+		   e.printStackTrace();  
+           System.err.println("Error in getAvailableItems: " + e.getMessage());  
+           return List.of();
+	   }
+   }
+   
+   public List<Item> searchItems(String keyword) {  
+       return Getaccepteditem().stream()  
+           .filter(item ->   
+               item.getName().toLowerCase().contains(keyword.toLowerCase()) ||  
+               item.getCategory().toLowerCase().contains(keyword.toLowerCase())  
+           )  
+           .collect(Collectors.toList());  
+   }  
     
     // Additional business logic methods can be added here
 }

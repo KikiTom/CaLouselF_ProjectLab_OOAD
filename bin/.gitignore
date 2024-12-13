@@ -1,4 +1,6 @@
-/Controller/
-/Repository/
-/Service/
 /Main/
+/Repository/
+/Controller/
+/View/
+/Service/
+/Model/

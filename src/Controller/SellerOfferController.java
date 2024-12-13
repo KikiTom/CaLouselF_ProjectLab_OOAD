@@ -2,6 +2,7 @@ package Controller;
 
 import javafx.application.Platform;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -172,69 +173,221 @@ public class SellerOfferController {
 		});
 	}
 
-	/**
-	 * Populates the offered items into the view. Fetches data from the UserService
-	 * and updates the UI.
-	 */
-	private void populateItemRows() {
-		Platform.runLater(() -> {
-			try {
-				// Fetch offered items for the seller from the service
-				List<Offer> offeredItems = offerService.getOfferedItemsForSeller(username);
-		        
-		        // Mendapatkan semua item
-		        List<Item> allItems = itemService.getallitem();
+	/**  
+     * Populate item rows with offered items.  
+     */  
+	private void populateItemRows() {  
+	    Platform.runLater(() -> {  
+	        // Fetch and process offered items  
+	        List<Offer> offeredItems = offerService.getOfferedItemsForSeller(username);  
+	        
+	        // Jika offeredItems null, langsung return tanpa try-catch  
+	        if (offeredItems == null) {  
+	            return;  
+	        }  
+	        
+	        // Jika tidak ada penawaran  
+	        if (offeredItems.isEmpty()) {  
+	            VBox itemsContainer = (VBox) sellerOfferView.getItemsScrollPane().getContent();  
+	            itemsContainer.getChildren().clear();  
+	            
+	            // Tambahkan label untuk menunjukkan tidak ada penawaran  
+	            Label noOffersLabel = new Label("No offers available");  
+	            noOffersLabel.setStyle(  
+	                "-fx-font-size: 16px;" +   
+	                "-fx-text-fill: #7F8C8D;" +   
+	                "-fx-alignment: center;"  
+	            );  
+	            itemsContainer.getChildren().add(noOffersLabel);  
+	            
+	            // Update footer statistics menjadi 0  
+	            sellerOfferView.updateFooterStatistics(  
+	                "0",   
+	                "Rp 0.00",  
+	                "Rp 0.00"  
+	            );  
+	            
+	            return;  
+	        }  
+	        
+	        List<Item> allItems = itemService.getallitem();  
+	        List<Item> filteredItems = filterItemsForOffers(offeredItems, allItems);  
 
-		        // Menyaring item berdasarkan itemId yang cocok dengan offer.getItemId()
-		        List<Item> filteredItems = new ArrayList<>();
-		        
-		        for (Offer offer : offeredItems) {
-		            for (Item item : allItems) {
-		                if (item.getId() == offer.getItemId()) {
-		                    filteredItems.add(item);
-		                    break;  // Karena item.id hanya satu, tidak perlu lanjutkan pencarian
-		                }
-		            }
-		        }
-				
+	        // Clear and populate items container  
+	        VBox itemsContainer = (VBox) sellerOfferView.getItemsScrollPane().getContent();  
+	        itemsContainer.getChildren().clear();  
 
-				// Get the container where items will be displayed
-				VBox itemsContainer = (VBox) sellerOfferView.getItemsScrollPane().getContent();
-				itemsContainer.getChildren().clear(); // Clear existing items
+	        populateItemContainer(itemsContainer, filteredItems, offeredItems);  
+	        updateFooterStatistics(offeredItems);  
+	    });  
+	}  
 
-				// Iterate over each offered item and create a row in the view
-				for (Item item : filteredItems) {
-					HBox itemRow = sellerOfferView.createItemRow();
-					sellerOfferView.updateItemRowLabels(itemRow, item.getName(), item.getCategory(), item.getSize(),
-							String.format("Rp %.2f", item.getPrice()),
-							String.format("Rp %.2f", item.getPrice()));
+    /**  
+     * Filter items based on offered items.  
+     */  
+	private List<Item> filterItemsForOffers(List<Offer> offeredItems, List<Item> allItems) {  
+	    // Pastikan input tidak null  
+	    if (offeredItems == null || allItems == null) {  
+	        return new ArrayList<>();  
+	    }  
 
-					// Optionally, add event handlers to the item row or specific buttons within it
-					// For example, accepting or declining an offer
-					// Example:
-					// itemRow.setOnMouseClicked(e -> handleOfferClick(item));
+	    List<Item> filteredItems = new ArrayList<>();  
+	    for (Offer offer : offeredItems) {  
+	        for (Item item : allItems) {  
+	            if (item.getId() == offer.getItemId()) {  
+	                filteredItems.add(item);  
+	                break;  
+	            }  
+	        }  
+	    }  
+	    return filteredItems;  
+	}  
 
-					itemsContainer.getChildren().add(itemRow);
-				}
+    /**  
+     * Populate item container with rows.  
+     */  
+    private void populateItemContainer(  
+        VBox itemsContainer,   
+        List<Item> filteredItems,   
+        List<Offer> offeredItems  
+    ) {  
+        for (int i = 0; i < filteredItems.size(); i++) {  
+            Item item = filteredItems.get(i);  
+            Offer offer = offeredItems.get(i);  
 
-				// Update footer statistics
-//				int totalOffers = offeredItems.size();
-//				double highestOffer = offeredItems.stream().mapToDouble(OfferedItem::getOfferedPrice).max().orElse(0);
-//				double averageOffer = offeredItems.stream().mapToDouble(OfferedItem::getOfferedPrice).average()
-//						.orElse(0);
-				
-				int totalOffers = 12;
-				double highestOffer = 12;
-				double averageOffer = 12;
+            HBox itemRow = createItemRow(item, offer);  
+            itemsContainer.getChildren().add(itemRow);  
+        }  
+    }  
 
-				sellerOfferView.updateFooterStatistics(String.valueOf(totalOffers), String.format("Rp %.2f", highestOffer),
-						String.format("Rp %.2f", averageOffer));
+    /**  
+     * Create an item row with event handlers.  
+     */  
+    private HBox createItemRow(Item item, Offer offer) {  
+        HBox itemRow = sellerOfferView.getcreateItemRow();  
+        
+        Button acceptBtn = sellerOfferView.getAcceptButton(itemRow);  
+        Button declineBtn = sellerOfferView.getDeclineButton(itemRow);  
 
-			} catch (Exception e) {
-				e.printStackTrace();
-				popupView.getInstance().showErrorPopup("Error", "Failed to load offered items.");
-			}
-		});
+        acceptBtn.setOnAction(event -> handleAcceptOffer(item, offer));  
+        declineBtn.setOnAction(event -> handleDeclineOffer(item, offer));  
+
+        sellerOfferView.updateItemRowLabels(  
+            itemRow,  
+            item.getName(),  
+            item.getCategory(),  
+            String.format("Rp %.2f", item.getPrice()),  
+            String.format("Rp %.2f", offer.getAmount()),  
+            userService.getUserNamebyid(offer.getUserId())  
+        );  
+
+        return itemRow;  
+    }  
+
+    /**  
+     * Update footer statistics.  
+     */  
+    private void updateFooterStatistics(List<Offer> offeredItems) {  
+        int totalOffers = offeredItems.size();  
+        double highestOffer = offeredItems.stream()  
+            .mapToDouble(Offer::getAmount)  
+            .max()  
+            .orElse(0);  
+        double averageOffer = offeredItems.stream()  
+            .mapToDouble(Offer::getAmount)  
+            .average()  
+            .orElse(0);  
+
+        sellerOfferView.updateFooterStatistics(  
+            String.valueOf(totalOffers),  
+            String.format("Rp %.2f", highestOffer),  
+            String.format("Rp %.2f", averageOffer)  
+        );  
+    }  
+
+    /**  
+     * Handle population errors.  
+     */  
+    private void handlePopulationError(Exception e) {  
+        e.printStackTrace();  
+        popupView.getInstance().showErrorPopup(  
+            "Error",   
+            "Failed to load offered items."  
+        );  
+    }  
+
+	// Metode baru untuk handle accept offer  
+	private void handleAcceptOffer(Item item, Offer offer) {  
+	    try {  
+	        // Tampilkan konfirmasi popup  
+	        boolean confirmed = popupView.getInstance().showConfirmationPopup(  
+	            "Accept Offer",   
+	            "Are you sure you want to accept this offer for " + item.getName() + "?"  
+	        );  
+
+	        if (confirmed) {  
+	            // Proses penerimaan penawaran  
+	            boolean success = offerService.acceptOffer(offer.getId());  
+	            
+	            if (success) {  
+	                popupView.getInstance().showSuccessPopup(  
+	                    "Offer Accepted",   
+	                    "The offer for " + item.getName() + " has been accepted."  
+	                );  
+	                
+	                // Refresh daftar penawaran  
+	                refreshOfferedItems();  
+	            } else {  
+	                popupView.getInstance().showErrorPopup(  
+	                    "Error",   
+	                    "Failed to accept the offer. Please try again."  
+	                );  
+	            }  
+	        }  
+	    } catch (Exception e) {  
+	        e.printStackTrace();  
+	        popupView.getInstance().showErrorPopup(  
+	            "Error",   
+	            "An error occurred while processing the offer."  
+	        );  
+	    }  
+	}  
+
+	// Metode baru untuk handle decline offer  
+	private void handleDeclineOffer(Item item, Offer offer) {  
+	    try {  
+	        // Tampilkan popup alasan penolakan  
+	        String declineReason = popupView.getInstance().showInputPopup(  
+	            "Decline Offer",   
+	            "Reason for declining the offer for " + item.getName() + ":"  
+	        );  
+
+	        if (declineReason != null && !declineReason.trim().isEmpty()) {  
+	            // Proses penolakan penawaran  
+	            boolean success = offerService.declineOffer(offer.getId(), declineReason);  
+	            
+	            if (success) {  
+	                popupView.getInstance().showSuccessPopup(  
+	                    "Offer Declined",   
+	                    "The offer for " + item.getName() + " has been declined."  
+	                );  
+	                
+	                // Refresh daftar penawaran  
+	                refreshOfferedItems();  
+	            } else {  
+	                popupView.getInstance().showErrorPopup(  
+	                    "Error",   
+	                    "Failed to decline the offer. Please try again."  
+	                );  
+	            }  
+	        }  
+	    } catch (Exception e) {  
+	        e.printStackTrace();  
+	        popupView.getInstance().showErrorPopup(  
+	            "Error",   
+	            "An error occurred while processing the offer."  
+	        );  
+	    }  
 	}
 
 	
@@ -263,45 +416,4 @@ public class SellerOfferController {
 		populateItemRows();
 	}
 
-	/**
-	 * Inner class representing an offered item. This should ideally be a separate
-	 * class in your model package.
-	 */
-	public static class OfferedItem {
-		private String name;
-		private String category;
-		private String size;
-		private double initialPrice;
-		private double offeredPrice;
-
-		// Constructor
-		public OfferedItem(String name, String category, String size, double initialPrice, double offeredPrice) {
-			this.name = name;
-			this.category = category;
-			this.size = size;
-			this.initialPrice = initialPrice;
-			this.offeredPrice = offeredPrice;
-		}
-
-		// Getters
-		public String getName() {
-			return name;
-		}
-
-		public String getCategory() {
-			return category;
-		}
-
-		public String getSize() {
-			return size;
-		}
-
-		public double getInitialPrice() {
-			return initialPrice;
-		}
-
-		public double getOfferedPrice() {
-			return offeredPrice;
-		}
-	}
 }
