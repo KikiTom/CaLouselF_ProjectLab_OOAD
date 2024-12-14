@@ -1,9 +1,48 @@
 package Service;
 
-public class WishlistService {
+import java.util.ArrayList;
+import java.util.List;
 
-	public WishlistService() {
-		// TODO Auto-generated constructor stub
+import Model.Item;
+import Model.WishList;
+import Repository.WishListRepository;
+
+public class WishlistService {
+	private WishListRepository wishlistRepository;
+	
+	public WishlistService(WishListRepository wishlistRepository) {
+		this.wishlistRepository = wishlistRepository;
 	}
+	
+	public boolean Addtowishlist(int userid, Item item) {  
+	    // Get the user's current wishlist 
+	    List<WishList> wishlistuser = wishlistRepository.getWishListByUserId(userid);  
+	   
+	    // Cek apakah wishlist kosong atau null  
+	    if (wishlistuser == null) {  
+	        wishlistuser = new ArrayList<>();  
+	    }  
+	    
+	    // Check if the item is already in the wishlist  
+	    boolean itemExists = wishlistuser.stream()  
+	        .anyMatch(wishlist -> wishlist.getItem().getId() == item.getId());  
+	    
+	    // If item is already in wishlist, return false  
+	    if (itemExists) {  
+	        return false;  
+	    }  
+	    
+	    // Create a new WishList object  
+	    WishList newWishlistItem = new WishList(userid, item);  
+	        
+	    // Attempt to create the new wishlist entry  
+	    try {  
+	        return wishlistRepository.create(newWishlistItem);  
+	    } catch (Exception e) {  
+	        // Log the error  
+	        System.err.println("Error adding item to wishlist: " + e.getMessage());  
+	        return false;  
+	    }  
+	}  
 
 }

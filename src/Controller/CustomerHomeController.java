@@ -42,7 +42,7 @@ public class CustomerHomeController {
         this.transactionRepository = new TransactionRepository(Database.getInstance());  
         
         // Inisialisasi Service  
-//        wishlistService = new ItemService(itemRepository, userService, transactionRepository);  
+        this.wishlistService = new WishlistService(this.wishlistrepository);  
         this.transactionService = new TransactionService(transactionRepository);
 		
 		
@@ -119,10 +119,10 @@ public class CustomerHomeController {
 
         // Confirm purchase with user  
         String confirmationMessage = String.format(  
-            "Are you sure you want to purchase %s for %s?",   
-            item.getName(),   
-            item.getPrice()  
-        );  
+        	    "Are you sure you want to purchase %s for Rp %s?",   
+        	    item.getName(),   
+        	    view.formatRupiah(item.getPrice())  
+        	);  
         
         if (!popupView.getInstance().showConfirmationPopup("Confirm Purchase", confirmationMessage)) {  
             return false; // User cancelled  
@@ -235,22 +235,34 @@ public class CustomerHomeController {
 //	}
 
 	// Tambahkan item ke wishlist
-//	public void addToWishlist(Item item) {
-//		try {
-//			boolean addedToWishlist = wishlistService.addToWishlist(username, item);
-//
-//			if (addedToWishlist) {
-//				// Tampilkan pesan sukses
-//				System.out.println("Item ditambahkan ke wishlist: " + item.getName());
-//			} else {
-//				// Tampilkan pesan gagal
-//				System.out.println("Gagal menambahkan item ke wishlist");
-//			}
-//		} catch (Exception e) {
-//			// Handle error
-//			System.err.println("Gagal menambahkan ke wishlist: " + e.getMessage());
-//		}
-//	}
+    public void addToWishlist(Item item) {  
+        try {  
+            // Dapatkan user ID dari username yang sedang login  
+            int userId = userService.getUserID(username);  
+            // Panggil service untuk menambahkan ke wishlist  
+            boolean addedToWishlist = wishlistService.Addtowishlist(userId, item);  
+
+            if (addedToWishlist) {  
+                // Tampilkan popup sukses  
+                popupView.getInstance().showSuccessPopup(  
+                    "Wishlist Berhasil",   
+                    "Item " + item.getName() + " berhasil ditambahkan ke wishlist"  
+                );  
+            } else {  
+                // Tampilkan popup error jika item sudah ada di wishlist  
+                popupView.getInstance().showErrorPopup(  
+                    "Gagal Menambahkan",   
+                    "Item " + item.getName() + " sudah ada di wishlist Anda"  
+                );  
+            }  
+        } catch (Exception e) {  
+            // Tangani error yang tidak terduga  
+            popupView.getInstance().showErrorPopup(  
+                "Kesalahan Sistem",   
+                "Gagal menambahkan item ke wishlist: " + e.getMessage()  
+            );  
+        }  
+    }  
     
     private void closeHomeScene() {
 		Platform.runLater(() -> {

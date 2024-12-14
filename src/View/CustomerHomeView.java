@@ -203,7 +203,14 @@ public class CustomerHomeView extends BorderPane {
 	    wishlistIcon.setOnMouseExited(e -> wishlistIcon.setOpacity(1.0));  
 
 	    wishlistIcon.setOnMouseClicked(e -> {  
-	        System.out.println("Menambahkan item ke wishlist: " + item.getName());  
+	        System.out.println("Menambahkan item ke wishlist: " + item.getName());
+	        if (controller != null) {  
+	            // Panggil method addToWishlist dari controller  
+	            controller.addToWishlist(item);  
+	        } else {  
+	            // Optional: Tampilkan pesan error jika controller belum di-set  
+	            System.err.println("Controller belum diinisialisasi");  
+	        }  
 	    });  
 
 	    // Gunakan AnchorPane untuk positioning absolut  
@@ -469,7 +476,7 @@ public class CustomerHomeView extends BorderPane {
 				chosenItemCard);
 	}
 
-	private String formatRupiah(int price) {
+	public String formatRupiah(int price) {
 		StringBuilder formatted = new StringBuilder(String.valueOf(price));
 		for (int i = formatted.length() - 3; i > 0; i -= 3) {
 			formatted.insert(i, ".");

@@ -22,10 +22,12 @@ public class WishListRepository extends RepositoryInheritClass implements Create
 		List<WishList> wishlistList = new ArrayList<>();
 		
 		try (Connection connection = database.getConnection()) {
-            String query = ""
-            		+ "SELECT wishlist.Id, items.Id, items.Name, items.Size, items.Price, items.Category, items.Status, items.IsAccepted "
-            		+ "FROM wishlist JOIN items ON wishlist.ItemId = items.Id "
-            		+ "Where wishlist.UserId = ?";
+			String query = ""  
+	                + "SELECT wishlist.Id AS WishlistId, " // Ubah nama kolom untuk menghindari konflik  
+	                + "items.Id AS ItemId, " // Tambahkan alias untuk ItemId  
+	                + "items.Name, items.Size, items.Price, items.Category, items.Status, items.IsAccepted "  
+	                + "FROM wishlist JOIN items ON wishlist.ItemId = items.Id "  
+	                + "WHERE wishlist.UserId = ?";  
                   
             PreparedStatement stmt = connection.prepareStatement(query);
             stmt.setInt(1, userId);
@@ -35,12 +37,12 @@ public class WishListRepository extends RepositoryInheritClass implements Create
             	WishList wishlist = new WishList();
             	Item item = new Item();
             	
-            	int id = rs.getInt("Id");
+            	int id = rs.getInt("WishlistId"); 
             	int itemId = rs.getInt("ItemId");
             	String name = rs.getString("Name");
             	String size = rs.getString("Size");
             	int price = rs.getInt("Price");
-            	String category = rs.getString("Name");
+            	String category = rs.getString("Category");
             	String status = rs.getString("Status");
             	Boolean isAccepted = rs.getBoolean("IsAccepted");
             	
