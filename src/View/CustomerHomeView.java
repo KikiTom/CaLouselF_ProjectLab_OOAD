@@ -197,10 +197,23 @@ public class CustomerHomeView extends BorderPane {
 	    wishlistIcon.setFitWidth(30);  
 	    wishlistIcon.setFitHeight(30);  
 	    wishlistIcon.setPreserveRatio(true);  
-	    wishlistIcon.setStyle("-fx-cursor: hand;");  
+	    wishlistIcon.setStyle("-fx-cursor: hand;"); 
+	    
+	    Tooltip wishlistTooltip = new Tooltip("Add to Wishlist");
+	    wishlistTooltip.setStyle("-fx-background-color: #3498DB; -fx-text-fill: white; -fx-font-size: 14px;");
+	    // Set Tooltip ke ImageView
+	    wishlistTooltip.setShowDelay(javafx.util.Duration.seconds(0));
+	    Tooltip.install(wishlistIcon, wishlistTooltip);
+	    
+	    wishlistIcon.setOnMouseEntered(e -> {
+	        wishlistIcon.setOpacity(0.7);
+	        wishlistTooltip.setOpacity(1);  // Menampilkan Tooltip
+	    });
 
-	    wishlistIcon.setOnMouseEntered(e -> wishlistIcon.setOpacity(0.7));  
-	    wishlistIcon.setOnMouseExited(e -> wishlistIcon.setOpacity(1.0));  
+	    wishlistIcon.setOnMouseExited(e -> {
+	        wishlistIcon.setOpacity(1.0);
+	        wishlistTooltip.setOpacity(0);  // Menyembunyikan Tooltip
+	    });
 
 	    wishlistIcon.setOnMouseClicked(e -> {  
 	        System.out.println("Menambahkan item ke wishlist: " + item.getName());
@@ -324,6 +337,7 @@ public class CustomerHomeView extends BorderPane {
 		// Action for View Purchase List button (index 0)
 		navbarView.setButtonAction(0, () -> {
 			System.out.println("View Purchase List clicked");
+			controller.navigateToPurchaseHistory();
 		});
 
 		// Action for Wishlist button (index 1)

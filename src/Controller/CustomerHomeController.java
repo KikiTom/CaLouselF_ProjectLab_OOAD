@@ -294,21 +294,16 @@ public class CustomerHomeController {
 
 
 	// Navigasi ke Purchase History
-//	public void navigateToPurchaseHistory() {
-//		Stage purchaseHistoryStage = new Stage();
-//		purchaseHistoryStage.initModality(Modality.APPLICATION_MODAL);
-//
-//		// Dapatkan daftar purchase history dari service
-//		List<Item> purchaseHistory = purchaseService.getPurchaseHistory(username);
-//
-//		PurchaseHistoryView purchaseHistoryView = new PurchaseHistoryView(purchaseHistory);
-//		purchaseHistoryView.setController(this);
-//
-//		Scene purchaseHistoryScene = new Scene(purchaseHistoryView);
-//		purchaseHistoryStage.setScene(purchaseHistoryScene);
-//		purchaseHistoryStage.setTitle("Purchase History");
-//		purchaseHistoryStage.showAndWait();
-//	}
+	public void navigateToPurchaseHistory() {
+		int userId = userService.getUserID(username);
+		System.out.println(userId);
+		CustomerHistoryController historyController = new CustomerHistoryController(
+				userId,
+				userService,
+				itemService);
+		closeHomeScene();
+		historyController.showView();
+	}
 
 	// Navigasi ke Wishlist
 	public void navigateToWishlist() {
