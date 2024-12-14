@@ -21,10 +21,11 @@ public class TransactionRepository extends RepositoryInheritClass implements Get
     @Override
     public boolean create(Transaction entity) {
     	try (Connection connection = database.getConnection()) {
-            String query = "INSERT INTO items (UserId, ItemId) VALUES (?, ?)";
+            String query = "INSERT INTO transaction (UserId, ItemId, Status) VALUES (?, ?, ?)";
             PreparedStatement stmt = connection.prepareStatement(query);
             stmt.setInt(1, entity.getUserId());
             stmt.setInt(2, entity.getItem().getId());
+            stmt.setString(3, entity.getStatus());
             
             int rowsInserted = stmt.executeUpdate();
             return rowsInserted > 0;
@@ -38,7 +39,7 @@ public class TransactionRepository extends RepositoryInheritClass implements Get
 	public Transaction getById(int id) {
 		try (Connection connection = database.getConnection()) {
 			String query = ""
-            		+ "SELECT transaction.Id, transaction.ItemId, items.Name, items.Size, items.Price, items.Category, items.Status, items.IsAccepted "
+            		+ "SELECT transaction.Id, transaction.ItemId, items.Name, items.Size, items.Price, items.Category, transaction.Status, items.IsAccepted "
             		+ "FROM transactions JOIN items ON transaction.ItemId = items.Id "
             		+ "Where transaction.Id = ?";
             
@@ -85,7 +86,7 @@ public class TransactionRepository extends RepositoryInheritClass implements Get
 		
 		try (Connection connection = database.getConnection()) {
 			String query = ""  
-				    + "SELECT transaction.Id, transaction.UserId, items.Id, items.Name, items.Size, items.Price, items.Category, items.Status, items.IsAccepted "  
+				    + "SELECT transaction.Id, transaction.UserId, items.Id, items.Name, items.Size, items.Price, items.Category, transaction.Status, items.IsAccepted "  
 				    + "FROM transaction JOIN items ON transaction.ItemId = items.Id "  
 				    + "WHERE transaction.ItemId = ?"; 
                   
@@ -135,7 +136,7 @@ public class TransactionRepository extends RepositoryInheritClass implements Get
 		
 		try (Connection connection = database.getConnection()) {
             String query = ""
-            		+ "SELECT transaction.Id, items.Id, items.Name, items.Size, items.Price, items.Category, items.Status, items.IsAccepted "
+            		+ "SELECT transaction.Id, items.Id, items.Name, items.Size, items.Price, items.Category, transaction.Status, items.IsAccepted "
             		+ "FROM transactions JOIN items ON transaction.ItemId = items.Id "
             		+ "Where transaction.UserId = ?";
                   

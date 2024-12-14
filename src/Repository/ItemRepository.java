@@ -39,6 +39,7 @@ public class ItemRepository extends RepositoryInheritClass implements GetAll<Ite
                 // Create a new Item object and add it to the list
                 Item item = new Item(name,isAccepted,status,category,size,price,userId);
                 item.setId(id);
+               
                 itemList.add(item);
             }
             

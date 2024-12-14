@@ -36,6 +36,7 @@ public class LoginController {
 
     private void setupLoginAction() {
         loginView.getLoginButton().setOnAction(e -> handleLogin());
+        
     }
     
     private void setupregisterHyperlink() {
@@ -115,8 +116,8 @@ public class LoginController {
             
             // Buat controller dan tampilkan home  
             CustomerHomeController homeController =   
-                new CustomerHomeController(username, itemService);  
-            homeController.show(customerHomeStage);  
+                new CustomerHomeController(username, itemService, userService);  
+            homeController.show(customerHomeStage);
         }  
     } 
 }

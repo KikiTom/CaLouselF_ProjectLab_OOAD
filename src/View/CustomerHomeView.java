@@ -15,11 +15,12 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 
 public class CustomerHomeView extends BorderPane {
 	private CustomerHomeController controller;
 	private CustomerComponentView navbarView;
-	private VBox chosenItemCard;
+	private StackPane chosenItemCard;
 	private Item currentChosenItem = null;
 	private String username;
 	private ItemService itemService;
@@ -115,13 +116,15 @@ public class CustomerHomeView extends BorderPane {
 	}
 
 	// Metode untuk membuat kartu item kosong
-	private VBox createEmptyChosenItemCard() {
+	private StackPane createEmptyChosenItemCard() {
+		StackPane cardContainer = new StackPane();
+
 		VBox card = new VBox(15);
 		card.setAlignment(Pos.CENTER);
 		card.setStyle("-fx-background-color: white;" + "-fx-background-radius: 15;"
 				+ "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0.2, 0, 3);");
 		card.setPadding(new Insets(20));
-		card.setPrefHeight(450); // Tetapkan tinggi default
+		card.setPrefHeight(450);
 
 		// Pesan placeholder
 		Label placeholderLabel = new Label("No Item Selected");
@@ -129,15 +132,17 @@ public class CustomerHomeView extends BorderPane {
 		placeholderLabel.setTextFill(Color.web("#BDC3C7"));
 
 		// Ikon placeholder
-		ImageView placeholderIcon = new ImageView(new Image("file:resources/image.png")); // Ganti dengan path ikon
-																								// Anda
+		ImageView placeholderIcon = new ImageView(new Image("file:resources/image.png"));
 		placeholderIcon.setFitWidth(150);
 		placeholderIcon.setFitHeight(150);
 		placeholderIcon.setOpacity(0.5);
 
 		card.getChildren().addAll(placeholderIcon, placeholderLabel);
 
-		return card;
+		// Tambahkan card ke container
+		cardContainer.getChildren().add(card);
+
+		return cardContainer;
 	}
 
 	private HBox createModernSearchBox() {
@@ -162,71 +167,129 @@ public class CustomerHomeView extends BorderPane {
 	}
 
 	// Metode untuk membuat kartu item yang dipilih
-	private VBox createSelectedItemCard(Item item) {
-		VBox card = new VBox(15);
-		card.setAlignment(Pos.CENTER);
-		card.setStyle("-fx-background-color: white;" + "-fx-background-radius: 15;"
-				+ "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0.2, 0, 3);");
-		card.setPadding(new Insets(20));
-		card.setPrefHeight(450);
+	private StackPane createSelectedItemCard(Item item) {  
+	    StackPane cardContainer = new StackPane();  
 
-		// Chosen Item Title
-		Label cardTitle = new Label("Chosen Item");
-		cardTitle.setFont(Font.font("Segoe UI", FontWeight.BOLD, 18));
-		cardTitle.setTextFill(Color.web(SECONDARY_COLOR));
+	    VBox card = new VBox(15);  
+	    card.setAlignment(Pos.CENTER);  
+	    card.setStyle(  
+	        "-fx-background-color: white;" +   
+	        "-fx-background-radius: 15;" +  
+	        "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0.2, 0, 3);"  
+	    );  
+	    card.setPadding(new Insets(20));  
+	    card.setPrefHeight(450);  
 
-		// Item Image
-		ImageView itemImage = new ImageView();
-		try {
-			Image image = new Image(item.getDefaultImagePathByCategory());
-			itemImage.setImage(image);
-			itemImage.setFitWidth(250);
-			itemImage.setFitHeight(250);
-			itemImage.setPreserveRatio(true);
-		} catch (Exception e) {
-			System.err.println("Gagal memuat gambar untuk item: " + item.getName());
-		}
+	    // Item Image  
+	    ImageView itemImage = new ImageView();  
+	    try {  
+	        Image image = new Image(item.getDefaultImagePathByCategory());  
+	        itemImage.setImage(image);  
+	        itemImage.setFitWidth(250);  
+	        itemImage.setFitHeight(250);  
+	        itemImage.setPreserveRatio(true);  
+	    } catch (Exception e) {  
+	        System.err.println("Gagal memuat gambar untuk item: " + item.getName());  
+	    }  
 
-		// Item Details
-		Label itemNameLabel = new Label(item.getName());
-		itemNameLabel.setFont(Font.font("Segoe UI", FontWeight.BOLD, 16));
-		itemNameLabel.setTextFill(Color.web(TEXT_COLOR));
+	    // Tambahkan tombol wishlist di sudut kanan atas  
+	    ImageView wishlistIcon = new ImageView(new Image("file:resources/add-to-wishlist.png"));  
+	    wishlistIcon.setFitWidth(30);  
+	    wishlistIcon.setFitHeight(30);  
+	    wishlistIcon.setPreserveRatio(true);  
+	    wishlistIcon.setStyle("-fx-cursor: hand;");  
 
-		Label categoryLabel = new Label(item.getCategory());
-		categoryLabel.setFont(Font.font("Segoe UI", 14));
-		categoryLabel.setTextFill(Color.web("#7F8C8D"));
+	    wishlistIcon.setOnMouseEntered(e -> wishlistIcon.setOpacity(0.7));  
+	    wishlistIcon.setOnMouseExited(e -> wishlistIcon.setOpacity(1.0));  
 
-		// Description (tambahkan deskripsi di model Item)
-		Label descriptionLabel = new Label(item.getSize());  
-		descriptionLabel.setFont(Font.font("Segoe UI", 14));  
-		descriptionLabel.setTextFill(Color.web(TEXT_COLOR));  
-		descriptionLabel.setWrapText(true);  
-		descriptionLabel.setMaxWidth(300);
-		descriptionLabel.setAlignment(Pos.CENTER); 
+	    wishlistIcon.setOnMouseClicked(e -> {  
+	        System.out.println("Menambahkan item ke wishlist: " + item.getName());  
+	    });  
 
-		// Price Label
-		Label priceLabel = new Label("Rp " + formatRupiah(item.getPrice()));
-		priceLabel.setFont(Font.font("Segoe UI", FontWeight.BOLD, 18));
-		priceLabel.setTextFill(Color.web(ACCENT_COLOR));
+	    // Gunakan AnchorPane untuk positioning absolut  
+	    AnchorPane cardWithWishlist = new AnchorPane(card);  
+	    
+	    // Posisikan wishlist icon di kanan atas  
+	    AnchorPane.setTopAnchor(wishlistIcon, 10.0);  
+	    AnchorPane.setRightAnchor(wishlistIcon, 10.0);  
+	    
+	    // Tambahkan wishlist icon ke AnchorPane  
+	    cardWithWishlist.getChildren().add(wishlistIcon);  
 
-		// Tombol Beli
-		Button buyButton = new Button("Beli Sekarang");
-		buyButton.setStyle(
-				"-fx-background-color: " + PRIMARY_COLOR + ";" + "-fx-text-fill: white;" + "-fx-background-radius: 25;"
-						+ "-fx-font-size: 14px;" + "-fx-font-weight: bold;" + "-fx-padding: 10px 20px;");
+	    // Tambahkan card dengan wishlist icon ke container  
+	    cardContainer.getChildren().add(cardWithWishlist);  
 
-		// Tambahkan event handler untuk tombol beli
-		buyButton.setOnAction(e -> {
-			// Implementasi logika beli
-			System.out.println("Membeli item: " + item.getName());
-			// Misalnya, buka dialog konfirmasi atau proses pembelian
-		});
+	    // Item Details  
+	    Label itemNameLabel = new Label(item.getName());  
+	    itemNameLabel.setFont(Font.font("Segoe UI", FontWeight.BOLD, 16));  
+	    itemNameLabel.setTextFill(Color.web(TEXT_COLOR));  
 
-		card.getChildren().addAll(cardTitle, itemImage, itemNameLabel, categoryLabel, descriptionLabel, priceLabel,
-				buyButton);
+	    Label categoryLabel = new Label(item.getCategory());  
+	    categoryLabel.setFont(Font.font("Segoe UI", 14));  
+	    categoryLabel.setTextFill(Color.web("#7F8C8D"));  
 
-		return card;
-	}
+	    // Description (Size)  
+	    Label descriptionLabel = new Label(item.getSize());  
+	    descriptionLabel.setFont(Font.font("Segoe UI", 14));  
+	    descriptionLabel.setTextFill(Color.web(TEXT_COLOR));  
+	    descriptionLabel.setWrapText(true);  
+	    descriptionLabel.setMaxWidth(300);  
+	    descriptionLabel.setAlignment(Pos.CENTER);  
+	    descriptionLabel.setTextAlignment(TextAlignment.CENTER);  
+
+	    // Price Label  
+	    Label priceLabel = new Label("Rp " + formatRupiah(item.getPrice()));  
+	    priceLabel.setFont(Font.font("Segoe UI", FontWeight.BOLD, 18));  
+	    priceLabel.setTextFill(Color.web(ACCENT_COLOR));  
+
+	    // Container untuk tombol  
+	    HBox buttonContainer = new HBox(15);  
+	    buttonContainer.setAlignment(Pos.CENTER);  
+
+	    // Tombol Purchase  
+	    Button purchaseButton = new Button("Purchase");  
+	    purchaseButton.setStyle(  
+	        "-fx-background-color: #2ECC71;" +   
+	        "-fx-text-fill: white;" +   
+	        "-fx-background-radius: 25;" +  
+	        "-fx-font-size: 14px;" +   
+	        "-fx-font-weight: bold;" +   
+	        "-fx-padding: 10px 20px;"  
+	    );  
+	    purchaseButton.setOnAction(e -> {  
+	        System.out.println("Membeli item: " + item.getName()); 
+	        controller.handlePurchase(currentChosenItem);
+	    });  
+
+	    // Tombol Make Offer  
+	    Button makeOfferButton = new Button("Make Offer");  
+	    makeOfferButton.setStyle(  
+	        "-fx-background-color: #F39C12;" +   
+	        "-fx-text-fill: white;" +   
+	        "-fx-background-radius: 25;" +  
+	        "-fx-font-size: 14px;" +   
+	        "-fx-font-weight: bold;" +   
+	        "-fx-padding: 10px 20px;"  
+	    );  
+	    makeOfferButton.setOnAction(e -> {  
+	        System.out.println("Membuat penawaran untuk item: " + item.getName());  
+	    });  
+
+	    // Tambahkan tombol ke container  
+	    buttonContainer.getChildren().addAll(purchaseButton, makeOfferButton);  
+
+	    // Tambahkan semua elemen ke card  
+	    card.getChildren().addAll(  
+	        itemImage,   
+	        itemNameLabel,   
+	        categoryLabel,   
+	        descriptionLabel,   
+	        priceLabel,   
+	        buttonContainer  
+	    );  
+
+	    return cardContainer;  
+	}  
 
 	private VBox createCenterSection() {
 		VBox centerSection = new VBox(20);
@@ -264,6 +327,7 @@ public class CustomerHomeView extends BorderPane {
 		Button logoutButton = navbarView.getLogoutButton();
 		logoutButton.setOnAction(e -> {
 			System.out.println("Logout clicked");
+			controller.logout();
 		});
 	}
 
@@ -387,26 +451,24 @@ public class CustomerHomeView extends BorderPane {
 	}
 
 	// Metode untuk memperbarui chosen item card
-	private void updateChosenItemCard(Item item) {  
-	    // Dapatkan VBox container dari left side  
-	    VBox leftSide = (VBox) getLeft();  
-	    
-	    // Hapus semua children dari left side  
-	    leftSide.getChildren().clear();  
-	    
-	    // Buat kartu item baru yang dipilih  
-	    chosenItemCard = createSelectedItemCard(item);  
-	    
-	    // Simpan item yang dipilih  
-	    currentChosenItem = item;  
-	    
-	    // Tambahkan kartu baru ke container  
-	    leftSide.getChildren().addAll(  
-	        createTitleAndSearchBox(),  // Pastikan mengembalikan elemen yang diperlukan  
-	        chosenItemCard  
-	    );  
+	private void updateChosenItemCard(Item item) {
+		// Dapatkan VBox container dari left side
+		VBox leftSide = (VBox) getLeft();
+
+		// Hapus semua children dari left side
+		leftSide.getChildren().clear();
+
+		// Buat kartu item baru yang dipilih
+		chosenItemCard = createSelectedItemCard(item);
+
+		// Simpan item yang dipilih
+		currentChosenItem = item;
+
+		// Tambahkan kartu baru ke container
+		leftSide.getChildren().addAll(createTitleAndSearchBox(), // Pastikan mengembalikan elemen yang diperlukan
+				chosenItemCard);
 	}
-	
+
 	private String formatRupiah(int price) {
 		StringBuilder formatted = new StringBuilder(String.valueOf(price));
 		for (int i = formatted.length() - 3; i > 0; i -= 3) {

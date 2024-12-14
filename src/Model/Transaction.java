@@ -5,11 +5,13 @@ public class Transaction {
 	private int id;
 	private int userId;
 	private Item item;
+	private String status;
 	public Transaction() {}
-	public Transaction(int userId, Item item) {
+	public Transaction(int userId, Item item,String status) {
 		super();
 		this.setUserId(userId);
 		this.setItem(item);
+		this.setStatus(status);
 	}
 	public int getId() {
 		return id;
@@ -28,5 +30,11 @@ public class Transaction {
 	}
 	public void setItem(Item item) {
 		this.item = item;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
 	}
 }
