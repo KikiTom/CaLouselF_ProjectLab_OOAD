@@ -19,7 +19,6 @@ public class AdminComponentView {
         if (logoutButton == null) {  
             System.err.println("Logout button is not initialized!");  
         }
-        System.err.println(logoutButton); 
         return logoutButton;  
     }
     
@@ -38,22 +37,7 @@ public class AdminComponentView {
     }  
 
     private VBox createSidebar(String username) {  
-        VBox sidebar = new VBox(20);  
-//        sidebar.setStyle("-fx-background-color: #2C3E50;");
-         
-     // Pilihan 1: Hijau Profesional Gelap  
-        //sidebar.setStyle("-fx-background-color: #0A5132;");  
-        
-        // Pilihan 2: Hijau Emerald Kelembutan  
-         //sidebar.setStyle("-fx-background-color: #0B6623;");  
-        
-        // Pilihan 3: Hijau Pinus Elegan  
-         //sidebar.setStyle("-fx-background-color: #01442D;");  
-        
-        // Pilihan 4: Hijau Hutan Profesional  
-        // sidebar.setStyle("-fx-background-color: #0E3B2D;");  
-        
-        // Pilihan 5: Hijau Gelap Sophisticated  
+        VBox sidebar = new VBox(20);    
          sidebar.setStyle("-fx-background-color: #1B4332;");
         
         sidebar.setAlignment(Pos.CENTER);  // Ubah ke CENTER  
@@ -95,7 +79,7 @@ public class AdminComponentView {
         // Add circular clip to profile image  
         Circle clip = new Circle(75, 75, 75);  
         profileImage.setClip(clip);  
-
+        
         return profileImage;  
     }  
 
