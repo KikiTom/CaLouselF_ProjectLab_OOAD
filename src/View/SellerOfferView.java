@@ -30,6 +30,9 @@ public class SellerOfferView {
 		this.username = username;
 		this.sidebarComponent = sidebarComponent;
 		initializeComponents();
+		
+		// Debug print  
+	    System.out.println("ItemsScrollPane after init: " + itemsScrollPane);  
 	}
 
 	public Scene createOfferedItemsScene() {
@@ -46,6 +49,7 @@ public class SellerOfferView {
 
 	private void initializeComponents() {
 		sidebar = sidebarComponent.getSidebar(username, "View Offered Items");
+		itemsScrollPane = createItemsScrollPane();  
 	}
 
 	private BorderPane createMainLayout() {
@@ -74,34 +78,42 @@ public class SellerOfferView {
 		return contentArea;
 	}
 
-	private VBox createOverviewPanel() {
-		VBox overviewPanel = new VBox(15);
-		overviewPanel.setPadding(new Insets(20));
-		overviewPanel.setStyle("-fx-background-color: white;");
+	private VBox createOverviewPanel() {  
+	    VBox overviewPanel = new VBox(15);  
+	    overviewPanel.setPadding(new Insets(20));  
+	    overviewPanel.setStyle("-fx-background-color: white;");  
 
-		// Search TextField
-		TextField searchField = new TextField();
-		searchField.setPromptText("Search offered items...");
-		searchField.setStyle("-fx-background-color: #F4F6F7;" + "-fx-border-color: #BDC3C7;"
-				+ "-fx-border-radius: 30px;" + "-fx-background-radius: 30px;" + "-fx-font-size: 14px;");
-		searchField.setPrefSize(300, 40);
+	    // Search TextField  
+	    TextField searchField = new TextField();  
+	    searchField.setPromptText("Search offered items...");  
+	    searchField.setStyle("-fx-background-color: #F4F6F7;" + "-fx-border-color: #BDC3C7;"  
+	            + "-fx-border-radius: 30px;" + "-fx-background-radius: 30px;" + "-fx-font-size: 14px;");  
+	    searchField.setPrefSize(300, 40);  
 
-		Label titleLabel = new Label("Offered Items");
-		titleLabel.setStyle("-fx-font-size: 24px;" + "-fx-font-weight: bold;");
+	    Label titleLabel = new Label("Offered Items");  
+	    titleLabel.setStyle("-fx-font-size: 24px;" + "-fx-font-weight: bold;");  
 
-		// Table Header
-		HBox tableHeader = createTableHeader();
+	    // Table Header  
+	    HBox tableHeader = createTableHeader();  
 
-		// Scrollable Items
-		ScrollPane itemsScrollPane = createItemsScrollPane();
+	    // Gunakan itemsScrollPane yang sudah ada, bukan membuat baru  
+	    // this.itemsScrollPane = createItemsScrollPane();  // Hapus baris ini  
 
-		// Table Footer with Statistics
-		HBox tableFooter = createTableFooter();
+	    // Pastikan content dari ScrollPane adalah VBox yang bisa diupdate  
+	    VBox itemsContainer = (VBox) itemsScrollPane.getContent();  
+	    if (itemsContainer == null) {  
+	        itemsContainer = new VBox(10);  
+	        itemsContainer.setStyle("-fx-background-color: white;");  
+	        itemsScrollPane.setContent(itemsContainer);  
+	    }  
 
-		overviewPanel.getChildren().addAll(searchField, titleLabel, tableHeader, itemsScrollPane, tableFooter);
+	    // Table Footer with Statistics  
+	    HBox tableFooter = createTableFooter();  
 
-		return overviewPanel;
-	}
+	    overviewPanel.getChildren().addAll(searchField, titleLabel, tableHeader, itemsScrollPane, tableFooter);  
+
+	    return overviewPanel;  
+	}  
 
 	private HBox createTableHeader() {  
 	    HBox header = new HBox(10);  
@@ -142,27 +154,21 @@ public class SellerOfferView {
 	    return header;  
 	}  
 
-	private ScrollPane createItemsScrollPane() {
-		ScrollPane scrollPane = new ScrollPane();
-		scrollPane.setStyle("-fx-background-color: transparent;");
-		scrollPane.setFitToWidth(true);
+	private ScrollPane createItemsScrollPane() {  
+	    ScrollPane scrollPane = new ScrollPane();  
+	    scrollPane.setStyle("-fx-background-color: transparent;");  
+	    scrollPane.setFitToWidth(true);  
 
-		// Assign a unique ID for easier lookup
-		scrollPane.setId("offered-items-scroll-pane");
+	    // Assign a unique ID for easier lookup  
+	    scrollPane.setId("offered-items-scroll-pane");  
 
-		VBox itemsContainer = new VBox(10);
-		itemsContainer.setStyle("-fx-background-color: white;");
+	    VBox itemsContainer = new VBox(10);  
+	    itemsContainer.setStyle("-fx-background-color: white;");  
 
-		// Optionally, add a sample item row
-		// HBox item = createItemRow();
-		// itemsContainer.getChildren().add(item);
+	    scrollPane.setContent(itemsContainer);  
+	    scrollPane.setPrefHeight(400);  
 
-		scrollPane.setContent(itemsContainer);
-		scrollPane.setPrefHeight(400);
-
-		this.itemsScrollPane = scrollPane; // Assign to class field
-
-		return scrollPane;
+	    return scrollPane;  
 	}
 
 	private Label createStandardLabel(String text, double width, String color) {
@@ -244,23 +250,66 @@ public class SellerOfferView {
 	 * @param initialPrice the initial price of the item
 	 * @param offeredPrice the offered price by the buyer
 	 */
-	public void updateItemRowLabels(HBox itemRow, String nameItem, String category, String initialPrice,  
-	        String offeredPrice, String customer) {  
-	    try {  
-	        // Update label-label  
-	        getNameItemLabel(itemRow).setText(nameItem);  
-	        getCategoryLabel(itemRow).setText(category);  
-	        getInitialPriceLabel(itemRow).setText(initialPrice);  
-	        
-	        // Karena struktur berubah, kita perlu mengakses VBox terlebih dahulu  
-	        VBox offeredPriceCustomerBox = (VBox) itemRow.getChildren().get(5);  
-	        ((Label)offeredPriceCustomerBox.getChildren().get(0)).setText(offeredPrice);  
-	        ((Label)offeredPriceCustomerBox.getChildren().get(1)).setText(customer);  
-	    } catch (Exception e) {  
-	        e.printStackTrace();  
-	        System.err.println("Error updating offered item row labels: " + e.getMessage());  
-	    }  
-	}  
+	public void updateItemRowLabels(  
+		    HBox itemRow,   
+		    String itemName,   
+		    String category,   
+		    String initialPrice,   
+		    String offeredPrice,   
+		    String customerName  
+		) {  
+		    try {  
+		        // Debug print  
+		        System.out.println("Updating Item Row Labels:");  
+		        System.out.println("Item Name: " + itemName);  
+		        System.out.println("Category: " + category);  
+		        System.out.println("Initial Price: " + initialPrice);  
+		        System.out.println("Offered Price: " + offeredPrice);  
+		        System.out.println("Customer Name: " + customerName);  
+
+		        // Gunakan getter baru untuk mengakses label  
+		        Label nameItemLabel = getNameItemLabel(itemRow);  
+		        Label categoryLabel = getCategoryLabel(itemRow);  
+		        Label initialPriceLabel = getInitialPriceLabel(itemRow);  
+		        Label offeredPriceLabel = getOfferedPriceLabel(itemRow);  
+		        Label customerLabel = getCustomerLabel(itemRow);  
+
+		        // Pastikan label tidak null sebelum di-set  
+		        if (nameItemLabel != null) {  
+		            nameItemLabel.setText(itemName);  
+		        } else {  
+		            System.err.println("Name Item Label is NULL");  
+		        }  
+
+		        if (categoryLabel != null) {  
+		            categoryLabel.setText(category);  
+		        } else {  
+		            System.err.println("Category Label is NULL");  
+		        }  
+
+		        if (initialPriceLabel != null) {  
+		            initialPriceLabel.setText(initialPrice);  
+		        } else {  
+		            System.err.println("Initial Price Label is NULL");  
+		        }  
+
+		        if (offeredPriceLabel != null) {  
+		            offeredPriceLabel.setText(offeredPrice);  
+		        } else {  
+		            System.err.println("Offered Price Label is NULL");  
+		        }  
+
+		        if (customerLabel != null) {  
+		            customerLabel.setText(customerName);  
+		        } else {  
+		            System.err.println("Customer Label is NULL");  
+		        }  
+
+		    } catch (Exception e) {  
+		        System.err.println("Error updating item row labels: " + e.getMessage());  
+		        e.printStackTrace();  
+		    }  
+		}   
 
 	private HBox createTableFooter() {
 		footer = new HBox(20);
@@ -443,5 +492,20 @@ public class SellerOfferView {
 
 	public Button getDeclineButton(HBox itemRow) {  
 	    return (Button) itemRow.getChildren().get(1);  
-	}  
+	} 
+	
+	public VBox getItemsContainer() {  
+	    if (itemsScrollPane == null) {  
+	        return null;  
+	    }  
+	    
+	    // Pastikan content adalah VBox  
+	    if (!(itemsScrollPane.getContent() instanceof VBox)) {  
+	        VBox itemsContainer = new VBox(10);  
+	        itemsContainer.setStyle("-fx-background-color: white;");  
+	        itemsScrollPane.setContent(itemsContainer);  
+	    }  
+	    
+	    return (VBox) itemsScrollPane.getContent();  
+	}
 }
