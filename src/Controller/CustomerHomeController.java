@@ -7,9 +7,11 @@ import Model.Item;
 import Model.Transaction;
 import Model.User;
 import Repository.Database;
+import Repository.OfferRepository;
 import Repository.TransactionRepository;
 import Repository.WishListRepository;
 import Service.ItemService;
+import Service.OfferService;
 import Service.TransactionService;
 import Service.UserService;
 import Service.WishlistService;
@@ -25,11 +27,13 @@ public class CustomerHomeController {
 	private CustomerHomeView view;
 	private WishListRepository wishlistrepository;
 	private TransactionRepository transactionRepository;
+	private OfferRepository offerRepository;
 	private Stage currentstage;
 	private ItemService itemService;
 	private UserService userService;
 	private TransactionService transactionService;
 	private WishlistService wishlistService;
+	private OfferService offerService;
 	private String username;
 
     public CustomerHomeController(String username, ItemService itemService, UserService userService) {  
@@ -40,10 +44,12 @@ public class CustomerHomeController {
 		// Inisialisasi Repository  
 		this.wishlistrepository = new WishListRepository(Database.getInstance());  
         this.transactionRepository = new TransactionRepository(Database.getInstance());  
+        this.offerRepository = new OfferRepository(Database.getInstance());
         
         // Inisialisasi Service  
         this.wishlistService = new WishlistService(this.wishlistrepository);  
-        this.transactionService = new TransactionService(transactionRepository);
+        this.transactionService = new TransactionService(this.transactionRepository);
+        this.offerService = new OfferService(this.offerRepository);
 		
 		
 		this.userService = userService;
@@ -165,40 +171,127 @@ public class CustomerHomeController {
         }  
     }  
 
-	// Tambahkan metode untuk handle make offer
-//	public void handleMakeOffer(Item item) {
-//		// Buka view make offer
-//		Stage makeOfferStage = new Stage();
-//		makeOfferStage.initModality(Modality.APPLICATION_MODAL);
-//
-//		MakeOfferView makeOfferView = new MakeOfferView(item, username);
-//		makeOfferView.setController(this);
-//
-//		Scene makeOfferScene = new Scene(makeOfferView);
-//		makeOfferStage.setScene(makeOfferScene);
-//		makeOfferStage.setTitle("Make Offer: " + item.getName());
-//		makeOfferStage.showAndWait();
-//	}
 
 	// Metode untuk submit offer
-//	public boolean submitOffer(Item item, double offerPrice) {
-//		try {
-//			// Lakukan proses submit offer melalui item service atau offer service
-//			boolean offerSubmitted = itemService.submitOffer(username, item, offerPrice);
-//
-//			if (offerSubmitted) {
-//				// Tampilkan pesan sukses
-//				return true;
-//			} else {
-//				// Tampilkan pesan gagal
-//				return false;
-//			}
-//		} catch (Exception e) {
-//			// Handle error
-//			System.err.println("Gagal submit offer: " + e.getMessage());
-//			return false;
-//		}
-//	}
+    public void HandleOffer(Item item) {  
+        try {  
+            // Cek amount offer yang sudah ada  
+            int currentOfferAmount = offerService.getAmountOffer(item.getId());  
+            
+            // Siapkan pesan untuk popup input  
+            String message;  
+            if (currentOfferAmount > 0) {  
+                // Jika sudah ada offer sebelumnya  
+                message = "Item ini sudah memiliki penawaran sebesar Rp " +   
+                          view.formatRupiah(currentOfferAmount) +   
+                          "\nMasukkan penawaran baru (harus lebih dari " +   
+                          view.formatRupiah(currentOfferAmount) + "):";  
+            } else {  
+                // Jika belum ada offer  
+                message = "Masukkan penawaran untuk item " + item.getName() +   
+                          " (harus lebih dari 0):";  
+            }  
+            
+            // Tampilkan popup input  
+            String offerInput = popupView.getInstance().showInputPopup(  
+            	    "Buat Penawaran",   
+            	    message  
+            	);  
+
+            	// Cek apakah input null (cancel ditekan)  
+            	if (offerInput == null) {  
+            	    // Jika cancel ditekan, keluar dari method tanpa error  
+            	    return;  
+            	}  
+
+            	// Validasi input kosong setelah trim  
+            	if (offerInput.trim().isEmpty()) {  
+            	    popupView.getInstance().showErrorPopup(  
+            	        "Gagal",   
+            	        "Penawaran tidak boleh kosong"  
+            	    );  
+            	    return;  
+            	}  
+            
+            // Konversi input ke integer  
+            int offerPrice;  
+            try {  
+                // Hapus karakter non-digit (misal titik atau koma)  
+                offerInput = offerInput.replaceAll("[^\\d]", "");  
+                offerPrice = Integer.parseInt(offerInput);  
+            } catch (NumberFormatException e) {  
+                popupView.getInstance().showErrorPopup(  
+                    "Kesalahan",   
+                    "Masukkan harga yang valid"  
+                );  
+                return;  
+            }  
+            
+            // Validasi harga penawaran  
+            if (offerPrice <= 0) {  
+                popupView.getInstance().showErrorPopup(  
+                    "Kesalahan",   
+                    "Penawaran harus lebih dari 0"  
+                );  
+                return;  
+            }  
+            
+            // Jika sudah ada penawaran sebelumnya, cek apakah penawaran baru lebih tinggi  
+            if (currentOfferAmount > 0 && offerPrice <= currentOfferAmount) {  
+                popupView.getInstance().showErrorPopup(  
+                    "Kesalahan",   
+                    "Penawaran harus lebih tinggi dari penawaran sebelumnya (Rp " +   
+                    view.formatRupiah(currentOfferAmount) + ")"  
+                );  
+                return;  
+            }  
+            
+            // Dapatkan user ID  
+            int userId = userService.getUserID(username);  
+            
+            // Validasi user ID  
+            if (userId <= 0) {  
+                popupView.getInstance().showErrorPopup(  
+                    "Kesalahan",   
+                    "Silakan login terlebih dahulu"  
+                );  
+                return;  
+            }  
+            
+            // Submit offer  
+            boolean offerSubmitted = offerService.makeNewOffer(  
+                item.getId(),   
+                userId,   
+                offerPrice  
+            );  
+            
+            // Cek hasil submit  
+            if (offerSubmitted) {  
+                // Tampilkan popup sukses  
+                popupView.getInstance().showSuccessPopup(  
+                    "Berhasil",   
+                    "Penawaran sebesar Rp " + view.formatRupiah(offerPrice) +   
+                    " untuk " + item.getName() + " berhasil diajukan"  
+                );  
+            } else {  
+                // Tampilkan popup error  
+                popupView.getInstance().showErrorPopup(  
+                    "Gagal",   
+                    "Gagal mengajukan penawaran untuk " + item.getName()  
+                );  
+            }  
+        } catch (Exception e) {  
+            // Handle error yang tidak terduga  
+            System.err.println("Gagal submit offer: " + e.getMessage());  
+            e.printStackTrace();  
+            
+            popupView.getInstance().showErrorPopup(  
+                "Kesalahan Sistem",   
+                "Terjadi kesalahan: " + e.getMessage()  
+            );  
+        }  
+    }  
+
 
 	// Navigasi ke Purchase History
 //	public void navigateToPurchaseHistory() {

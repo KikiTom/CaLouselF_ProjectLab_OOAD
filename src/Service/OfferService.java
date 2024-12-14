@@ -22,6 +22,10 @@ public class OfferService {
 		this.userService = userService;
 	}
 	
+	public OfferService(OfferRepository offerRepository) {
+		this.offerRepository = offerRepository;
+	}
+	
 	public List<Offer> getOfferedItemsForSeller(String username) {  
 	    // Daftar untuk menyimpan semua offers yang cocok  
 	    List<Offer> listOffer = new ArrayList<>();  
@@ -122,8 +126,101 @@ public class OfferService {
 	        System.err.println("Error declining offer: " + e.getMessage());  
 	        return false;  
 	    }  
-	}  
+	}
 	
+	public int getAmountOffer(int itemId) {  
+	    try {  
+	        // Dapatkan semua offers  
+	        List<Offer> allOffers = offerRepository.getAll();  
+	        
+	        // Jika list kosong, kembalikan 0  
+	        if (allOffers == null || allOffers.isEmpty()) {  
+	            return 0;  
+	        }  
+	        
+	        // Cari offer pertama yang sesuai kriteria  
+	        Offer matchingOffer = allOffers.stream()  
+	            .filter(offer ->   
+	                offer.getItemId() == itemId &&  // Cocokkan item ID  
+	                !offer.isAccepted() &&          // Belum diterima  
+	                "Pending".equalsIgnoreCase(offer.getStatus()) // Status pending  
+	            )  
+	            .findFirst()                        // Ambil yang pertama  
+	            .orElse(null);                      // Jika tidak ada, kembalikan null  
+	        
+	        // Kembalikan amount jika offer ditemukan, jika tidak kembalikan 0  
+	        return matchingOffer != null ? matchingOffer.getAmount() : 0;  
+	        
+	    } catch (Exception e) {  
+	        // Log error untuk debugging  
+	        System.err.println("Error in getAmountOffer: " + e.getMessage());  
+	        e.printStackTrace();  
+	        
+	        // Kembalikan 0 jika terjadi error  
+	        return 0;  
+	    }  
+	}
 	
+	public boolean makeNewOffer(int itemId, int userId, int amount) {  
+	    try {  
+	        // Validasi input  
+	        if (itemId <= 0 || userId <= 0 || amount <= 0) {  
+	            System.err.println("Invalid input: itemId, userId, or amount is not positive");  
+	            return false;  
+	        }  
 
+	        // Cek apakah sudah ada offer sebelumnya untuk item ini  
+	        List<Offer> allOffers = offerRepository.getAll();  
+	        
+	        // Cari offer yang belum diterima untuk item ini  
+	        Offer existingOffer = allOffers.stream()  
+	            .filter(offer ->   
+	                offer.getItemId() == itemId &&  
+	                !offer.isAccepted() &&   
+	                "Pending".equalsIgnoreCase(offer.getStatus())  
+	            )  
+	            .findFirst()  
+	            .orElse(null);  
+
+	        // Buat objek Offer baru  
+	        Offer newOffer = new Offer();  
+	        newOffer.setItemId(itemId);  
+	        newOffer.setUserId(userId);  
+	        newOffer.setAmount(amount);  
+	        newOffer.setStatus("Pending");  
+	        newOffer.setAccepted(false);  
+
+	        // Jika sudah ada offer sebelumnya, update offer tersebut  
+	        if (existingOffer != null) {  
+	            // Update offer yang sudah ada  
+	            boolean updated = offerRepository.update(existingOffer.getId(), userId, amount);  
+	            
+	            if (updated) {  
+	                System.out.println("Existing offer updated successfully");  
+	                return true;  
+	            } else {  
+	                System.err.println("Failed to update existing offer");  
+	                return false;  
+	            }  
+	        }   
+	        // Jika belum ada offer, buat offer baru  
+	        else {  
+	            boolean created = offerRepository.create(newOffer);  
+	            
+	            if (created) {  
+	                System.out.println("New offer created successfully");  
+	                return true;  
+	            } else {  
+	                System.err.println("Failed to create new offer");  
+	                return false;  
+	            }  
+	        }  
+	    } catch (Exception e) {  
+	        // Log error untuk debugging  
+	        System.err.println("Error in makeNewOffer: " + e.getMessage());  
+	        e.printStackTrace();  
+	        return false;  
+	    }  
+	}
+	
 }

@@ -280,6 +280,7 @@ public class CustomerHomeView extends BorderPane {
 	    );  
 	    makeOfferButton.setOnAction(e -> {  
 	        System.out.println("Membuat penawaran untuk item: " + item.getName());  
+	        controller.HandleOffer(currentChosenItem);
 	    });  
 
 	    // Tambahkan tombol ke container  
