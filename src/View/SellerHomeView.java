@@ -81,16 +81,6 @@ public class SellerHomeView {
         overviewPanel.setPadding(new Insets(20));
         overviewPanel.setStyle("-fx-background-color: white;");
 
-        // Search TextField
-        TextField searchField = new TextField();
-        searchField.setPromptText("Search items...");
-        searchField.setStyle("-fx-background-color: #F4F6F7;" +
-                            "-fx-border-color: #BDC3C7;" +
-                            "-fx-border-radius: 30px;" +
-                            "-fx-background-radius: 30px;" +
-                            "-fx-font-size: 14px;");
-        searchField.setPrefSize(300, 40);
-
         Label titleLabel = new Label("My Items CalouseIF");
         titleLabel.setStyle("-fx-font-size: 24px;" + "-fx-font-weight: bold;");
 
@@ -103,7 +93,7 @@ public class SellerHomeView {
         // Table Footer with Statistics
         HBox tableFooter = createTableFooter();
 
-        overviewPanel.getChildren().addAll(searchField, titleLabel, tableHeader, itemsScrollPane, tableFooter);
+        overviewPanel.getChildren().addAll(titleLabel, tableHeader, itemsScrollPane, tableFooter);
 
         return overviewPanel;
     }

@@ -351,11 +351,16 @@ public class SellerEditItemView {
 
  // Validation method (keep existing validation logic)  
     public boolean validateInput() {  
-        // Name validation  
-        if (nameField.getText().trim().isEmpty()) {  
-            showValidationError("Item name cannot be empty");  
-            return false;  
-        }  
+    	// Name validation  
+    	if (nameField.getText().trim().isEmpty()) {  
+    	    showValidationError("Item name cannot be empty");  
+    	    return false;  
+    	}  
+
+    	if (nameField.getText().trim().length() < 3) {  
+    	    showValidationError("Item name must be at least 3 characters long");  
+    	    return false;  
+    	}  
 
         // Category validation  
         if (categoryComboBox.getValue() == null) {  

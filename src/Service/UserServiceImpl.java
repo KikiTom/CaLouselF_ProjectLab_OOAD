@@ -55,5 +55,11 @@ public class UserServiceImpl implements UserService {
 		User user = getUserByUsername(username);
 		return user.getId();
 	}
+
+	@Override
+	public String getUserNamebyid(int userid) {
+		User user = userRepository.getUserById(userid);
+		return user.getUsername();
+	}
 }
 

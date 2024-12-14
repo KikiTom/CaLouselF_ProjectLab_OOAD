@@ -18,6 +18,7 @@ public class Item {
 	private User user;
 	private UserRepository userRepository;
 	
+	
 	public Item() {}
 	public Item(String name, Boolean isAccepted, String status,String category, String size, int price, int userId) {
 		super();
@@ -98,5 +99,26 @@ public class Item {
 	public User getUser() {
 		return userRepository.getUserById(this.userId);
 	}
+	
+	public String getDefaultImagePathByCategory() {       
+        switch (category.toLowerCase()) {  
+            case "atasan":  
+                return "file:resources/ItemImagepath/Atasan.jpg";  
+            case "bawahan":  
+                return "file:resources/ItemImagepath/Bawahan.jpg";  
+            case "pakaian formal":  
+                return "file:resources/ItemImagepath/Pakaian-Formal.jpg";  
+            case "outerwear":  
+                return "file:resources/ItemImagepath/Outerwear.jpg";  
+            case "pakaian olahraga":  
+                return "file:resources/ItemImagepath/Pakaian-Olahraga.jpg";
+            case "aksesoris":
+            	return "file:resources/ItemImagepath/Aksesoris.jpg";
+            case "pakaian dalam":
+            	return "file:resources/ItemImagepath/Pakaian-Dalam.jpg";
+            default:  
+                return "/images/default.png";  
+        }  
+    }  
 	
 }
