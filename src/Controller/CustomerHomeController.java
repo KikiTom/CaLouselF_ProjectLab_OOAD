@@ -311,21 +311,20 @@ public class CustomerHomeController {
 //	}
 
 	// Navigasi ke Wishlist
-//	public void navigateToWishlist() {
-//		Stage wishlistStage = new Stage();
-//		wishlistStage.initModality(Modality.APPLICATION_MODAL);
-//
-//		// Dapatkan daftar wishlist dari service
-//		List<Item> wishlistItems = wishlistService.getWishlistItems(username);
-//
-//		WishlistView wishlistView = new WishlistView(wishlistItems);
-//		wishlistView.setController(this);
-//
-//		Scene wishlistScene = new Scene(wishlistView);
-//		wishlistStage.setScene(wishlistScene);
-//		wishlistStage.setTitle("Wishlist");
-//		wishlistStage.showAndWait();
-//	}
+	public void navigateToWishlist() {
+		int userId = userService.getUserID(username);
+		CustomerWishlistController wishlistController = new CustomerWishlistController(  
+			    wishlistService,   
+			    itemService,         
+			    userService,        
+			    userId,   
+			    username  
+			);   
+
+		// Show the wishlist
+		closeHomeScene();
+		wishlistController.show(); 
+	}
 
 	// Tambahkan item ke wishlist
     public void addToWishlist(Item item) {  

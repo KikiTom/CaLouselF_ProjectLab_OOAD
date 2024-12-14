@@ -1,8 +1,11 @@
 package Service;  
 
 import Model.Item;
+import Model.Offer;
 import Model.Transaction;
+import Repository.Database;
 import Repository.ItemRepository;
+import Repository.OfferRepository;
 import Repository.TransactionRepository;  
 import java.util.List;  
 
@@ -11,6 +14,7 @@ public class TransactionService {
     private ItemRepository itemRepository;
     private ItemService itemService;
     private UserService userService;
+    private OfferRepository offerRepository = new OfferRepository(Database.getInstance());
     
     // Constructor  
     public TransactionService(TransactionRepository transactionRepository, ItemRepository itemRepository) {  
@@ -111,7 +115,6 @@ public class TransactionService {
             // Dapatkan semua item milik seller  
             List<Item> sellerItems = itemService.getItemsByUsername(username);  
             
-            // Gunakan stream untuk menghitung total transaksi  
             return sellerItems.stream()  
                 .flatMap(item -> {  
                     // Dapatkan transaksi untuk setiap item  
@@ -119,13 +122,52 @@ public class TransactionService {
                     return itemTransactions.stream();  
                 })  
                 .filter(transaction -> transaction.getItem() != null)  
-                .mapToInt(transaction -> transaction.getItem().getPrice())  
+                .mapToInt(transaction -> {  
+                    try {  
+                        // Cek status transaksi untuk menentukan cara menghitung harga  
+                        String status = transaction.getStatus();  
+                        
+                        if ("Purchased".equals(status)) {  
+                            // Jika status adalah Purchased, gunakan harga item  
+                            return transaction.getItem().getPrice();  
+                        }   
+                        
+                        // Cek status yang mengandung "Purchased, Offer"  
+                        if (status != null && status.contains("Purchased, Offer")) {  
+                            // Ekstrak ID offer dari status  
+                            String offerIdStr = status.split("=")[1].trim();  
+                            int offerId = Integer.parseInt(offerIdStr);  
+                            
+                            // Ambil offer dan dapatkan jumlahnya  
+                            Offer offer = offerRepository.getById(offerId);  
+                            
+                            if (offer != null) {  
+                                return offer.getAmount();  
+                            } else {  
+                                System.err.println("Offer not found for ID: " + offerId +   
+                                                   " in transaction with status: " + status);  
+                                return 0;  
+                            }  
+                        }  
+                        
+                        // Jika status tidak sesuai kriteria  
+                        System.err.println("Unhandled transaction status: " + status);  
+                        return 0;  
+                        
+                    } catch (Exception e) {  
+                        System.err.println("Error processing transaction: " +   
+                            (transaction != null ? transaction.getId() : "null transaction") +   
+                            " - " + e.getMessage());  
+                        return 0;  
+                    }  
+                })  
                 .sum();  
         } catch (Exception e) {  
+            System.err.println("Error in getTotalTransactionValueByUsername: " + e.getMessage());  
             e.printStackTrace();  
             return 0;  
         }  
-    }
+    }  
 
     /**  
      * Menghitung total transaksi keseluruhan (semua transaksi di sistem)  

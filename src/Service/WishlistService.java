@@ -43,6 +43,35 @@ public class WishlistService {
 	        System.err.println("Error adding item to wishlist: " + e.getMessage());  
 	        return false;  
 	    }  
+	} 
+	
+	public List<WishList> Getwishlistbyuserid(int userid) {  
+	    try {  
+	        // Retrieve the wishlist for the specified user  
+	        List<WishList> wishlistuser = wishlistRepository.getWishListByUserId(userid);  
+	        
+	        // If no wishlist is found, return an empty list instead of null  
+	        if (wishlistuser == null) {  
+	            return new ArrayList<>();  
+	        }  
+	        
+	        return wishlistuser;  
+	    } catch (Exception e) {  
+	        // Log the error for debugging purposes  
+	        System.err.println("Error retrieving wishlist for user ID " + userid + ": " + e.getMessage());  
+	        
+	        // Return an empty list in case of any exception  
+	        return new ArrayList<>();  
+	    }  
+	}
+	
+	public boolean removeFromWishlist(int wishlistId) {  
+	    try {    
+	        return wishlistRepository.delete(wishlistId);  
+	    } catch (Exception e) {  
+	        System.err.println("Error removing item from wishlist: " + e.getMessage());  
+	        return false;  
+	    }  
 	}  
 
 }

@@ -108,7 +108,6 @@ public class LoginController {
             sellerHomeController.showSellerHomeScene(sellerHomeStage);
         } else if ("Customer".equalsIgnoreCase(userRole)) {  
             // Default Home Page (for other roles or customers) 
-        	Stage BuyerHomeStage = new Stage();
         	ItemRepository itemRepository = new ItemRepository(Database.getInstance());
         	ItemService itemService = new ItemService(itemRepository, userService);  
             CustomerHomeView homeView = new CustomerHomeView(username, itemService);  

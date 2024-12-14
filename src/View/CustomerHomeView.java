@@ -329,6 +329,7 @@ public class CustomerHomeView extends BorderPane {
 		// Action for Wishlist button (index 1)
 		navbarView.setButtonAction(1, () -> {
 			System.out.println("Wishlist clicked");
+			controller.navigateToWishlist();
 		});
 
 		// Get logout button and set its action

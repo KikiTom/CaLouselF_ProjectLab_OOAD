@@ -20,6 +20,8 @@ import Repository.OfferRepository;
 import Repository.TransactionRepository;
 import Repository.UserRepository;
 import Repository.UserRepositoryimpl;
+import View.CustomerHistoryView;
+import View.CustomerWishlistView;
 import View.LoginView;
 import View.SellerHomeView;
 
@@ -38,16 +40,9 @@ public class Main extends Application {
         
         // Show the Login scene initially
         loginController.showLoginScene(primaryStage);
-        
-//          Testing testing = new Testing(primaryStage);
-//          Scene scene = new Scene(testing);
-//          primaryStage.setScene(scene);
-//          primaryStage.setTitle("Employee Management System");
-//          primaryStage.show();
-//        SellerHomeView sellerHomeView = new SellerHomeView(primaryStage);  
-//        primaryStage.setScene(sellerHomeView.createSellerHomeScene());  
-//        
-//        primaryStage.show(); 
+//        CustomerHistoryView view = new CustomerHistoryView(primaryStage);
+//        CustomerWishlistView view = new CustomerWishlistView(primaryStage);
+//        view.show();
     }
 
     public static void main(String[] args) {

@@ -17,11 +17,13 @@ import View.SellerOfferView;
 import View.SellerUploadView;
 import View.popupView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import Model.Item;
 import Model.Offer;
+import Model.Transaction;
 import Repository.Database;
 import Repository.OfferRepository;
 import Repository.TransactionRepository;
@@ -456,7 +458,8 @@ public class SellerOfferController {
 				if (success) {
 					popupView.getInstance().showSuccessPopup("Offer Accepted",
 							"The offer for " + item.getName() + " has been accepted.");
-
+					Transaction transaction = new Transaction(offer.getUserId(), item, "Purchased, Offer = "+ offer.getId());
+					transactionService.createTransaction(transaction); 
 					// Refresh daftar penawaran
 					refreshOfferedItems();
 				} else {
@@ -521,8 +524,10 @@ public class SellerOfferController {
 	}
 
 	// Metode utility untuk format mata uang
-	private String formatCurrency(double amount) {
-		return String.format("Rp %.2f", amount);
+	private String formatCurrency(double amount) {  
+	    // Use DecimalFormat for more precise Rupiah formatting  
+	    DecimalFormat formatter = new DecimalFormat("#,###");  
+	    return "Rp " + formatter.format(amount);  
 	}
 
 }

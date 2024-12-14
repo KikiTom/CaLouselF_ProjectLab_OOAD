@@ -87,18 +87,19 @@ public class WishListRepository extends RepositoryInheritClass implements Create
 	}
 	
 	@Override
-	public boolean delete(int id) {
-		try (Connection connection = database.getConnection()) {
-		    String query = "DELETE wishlist WHERE Id = ?";
-		    PreparedStatement stmt = connection.prepareStatement(query);
-		    
-		    stmt.setInt(1, id);
-		    
-		    int rowsDeleted = stmt.executeUpdate();
-		    return rowsDeleted > 0;
-		} catch (SQLException e) {
-		    e.printStackTrace();
-		    return false; 
-		}
-	}	
+	public boolean delete(int id) {  
+	    try (Connection connection = database.getConnection()) {  
+	        // Correct SQL DELETE syntax  
+	        String query = "DELETE FROM wishlist WHERE Id = ?";  
+	        PreparedStatement stmt = connection.prepareStatement(query);  
+	        
+	        stmt.setInt(1, id);  
+	        
+	        int rowsDeleted = stmt.executeUpdate();  
+	        return rowsDeleted > 0;  
+	    } catch (SQLException e) {  
+	        e.printStackTrace();  
+	        return false;   
+	    }  
+	}  
 }
