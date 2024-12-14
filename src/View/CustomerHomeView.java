@@ -161,6 +161,17 @@ public class CustomerHomeView extends BorderPane {
 		searchButton.setStyle(
 				"-fx-background-color: " + PRIMARY_COLOR + ";" + "-fx-text-fill: white;" + "-fx-background-radius: 25;"
 						+ "-fx-font-size: 14px;" + "-fx-font-weight: bold;" + "-fx-padding: 10px;");
+		
+		searchButton.setOnAction(e -> {
+	        String searchTerm = searchField.getText();
+	        if (!searchTerm.isEmpty()) {
+	            // Misalnya, kita panggil controller untuk menangani pencarian
+	            controller.searchItems(searchTerm); // Pastikan controller memiliki metode searchItems
+	        } else {
+	            // Tampilkan pesan jika field kosong
+	            controller.loadAndDisplayItems();
+	        }
+	    });
 
 		searchBox.getChildren().addAll(searchField, searchButton);
 		return searchBox;

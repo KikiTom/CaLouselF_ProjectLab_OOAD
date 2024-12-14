@@ -79,7 +79,7 @@ public class CustomerHomeController {
         loadAndDisplayItems();  
     }  
 
-    private void loadAndDisplayItems() {  
+    public void loadAndDisplayItems() {  
         // Dapatkan item yang sudah diterima  
         List<Item> availableItems = itemService.Getaccepteditem();  
         
