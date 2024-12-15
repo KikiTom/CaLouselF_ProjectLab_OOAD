@@ -13,7 +13,7 @@ Key features of CaLouselF include customizable search filters and a smooth brows
 ## Prerequisites
 To run the application, make sure you have the following software installed:
 
-- Eclipse 2020.6 R (recommended for connecting JavaFX and SQL Connector)
+- Eclipse 2020.6 R (recommended for connecting JavaFX and SQL Connector, but any newer version of Eclipse will also work as long as Eclipse is installed)
 - Java 11.0.11 (included within the repository)
 - JavaFX 17.0.7 (included within the repository in the LibraryTambahan.zip file)
 - MySQL Java Connection Library 8.0.24 (included within the repository in the LibraryTambahan.zip file)
