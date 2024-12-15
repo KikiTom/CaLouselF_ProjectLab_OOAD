@@ -1,7 +1,11 @@
-# CaLouselF
-
+# CaLouselF: Sustainable Fashion Marketplace
 ## Deskripsi
-[Deskripsi singkat proyek, tujuan, dan manfaat utama]
+CaLouselF is an innovative marketplace application designed to simplify the buying and selling of second-hand clothing in a safe and user-friendly environment. The platform connects sellers with buyers, enabling individuals to give their pre-loved clothing a second life, contributing to a more sustainable fashion ecosystem. By promoting sustainability, CaLouselF helps users discover unique and affordable fashion pieces while reducing waste in the fashion industry.
+
+Key features of CaLouselF include customizable search filters, user product reviews, social media integration, and secure transactions. The platform prioritizes user safety with strong encryption and offers responsive customer support to ensure a smooth and enjoyable shopping experience.
+
+CaLouselF is dedicated to fostering a community of fashion-conscious individuals who value sustainability and seek smarter, eco-friendly shopping options.
+
 
 ## Fitur Utama
 - Fitur 1
