@@ -68,7 +68,7 @@ CaLouselF-OOAD_Lab_Project/
 ├── src/
 │   ├── Controller 
 │   └── Main
-|     └── Model
+|   └── Model
 │   └── Repository
 │   └── Service
 │   └── View
