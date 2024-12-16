@@ -82,21 +82,24 @@ CaLouselF-OOAD_Lab_Project/
 ```
 Penjelasan Struktur Direktori
 1. src/
-Folder utama yang berisi kode sumber dari aplikasi. Di dalamnya terdapat sub-direktori berikut:
-  - Controller/: Berisi kelas-kelas yang mengontrol alur logika aplikasi.
-  - Main/: Menyimpan kelas utama yang menjalankan aplikasi, biasanya berisi entry point aplikasi.
-  - Model/: Menyimpan model data atau objek yang digunakan dalam aplikasi.
-  - Repository/: Berisi kelas-kelas yang mengelola akses ke data (biasanya berhubungan dengan database atau file).
-  - Service/: Berisi logika bisnis atau aturan yang digunakan oleh aplikasi.
-  - View/: Menyimpan kelas atau komponen yang menangani tampilan atau antarmuka pengguna.
+   Folder utama yang berisi kode sumber dari aplikasi. Di dalamnya terdapat sub-direktori berikut:
+     - Controller/: Berisi kelas-kelas yang mengontrol alur logika aplikasi.
+     - Main/: Menyimpan kelas utama yang menjalankan aplikasi, biasanya berisi entry point aplikasi.
+     - Model/: Menyimpan model data atau objek yang digunakan dalam aplikasi.
+     - Repository/: Berisi kelas-kelas yang mengelola akses ke data (biasanya berhubungan dengan database atau file).
+     - Service/: Berisi logika bisnis atau aturan yang digunakan oleh aplikasi.
+     - View/: Menyimpan kelas atau komponen yang menangani tampilan atau antarmuka pengguna.
+       
 2. JRE System Library (java 11)
-Menunjukkan bahwa proyek ini menggunakan Java 11 sebagai runtime environment-nya.
+   Menunjukkan bahwa proyek ini menggunakan Java 11 sebagai runtime environment-nya.
+   
 3. Resource/
-Folder ini menyimpan berbagai file sumber daya (resource) yang digunakan oleh aplikasi, seperti:
-  - Gambar button dan profile picture untuk tampilan antarmuka.
-  - Gambar produk yang digunakan dalam aplikasi.
+   Folder ini menyimpan berbagai file sumber daya (resource) yang digunakan oleh aplikasi, seperti:
+     - Gambar button dan profile picture untuk tampilan antarmuka.
+     - Gambar produk yang digunakan dalam aplikasi.
+       
 4. README.md
-File ini yang sedang kamu baca. Berisi dokumentasi tentang proyek ini, instruksi penggunaan, dan penjelasan terkait proyek.
+   File ini yang sedang kamu baca. Berisi dokumentasi tentang proyek ini, instruksi penggunaan, dan penjelasan terkait proyek.
 
 ## Lisensi
 Proyek ini dilisensikan di bawah [Heru Deliansyah] - lihat file LICENSE untuk detail.
