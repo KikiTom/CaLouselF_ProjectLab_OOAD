@@ -7,10 +7,10 @@ Key features of CaLouselF include customizable search filters and a smooth brows
 
 ## Fitur Utama
 
-<p align="center">
+<div align="center">
   <h3>Login</h3>
   <img src="Screenshot-Documentation/Tampilan-Login.png" alt="Tampilan Login">
-</p>
+</div>
 
 ## Prerequisites
 To run the application, make sure you have the following software installed:
