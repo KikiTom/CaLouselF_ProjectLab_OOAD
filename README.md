@@ -41,82 +41,71 @@ To run the application, make sure you have the following software installed:
 
 ### Kloning Repositori
 ```bash
-git clone https://github.com/username/nama-proyek.git
+git clone https://github.com/KikiTom/CaLouselF_ProjectLab_OOAD.git
 cd nama-proyek
 ```
 
-### Buat Virtual Environment
-```bash
-python -m venv venv
-source venv/bin/activate  # Untuk Linux/Mac
-venv\Scripts\activate     # Untuk Windows
-```
+### Import mysql calouself_localdb.sql
+Langkah-langkah Setup Database
+1. Jalankan XAMPP:
+   - Buka aplikasi XAMPP Control Panel.
+   - Klik Start pada Apache dan MySQL untuk menjalankan server.
+2. Buat Database:
+   - Akses phpMyAdmin melalui browser di http://localhost/phpmyadmin/.
+   - Pilih tab Databases, buat database baru dengan nama calouself_localdb.
+3. Import File SQL:
+   - Pilih database calouself_localdb di phpMyAdmin.
+   - Klik tab Import, pilih file calouself_localdb.sql dari folder repository/include, lalu klik Go untuk mengimpor.
 
-### Instal Dependensi
-```bash
-pip install -r requirements.txt
-```
-
-## Penggunaan
-
-### Menjalankan Aplikasi
-```bash
-python main.py
-```
-
-### Contoh Penggunaan
-```python
-# Contoh kode penggunaan
-from modul import fungsi
-
-hasil = fungsi(parameter)
-print(hasil)
-```
+### Setup build path javafx
+silahkan ikuti langkah langkahnya didalam link ini
+https://youtu.be/nz8P528uGjk?si=v-3Igk-G3FJiJRbn
 
 ## Struktur Proyek
 ```
-nama-proyek/
+CaLouselF-OOAD_Lab_Project/
 │
 ├── src/
-│   ├── main.py
-│   └── modul.py
+│   ├── Controller 
+│   └── Main
+|     └── Model
+│   └── Repository
+│   └── Service
+│   └── View
 │
-├── tests/
-│   └── test_modul.py
 │
-├── docs/
-│   └── dokumentasi.md
-│
-├── requirements.txt
+├── JRE System Library (java 11)
+│   
+├── Resource (gambar button, profile picture, dan gambar produk)
 ├── README.md
-└── LICENSE
+
 ```
-
-## Konfigurasi
-Salin `config.example.json` ke `config.json` dan sesuaikan pengaturan:
-
-```json
-{
-    "database": "nama_database",
-    "port": 8000,
-    "debug": false
-}
-```
-
-## Kontribusi
-1. Fork repositori
-2. Buat branch fitur (`git checkout -b fitur-baru`)
-3. Commit perubahan (`git commit -m 'Tambah fitur baru'`)
-4. Push ke branch (`git push origin fitur-baru`)
-5. Buat Pull Request
+Penjelasan Struktur Direktori
+1. src/
+Folder utama yang berisi kode sumber dari aplikasi. Di dalamnya terdapat sub-direktori berikut:
+  - Controller/: Berisi kelas-kelas yang mengontrol alur logika aplikasi.
+  - Main/: Menyimpan kelas utama yang menjalankan aplikasi, biasanya berisi entry point aplikasi.
+  - Model/: Menyimpan model data atau objek yang digunakan dalam aplikasi.
+  - Repository/: Berisi kelas-kelas yang mengelola akses ke data (biasanya berhubungan dengan database atau file).
+  - Service/: Berisi logika bisnis atau aturan yang digunakan oleh aplikasi.
+  - View/: Menyimpan kelas atau komponen yang menangani tampilan atau antarmuka pengguna.
+2. JRE System Library (java 11)
+Menunjukkan bahwa proyek ini menggunakan Java 11 sebagai runtime environment-nya.
+3. Resource/
+Folder ini menyimpan berbagai file sumber daya (resource) yang digunakan oleh aplikasi, seperti:
+  - Gambar button dan profile picture untuk tampilan antarmuka.
+  - Gambar produk yang digunakan dalam aplikasi.
+4. README.md
+File ini yang sedang kamu baca. Berisi dokumentasi tentang proyek ini, instruksi penggunaan, dan penjelasan terkait proyek.
 
 ## Lisensi
-Proyek ini dilisensikan di bawah [Nama Lisensi] - lihat file LICENSE untuk detail.
+Proyek ini dilisensikan di bawah [Heru Deliansyah] - lihat file LICENSE untuk detail.
 
 ## Kontak
-- Nama Pengembang - email@example.com
-- Link Proyek: [URL Repositori]
+- Nama Pengembang - herudeliansyah@gmail.com
 
 ## Ucapan Terima Kasih
-- [Nama Kontributor]
-- [Library/Tools yang digunakan]
+
+- **W-ptra Dunkle_Vogel** - Repository, Model & Database  
+  Terima kasih kepada **W-ptra Dunkle_Vogel** atas kontribusinya dalam pembuatan repository, model, dan database yang sangat membantu dalam pengembangan proyek ini.  
+  [GitHub Repository](https://github.com/W-ptra)
