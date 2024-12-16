@@ -55,7 +55,7 @@ Langkah-langkah Setup Database
    - Pilih tab Databases, buat database baru dengan nama calouself_localdb.
 3. Import File SQL:
    - Pilih database calouself_localdb di phpMyAdmin.
-   - Klik tab Import, pilih file calouself_localdb.sql dari folder repository/include, lalu klik Go untuk mengimpor.
+   - Klik tab Import, pilih file calouself_localdb.sql dari folder repository, lalu klik Go untuk mengimpor.
 
 ### Setup build path javafx
 silahkan ikuti langkah langkahnya didalam link ini
