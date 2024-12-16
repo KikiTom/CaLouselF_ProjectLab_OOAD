@@ -6,8 +6,9 @@ Key features of CaLouselF include customizable search filters and a smooth brows
 
 
 ## Fitur Utama
-### Login
+
 <p align="center">
+  ### Login
   <img src="Screenshot-Documentation/Tampilan-Login.png" alt="Tampilan Login">
 </p>
 
