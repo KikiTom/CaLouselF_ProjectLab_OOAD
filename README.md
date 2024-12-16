@@ -12,19 +12,19 @@ Key features of CaLouselF include customizable search filters and a smooth brows
   <img src="Screenshot-Documentation/Tampilan-Login.png" alt="Tampilan Login">
   <h3>2. Register</h3>
   <img src="Screenshot-Documentation/Tampilan-Register.png" alt="Tampilan Register">
-  <h3>3. View Item Roles: Seller</h3>
+  <h3>3. View Item (Roles: Seller)</h3>
   <img src="Screenshot-Documentation/Tampilan-Viewitem-RejectedAndAcceptedItem.png" alt="Tampilan-Viewitem-RejectedAndAcceptedItem">
-  <h3>4. Upload Item Roles: Seller</h3>
+  <h3>4. Upload Item (Roles: Seller)</h3>
   <img src="Screenshot-Documentation/Tampilan-UploadItem.png" alt="Tampilan-UploadItem">
-  <h3>5. View Offers Roles: Seller</h3>
+  <h3>5. View Offers (Roles: Seller)</h3>
   <img src="Screenshot-Documentation/Tampilan-ViewOffer.png" alt="Tampilan-ViewOffer">
-  <h3>6. View Requested Item Roles: Admin</h3>
+  <h3>6. View Requested Item (Roles: Admin)</h3>
   <img src="Screenshot-Documentation/Tampilan-ViewRequesteditem 2.png" alt="Tampilan-ViewRequesteditem">
-  <h3>7. View Approved Item Roles: Customer</h3>
+  <h3>7. View Approved Item (Roles: Customer)</h3>
   <img src="Screenshot-Documentation/Tampilan-Viewitem-Selectitem.png" alt="Tampilan-Viewitem-Selectitem">
-  <h3>8. View Purchase History Roles: Customer</h3>
+  <h3>8. View Purchase History (Roles: Customer)</h3>
   <img src="Screenshot-Documentation/Tampilan-PurchaseHistory.png" alt="Tampilan-PurchaseHistory">
-  <h3>9. View Wishlist Roles: Customer</h3>
+  <h3>9. View Wishlist (Roles: Customer)</h3>
   <img src="Screenshot-Documentation/Tampilan-Wishlist.png" alt="Tampilan-Wishlist">
 </div>
 
