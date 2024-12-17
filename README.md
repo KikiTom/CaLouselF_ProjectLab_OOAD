@@ -1,4 +1,4 @@
-# CaLouselF: Sustainable Fashion Marketplace
+# CaLouselF: Sustainable Fashion Marketplace Desktop App
 
 ## Description
 CaLouselF is an innovative marketplace application designed to simplify the buying and selling of second-hand clothing in a safe and user-friendly environment. The platform connects sellers with buyers, enabling individuals to give their pre-loved clothing a second life, contributing to a more sustainable fashion ecosystem. By promoting sustainability, CaLouselF helps users discover unique and affordable fashion pieces while reducing waste in the fashion industry.
@@ -7,7 +7,7 @@ Key features of CaLouselF include customizable search filters and a smooth brows
 
 **Technology Stack:**
 - **Frontend:** Developed using **JavaFX**, providing a rich and interactive user interface.
-- **Backend:** Utilizes **MySQL Connector/J** for seamless database connectivity.
+- **Backend:** Utilizes **MySQL Connector Java** for seamless database connectivity.
 - **Database:** Powered by **MySQL MariaDB**, ensuring robust data management and storage.
 
 By leveraging these technologies, CaLouselF ensures a reliable and efficient platform for users to engage in sustainable fashion practices.
