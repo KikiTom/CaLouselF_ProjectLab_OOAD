@@ -7,7 +7,7 @@ Key features of CaLouselF include customizable search filters and a smooth brows
 
 **Technology Stack:**
 - **Frontend:** Developed using **JavaFX**, providing a rich and interactive user interface.
-- **Backend:** Utilizes **MySQL Connector Java** for seamless database connectivity.
+- **Backend:** Utilizes **MySQL Java Connection Library** for seamless database connectivity.
 - **Database:** Powered by **MySQL MariaDB**, ensuring robust data management and storage.
 
 By leveraging these technologies, CaLouselF ensures a reliable and efficient platform for users to engage in sustainable fashion practices.
