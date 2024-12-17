@@ -105,7 +105,7 @@ Penjelasan Struktur Direktori
 Proyek ini dilisensikan di bawah [Heru Deliansyah] - lihat file LICENSE untuk detail.
 
 ## Kontak
-- Heru Deliansyah - herudeliansyah@gmail.com
+- Heru Deliansyah - heru.deliansyah@binus.ac.id
 - Wisnu Putra - wisnu.putra001@binus.ac.id
 
 ## Ucapan Terima Kasih
