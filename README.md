@@ -108,9 +108,6 @@ Penjelasan Struktur Direktori
 4. README.md
    File ini yang sedang kamu baca. Berisi dokumentasi tentang proyek ini, instruksi penggunaan, dan penjelasan terkait proyek.
 
-## Lisensi
-Proyek ini dilisensikan di bawah [Heru Deliansyah] - lihat file LICENSE untuk detail.
-
 ## Kontak
 - Heru Deliansyah - heru.deliansyah@binus.ac.id
 - Wisnu Putra - wisnu.putra001@binus.ac.id
